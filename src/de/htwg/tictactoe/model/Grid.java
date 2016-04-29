@@ -52,10 +52,31 @@ public class Grid {
 	}
 	
 	/**
+	 * Checks if the cell is Set 
+	 * @param row
+	 * @param column
+	 * @return
+	 */
+	public boolean cellIsSet(int row, int column){
+		return cell[row][column].isSet();
+	}
+	
+	/**
 	 * Get Grid size
 	 * @return Grid size
 	 */
 	public int getGridSize(){
 		return GRIDE_SIZE;
+	}
+	/**
+	 * reset Grid
+	 */
+	public void resetGrid(){
+		cell = new Cell[GRIDE_SIZE][GRIDE_SIZE];
+		for (int row = 0; row < cell.length; row++) {
+			for (int column = 0; column < cell[row].length; column++) {
+				cell[row][column] = new Cell(row, column);
+			}
+		}
 	}
 }
