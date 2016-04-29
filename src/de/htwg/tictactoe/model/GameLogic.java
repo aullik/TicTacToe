@@ -32,13 +32,13 @@ public class GameLogic {
 		diagAllGrid.add(new int[3][3]);
 		colsAllGrid = new int[3][3];
 	}
-	private boolean checkRow(int row, int column, int gridPlace){
+	private boolean checkRowOneGrid(int row, int column, int gridPlace){
 		if(++rowGridScore.get(gridPlace)[row] == SIZE){
 			return true;
 		}
 		return false;
 	}
-	private boolean checkColumn(int row, int column, int gridPlace){
+	private boolean checkColumnOneGrid(int row, int column, int gridPlace){
 		if(++colsAllGrid[row][column] == SIZE){
 			return true;
 		}
@@ -47,7 +47,7 @@ public class GameLogic {
 		}
 		return false;
 	}
-	private boolean checkDiagonal(int row, int column, int gridPlace){
+	private boolean checkDiagonalOneGrid(int row, int column, int gridPlace){
 		if(row == column){
 			if(++diagGridScore.get(gridPlace)[0] == SIZE){
 				return true;
@@ -60,9 +60,9 @@ public class GameLogic {
 				}
 			}
 		}
-		return checkUnNormalDiag(row, column, gridPlace);
+		return checkDiagInAllGrids(row, column, gridPlace);
 	}
-	private boolean incrementRow(int[][] is){
+	private boolean incrementAllRow(int[][] is){
 		for (int i = 0; i < is.length; i++) {
 			for (int j = 0; j < is[i].length; j++) {
 				if(++is[i][j] == SIZE){
@@ -72,14 +72,14 @@ public class GameLogic {
 		}
 		return false;
 	}
-	private boolean checkUnNormalDiag(int row, int column, int gridPlace) {
+	private boolean checkDiagInAllGrids(int row, int column, int gridPlace) {
 		if(gridPlace == 1){
 			if(row == 1 && column == 1){
 				for (int[][] is : diagAllGrid) {
-					incrementRow(is);
+					incrementAllRow(is);
 				}
 			}else {
-				return centerGrid(row, column);
+				return centerInAllGrid(row, column);
 			}
 		}else {
 			if(gridPlace == 2){
@@ -89,15 +89,15 @@ public class GameLogic {
 				return true;
 			}
 			if(gridPlace == 0){
-				return unnormalDiagLogic(gridPlace + 1, row, column, 2);
+				return DiagOfAllGridsLogic(gridPlace + 1, row, column, 2);
 			}else if(gridPlace == 1){
-				return unnormalDiagLogic(gridPlace - 1, row, column, -2);
+				return DiagOfAllGridsLogic(gridPlace - 1, row, column, -2);
 			}			
 		}
 		return false;
 	}
 	
-	private boolean centerGrid(int row, int column){
+	private boolean centerInAllGrid(int row, int column){
 		if (column + row == 1 && (column == 0 || row == 0)){
 			int row1 = row == 0 ? 0 : 2;
 			int column1 = column == 0 ? 0 : 2;
@@ -118,7 +118,7 @@ public class GameLogic {
 		return false;
 	}
 	
-	public boolean unnormalDiagLogic(int gridPlace, int row, int column, int token){
+	public boolean DiagOfAllGridsLogic(int gridPlace, int row, int column, int token){
 		int mainRow = Math.abs(row + token);
 		int mainColumn = Math.abs(column + token);
 		if( (mainRow < SIZE && mainColumn < SIZE) &&
@@ -138,10 +138,10 @@ public class GameLogic {
 		}
 		return false;
 	}
-	public boolean checkScore(int row, int column, int gridPlace){
-		if(checkRow(row, column, gridPlace) 
-				|| checkColumn(row, column, gridPlace) 
-				|| checkDiagonal(row, column, gridPlace)){
+	public boolean checkForWin(int row, int column, int gridPlace){
+		if(checkRowOneGrid(row, column, gridPlace) 
+				|| checkColumnOneGrid(row, column, gridPlace) 
+				|| checkDiagonalOneGrid(row, column, gridPlace)){
 			return true;
 		}
 		return false;
