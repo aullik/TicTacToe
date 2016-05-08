@@ -5,9 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>htwg.se</groupId>
-    <artifactId>tictactoe</artifactId>
+    <artifactId>TicTacToe</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <name>SE2016SS-01-Tictactoe</name>
+    <name>SE2016SS-01-TicTacToe</name>
     <packaging>jar</packaging>
     <build>
         <sourceDirectory>src</sourceDirectory>
