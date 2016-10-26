@@ -6,7 +6,10 @@ resolvers += "Typesafe repository" at "http://repo.typesafe.com/typesafe/release
 lazy val commonSettings = Seq(
   version := "0.1",
   scalaVersion := "2.11.7",
+  classpathTypes += "maven-plugin",
   libraryDependencies ++= Seq(
+    //"com.google.guava" % "guava" % "19.0",
+    "junit" % "junit" % "4.12",
     "log4j" % "log4j" % "1.2.17",
     "com.google.inject" % "guice-parent" % "3.0",
     "com.fasterxml.jackson.core" % "jackson-databind" % "2.6.3",
