@@ -7,7 +7,7 @@ lazy val commonSettings = Seq(
   version := "0.1",
   scalaVersion := "2.11.7",
   libraryDependencies ++= Seq(
-    "log4j" %% "log4j" % "1.2.17",
+    "log4j" % "log4j" % "1.2.17",
     "com.google.inject" % "guice-parent" % "3.0",
     "com.fasterxml.jackson.core" % "jackson-databind" % "2.6.3",
     "org.clapper" %% "grizzled-slf4j" % "1.0.2",
