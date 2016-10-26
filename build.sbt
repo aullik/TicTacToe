@@ -12,16 +12,16 @@ lazy val commonSettings = Seq(
 )
 
 
-lazy val `TicTacToe` = (project in file("."))
-  .settings(commonSettings)
+lazy val root = (project in file("."))
+  .settings(commonSettings: _*).settings(name := "TicTacToe-root")
   .enablePlugins(PlayScala)
 
 
 lazy val `web` = (project in file("web"))
-  .settings(commonSettings).settings(name := "TicTacToe-web")
-  .enablePlugins(PlayScala).
-  dependsOn(`backend`)
+  .settings(commonSettings: _*).settings(name := "TicTacToe-web")
+  .enablePlugins(PlayScala)
+//.dependsOn(`backend`)
 
-lazy val `backend` = (project in file("backend")).
-  settings(commonSettings).
-  settings(name := "TicTacToe-backend")
+lazy val `backend` = (project in file("backend"))
+  .settings(commonSettings: _*)
+  .settings(name := "TicTacToe-backend")
