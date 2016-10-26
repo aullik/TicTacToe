@@ -12,7 +12,7 @@ lazy val commonSettings = Seq(
     "javax.inject" % "javax.inject" % "1",
     "junit" % "junit" % "4.12",
     "log4j" % "log4j" % "1.2.17",
-    "com.google.inject" % "guice-parent" % "3.0",
+    "com.google.inject" % "guice" % "3.0",
     "com.fasterxml.jackson.core" % "jackson-databind" % "2.6.3",
     "org.clapper" %% "grizzled-slf4j" % "1.0.2",
     "com.typesafe.akka" %% "akka-cluster-tools" % "2.4.6"
