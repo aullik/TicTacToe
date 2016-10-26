@@ -8,7 +8,8 @@ lazy val commonSettings = Seq(
   scalaVersion := "2.11.7",
   classpathTypes += "maven-plugin",
   libraryDependencies ++= Seq(
-    //"com.google.guava" % "guava" % "19.0",
+    "com.google.guava" % "guava" % "19.0",
+    "javax.inject" % "javax.inject" % "1",
     "junit" % "junit" % "4.12",
     "log4j" % "log4j" % "1.2.17",
     "com.google.inject" % "guice-parent" % "3.0",
