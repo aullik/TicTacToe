@@ -1,13 +1,11 @@
 package de.htwg.tictactoe.model.impl;
 
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.htwg.tictactoe.model.impl.Grid;
-import de.htwg.tictactoe.model.impl.Player;
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class PlayerTest {
 
