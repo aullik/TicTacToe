@@ -5,8 +5,7 @@ target
 tmp
 .history
 dist
-# /.idea
-idea.zip
+/.idea
 /*.iml
 /out
 /.idea_modules
