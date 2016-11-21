@@ -1,38 +1,47 @@
 package de.htwg.tictactoe;
 
-import java.util.Scanner;
-
-import de.htwg.tictactoe.view.gui.TicTacToeGUI;
-import org.apache.log4j.PropertyConfigurator;
-
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import de.htwg.tictactoe.controller.IController;
 
-import de.htwg.tictactoe.view.TextUI;
+import java.util.Scanner;
 
 public class TicTacToe {
 
-   static Scanner scanner;
-   String line = "";
+    static Scanner scanner;
+    String line = "";
 
-   public static void main(String[] args) {
+    private static IController controller;
 
-      // Set up logging through log4j
-      PropertyConfigurator.configure("log4j.properties");
+    public TicTacToe() {
+        Injector injector = Guice.createInjector(new TicTacToeModule());
+        controller = injector.getInstance(IController.class);
+    }
 
-      // Set up Google Guice Dependency Injector
-      Injector injector = Guice.createInjector(new TicTacToeModule());
+    /*
+        public static void main(String[] args) {
 
-      TextUI tui = injector.getInstance(TextUI.class);
+            // Set up logging through log4j
+            PropertyConfigurator.configure("log4j.properties");
 
-      injector.getInstance(TicTacToeGUI.class);
 
-      tui.printTUI();
-      //continue until the user decides to quit
-      boolean continu = true;
-      scanner = new Scanner(System.in);
-      while (continu) {
-         continu = tui.processInputLine(scanner.next());
-      }
-   }
+            // Set up Google Guice Dependency Injector
+
+
+            TextUI tui = injector.getInstance(TextUI.class);
+
+            injector.getInstance(TicTacToeGUI.class);
+
+            tui.printTUI();
+            //continue until the user decides to quit
+            boolean continu = true;
+            scanner = new Scanner(System.in);
+            while (continu) {
+                continu = tui.processInputLine(scanner.next());
+            }
+        }
+    */
+    public IController getController() {
+        return controller;
+    }
 }
