@@ -1,67 +1,70 @@
-
 @main("Welcome to TicTacToe") {
 
-  <div class="col-xs-4 col-xs-offset-4 title">
-    <marquee class="cardList titleDiv" behavior="scroll" direction="left">
-      <h1 class="titleHeader">Welcome to TicTacToe 3D</h1>
-    </marquee>
-  </div>
-  <div class="row indexWrapper">
-    <div class="col-xs-6 col-xs-offset-1 cardList loginForm">
-      <div class="loginmodal-container game_description">
-        3D tic-tac-toe, also known by the trade name <strong> Qubic </strong>, is a board game.
-        It is similar in concept to traditional
-        <a href="https://en.wikipedia.org/wiki/Tic-tac-toe">tic-tac-toe </a>
-        but is played in a cubical array of cells.
-        Players take turns placing their markers in blank cells in the array.
-        The first player to achieve three of their own markers in a row wins.
-        The winning row can be horizontal, vertical, or diagonal on a single board as in regular tic-tac-toe,
-        or vertically in a column, or a diagonal line through four boards.
-        <br >
-        <img src="@routes.Assets.at("images/tictactoe.jpg")" alt="TicTacToe 3D">
-      </div>
+    <div class="col-xs-4 col-xs-offset-4 title">
+        <marquee class="cardList titleDiv" behavior="scroll" direction="left">
+            <h1 class="titleHeader">Welcome to TicTacToe 3D</h1>
+        </marquee>
     </div>
-    <div class="col-xs-3 cardList loginForm">
-      <ul class="nav nav-tabs">
-        <li role="presentation" class="active"><a href="#login" data-toggle="tab">Log in</a></li>
-        <li role="presentation"><a href="#signup" data-toggle="tab">Sign Up</a></li>
-      </ul>
-      <div class="tab-content">
-        <div class="tab-pane loginmodal-container active" id="login" >
-          <h1>Login and start playing</h1><br>
-          <!--helper.form(routes.MainController.login) logInForm("email").value{-->
-            <div class="form-group">
-              <label for="email">Email address</label>
-              <input type="email" class="form-control" name="email" id="email" placeholder="Enter email" value="">
+    <div class="row indexWrapper">
+        <div class="col-xs-6 col-xs-offset-1 cardList loginForm">
+            <div class="loginmodal-container game_description">
+                3D tic-tac-toe, also known by the trade name <strong> Qubic </strong>, is a board game.
+                It is similar in concept to traditional
+                <a href="https://en.wikipedia.org/wiki/Tic-tac-toe">tic-tac-toe </a>
+                but is played in a cubical array of cells.
+                Players take turns placing their markers in blank cells in the array.
+                The first player to achieve three of their own markers in a row wins.
+                The winning row can be horizontal, vertical, or diagonal on a single board as in regular tic-tac-toe,
+                or vertically in a column, or a diagonal line through four boards.
+                <br >
+                <img src="@routes.Assets.at("images/tictactoe.jpg")" alt="TicTacToe 3D">
             </div>
-            <div class="form-group">
-              <label for="password">Password</label>
-              <input type="password" class="form-control" name="password" id="password" placeholder="Password">
-            </div>
-            <div class="btn-group">
-              <input type="submit" class="login loginmodal-submit" value="Submit" />
-            </div>
-            <!--}-->
         </div>
-        <div class="tab-pane loginmodal-container" id="signup">
-          <h1>Sign Up</h1><br>
-          <!--helper.form(routes.MainController.signup) signUpForm("email").value{-->
-            <div class="form-group">
-              <label for="email">Email address</label>
-              <input type="email" class="form-control" name="email" id="email" placeholder="Enter email" value="">
+        <div class="col-xs-3 cardList loginForm">
+            <ul class="nav nav-tabs">
+                <li role="presentation" class="active"><a href="#login" data-toggle="tab">Log in</a></li>
+                <li role="presentation"><a href="#signup" data-toggle="tab">Sign Up</a></li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane loginmodal-container active" id="login" >
+                    <h1>Login and start playing</h1><br>
+                    @helper.form(routes.Application.login, 'id -> "loginForm") {
+                        <div class="form-group">
+                            <label for="email">Email address</label>
+                            <input type="email" class="form-control" name="email" id="email" placeholder="Enter email" value="">
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" class="form-control" name="password" id="password" placeholder="Password">
+                        </div>
+                        <div class="btn-group">
+                            <input type="submit" class="login loginmodal-submit" value="Submit" />
+                        </div>
+                    }
+                </div>
+                <div class="tab-pane loginmodal-container" id="signup">
+                    <h1>Sign Up</h1><br>
+                    @helper.form(routes.Application.signup, 'id -> "signupForm") {
+                        <div class="form-group">
+                            <label for="email">Email address</label>
+                            <input type="email" class="form-control" name="email" id="email" placeholder="Enter email" value="">
+                        </div>
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            <input type="text" class="form-control" name="username" id="username" placeholder="Enter username" value="">
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" class="form-control" name="password" id="password" placeholder="Password">
+                        </div>
+                        <div class="btn-group">
+                            <input type="submit" class="login loginmodal-submit" value="Submit" />
+                        </div>
+                    }
+                </div>
             </div>
-            <div class="form-group">
-              <label for="password">Password</label>
-              <input type="password" class="form-control" name="password" id="password" placeholder="Password">
-            </div>
-            <div class="btn-group">
-              <input type="submit" class="login loginmodal-submit" value="Submit" />
-            </div>
-          <!--}-->
-        </div>
-      </div>
 
+        </div>
     </div>
-  </div>
 
 }

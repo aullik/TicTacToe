@@ -37,6 +37,10 @@ body {
     margin: auto;
 }
 
+.indexWrapper .cardList {
+    padding: 0;
+}
+
 .game_description {
     font-size: 20px;
     text-align: center;
