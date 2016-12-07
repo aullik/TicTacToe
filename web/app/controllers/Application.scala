@@ -7,7 +7,7 @@ import play.api.mvc._
 
 class Application extends Controller {
 
-  var controller: IController = null;
+  var controller: IController = null
 
   def index = Action {
 
@@ -16,18 +16,26 @@ class Application extends Controller {
     Ok(bootstrap.views.html.index(list))
   }
 
-  def call(caller: String, calle: String) = Action {
-    //TODO: this is the method when a user want to play with another one
-    //TODO: hier will be the initialization on a controller and adding it the the list and setPlayers method
-    //TODO: will be called with the user names
+  def startGame(player1: String, player2: String) = play.mvc.Results.TODO
 
-    //this code has to be improved
-    if (caller.equals("1")) {
-      val tictactoe = new TicTacToe()
-      controller = tictactoe.getController()
-      controller.setPlayers("coco", "bobo");
-    }
-    Ok(bootstrap.views.html.tictactoe(controller.getStatus(), caller))
+  def game() = play.mvc.Results.TODO
+
+  //REMOVE
+  def call(caller: String) = Action {
+    request =>
+
+
+      //TODO: this is the method when a user want to play with another one
+      //TODO: here will be the initialization on a controller and adding it the the list and setPlayers method
+      //TODO: will be called with the user names
+
+      //this code has to be improved
+      if (caller.equals("1")) {
+        val tictactoe = new TicTacToe()
+        controller = tictactoe.getController
+        controller.setPlayers("coco", "bobo")
+      }
+      Ok(bootstrap.views.html.tictactoe(controller.getStatus, caller))
   }
 
   def signupPage = Action {
@@ -66,8 +74,9 @@ class Application extends Controller {
     }
     var json = Json.toJson(returnedData)
     val jsonString: String = Json.stringify(json)
-    Ok(jsonString);
+    Ok(jsonString)
 
   }
+
 
 }
