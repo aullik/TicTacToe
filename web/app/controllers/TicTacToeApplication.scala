@@ -60,7 +60,8 @@ object TicTacToeApplication {
   }
 
   def login(request: Request[AnyContent]): Result = {
-    println("data: " + request.body.asJson.get)
+    println("data: " + request.body)
+    println("data: " + request.body.asJson)
     //TODO Youssef => form should fail, json should work
     //    val json = request.body.asJson.get
     //    println(json)
