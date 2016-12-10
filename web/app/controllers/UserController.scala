@@ -8,11 +8,18 @@ import scala.util.Random
 /**
   */
 object UserController {
+
+  private val tokenCache = Map.empty[User, String]
+
   def getUserFromToken(session: Session): Option[User] = {
     None
   }
 
-  def login(session: Session): Session = session
+  def login(session: Session): Session = {
+    println("login: \n" + session.data)
+
+    session
+  }
 
   private val TOKEN_LENGTH = 32
 
