@@ -9,10 +9,15 @@ import scala.util.Random
   */
 object UserController {
 
-  private val tokenCache = Map.empty[User, String]
+  private val cacheToken2User = Map.empty[String, User]
+  private val cacheUserName2Token = Map.empty[String, String]
 
   def getUserFromToken(session: Session): Option[User] = {
-    None
+    session.get("name").flatMap(name => session.get("token").flatMap(token => checkUserToken(name, token)))
+  }
+
+  private def checkUserToken(username: String, token: String): Option[User] = {
+    cacheToken2User.get(token).filter(usr => usr.name == username)
   }
 
   def login(session: Session): Session = {
