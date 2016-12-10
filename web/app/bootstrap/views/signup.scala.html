@@ -27,7 +27,11 @@
                 <div class="tab-pane loginmodal-container active" id="login" >
                     <h1>Login and start playing</h1><br>
                     <form method="POST" action='@routes.Application.login' Content-type="application/json" id="loginForm">
-                        <div class="form-group">
+                        <input type="email" name="email" id="email" placeholder="Enter email" value="">
+                        <input type="password" name="password" id="password" placeholder="Password">
+                        <input type="submit" class="login loginmodal-submit" value="Submit" />
+
+                            <!--<div class="form-group">
                             <label for="email">Email address</label>
                             <input type="email" class="form-control" name="email" id="email" placeholder="Enter email" value="">
                         </div>
@@ -37,7 +41,7 @@
                         </div>
                         <div class="btn-group">
                             <input type="submit" class="login loginmodal-submit" value="Submit" />
-                        </div>
+                        </div>-->
                     </form>
                 </div>
                 <div class="tab-pane loginmodal-container" id="signup">
