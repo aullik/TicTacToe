@@ -52,6 +52,7 @@ object TicTacToeApplication {
   }
 
   def signup(request: Request[AnyContent]): Result = {
+    println("data: " + request.body.asJson.get)
     println("signup: \n" + request.session.data)
     request.session.data.foreach(println _)
 
@@ -60,11 +61,12 @@ object TicTacToeApplication {
   }
 
   def login(request: Request[AnyContent]): Result = {
+    println("data: " + request.body)
     println("data: " + request.body.asJson.get)
     //TODO Youssef => form should fail, json should work
     //    val json = request.body.asJson.get
     //    println(json)
-    val form = request.body.asFormUrlEncoded.get
+    //val form = request.body.asFormUrlEncoded.get
 
     val changedSession = UserController.login(request.session)
     //TODO: check if the data is from a current user if true go to the index page else return with errors.
