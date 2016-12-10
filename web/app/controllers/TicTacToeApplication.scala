@@ -3,8 +3,8 @@ package controllers
 import de.htwg.tictactoe.TicTacToe
 import de.htwg.tictactoe.controller.IController
 import play.api.libs.json.Json
+import play.api.mvc.Results._
 import play.api.mvc._
-import Results._
 
 
 /**
@@ -13,18 +13,32 @@ object TicTacToeApplication {
   var controller: IController = null
 
 
-  def index(request: Request[AnyContent]): Result = {
+  def index(user: User, request: Request[AnyContent]): Result = {
 
     //TODO: the list of all users (username) must be send to the view
-    val list = List("ysf", "nicolas", "dany", "ysf", "nicolas", "dany", "ysf", "nicolas", "dany", "ysf", "nicolas", "dany")
+    val list = UserController.getAllActiveUserNames
     Ok(bootstrap.views.html.index(list))
   }
 
-  def startGame(request: Request[AnyContent], player1: String, player2: String): Result = {
+  /**
+    * Start the game internally.
+    *
+    * @param request
+    * @param player1
+    * @param player2
+    * @return
+    */
+  def startGame(user: User, request: Request[AnyContent], player1: String, player2: String): Result = {
     null
   }
 
-  def game(request: Request[AnyContent]): Result = {
+  /**
+    * connect to already started game. If no game is started connect to index
+    *
+    * @param request
+    * @return
+    */
+  def game(user: User, request: Request[AnyContent]): Result = {
     null
   }
 
@@ -42,11 +56,13 @@ object TicTacToeApplication {
   }
 
   def login(request: Request[AnyContent]): Result = {
+    val json = request.body.asJson.get
+    val changedSession = UserController.login(request.session)
     //TODO: check if the data is from a current user if true go to the index page else return with errors.
-    Ok("ok")
+    Ok.withSession(changedSession)
   }
 
-  def move(data: String, request: Request[AnyContent]): Result = {
+  def move(user: User, data: String, request: Request[AnyContent]): Result = {
 
     // TODO: you receive data as a String (grid-column-row) set a move and check if there is a win
     // TODO: if true return status and win with 1 else return status with win with 0
@@ -61,31 +77,31 @@ object TicTacToeApplication {
     if (!controller.getWin(0) && !controller.getWin(1)) {
       returnedData = Map(
         "status" -> controller.getStatus,
-"win" -> "0"
-)
-}
-val json = Json.toJson(returnedData)
-val jsonString: String = Json.stringify(json)
-Ok(jsonString)
+        "win" -> "0"
+      )
+    }
+    val json = Json.toJson(returnedData)
+    val jsonString: String = Json.stringify(json)
+    Ok(jsonString)
 
-}
+  }
 
-//REMOVE
-def call(caller: String) = Action {
-  request =>
+  //REMOVE
+  def call(caller: String) = Action {
+    request =>
 
 
-  //TODO: this is the method when a user want to play with another one
-  //TODO: here will be the initialization on a controller and adding it the the list and setPlayers method
-  //TODO: will be called with the user names
+      //TODO: this is the method when a user want to play with another one
+      //TODO: here will be the initialization on a controller and adding it the the list and setPlayers method
+      //TODO: will be called with the user names
 
-  //this code has to be improved
-  if (caller.equals("1")) {
-  val tictactoe = new TicTacToe()
-  controller = tictactoe.getController
-  controller.setPlayers("coco", "bobo")
-}
-  Ok(bootstrap.views.html.tictactoe(controller.getStatus, caller))
-}
+      //this code has to be improved
+      if (caller.equals("1")) {
+        val tictactoe = new TicTacToe()
+        controller = tictactoe.getController
+        controller.setPlayers("coco", "bobo")
+      }
+      Ok(bootstrap.views.html.tictactoe(controller.getStatus, caller))
+  }
 
 }
