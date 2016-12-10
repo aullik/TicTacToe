@@ -60,11 +60,11 @@ object TicTacToeApplication {
   }
 
   def login(request: Request[AnyContent]): Result = {
+    println("data: " + request.body.asJson.get)
     //TODO Youssef => form should fail, json should work
     //    val json = request.body.asJson.get
     //    println(json)
     val form = request.body.asFormUrlEncoded.get
-
 
     val changedSession = UserController.login(request.session)
     //TODO: check if the data is from a current user if true go to the index page else return with errors.
