@@ -5,6 +5,7 @@ import de.htwg.tictactoe.controller.IController
 import play.api.libs.json.Json
 import play.api.mvc.Results._
 import play.api.mvc._
+import viewModel.{LoginData, ViewModel}
 
 
 /**
@@ -61,8 +62,7 @@ object TicTacToeApplication {
   }
 
   def login(request: Request[AnyContent]): Result = {
-    println("data: " + request.body)
-    println("data: " + request.body.asJson.get)
+    println("data: " + ViewModel.read[LoginData](request.body))
     //TODO Youssef => form should fail, json should work
     //    val json = request.body.asJson.get
     //    println(json)
