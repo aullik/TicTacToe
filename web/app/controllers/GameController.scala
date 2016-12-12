@@ -63,20 +63,17 @@ object GameController {
 
     var controller: IController = null
 
-    request =>
+    //TODO: this is the method when a user want to play with another one
+    //TODO: here will be the initialization on a controller and adding it the the list and setPlayers method
+    //TODO: will be called with the user names
 
-
-      //TODO: this is the method when a user want to play with another one
-      //TODO: here will be the initialization on a controller and adding it the the list and setPlayers method
-      //TODO: will be called with the user names
-
-      //this code has to be improved
-      if (caller.equals("1")) {
-        val tictactoe = new TicTacToe()
-        controller = tictactoe.getController
-        controller.setPlayers("coco", "bobo")
-      }
-      Ok(bootstrap.views.html.tictactoe(controller.getStatus, caller))
+    //this code has to be improved
+    if (caller.equals("1")) {
+      val tictactoe = new TicTacToe()
+      controller = tictactoe.getController
+      controller.setPlayers("coco", "bobo")
+    }
+    Ok(bootstrap.views.html.tictactoe(controller.getStatus, caller))
   }
 
 
