@@ -66,9 +66,17 @@ object UserController {
     }
   }
 
+  private def unPair[A, B, R](f: (A, B) => R): ((A, B)) => R = {
+    (pair) => f(pair._1, pair._2)
+  }
 
   private def loginUser(loginData: LoginData): Option[User] = {
-    cacheEmail2UserPass.get(loginData.email).filter(_._2 == loginData.password).map(userPass => {
+    cacheEmail2UserPass.get(loginData.email).filter(pair => {
+      val (_, pw) = pair
+      pw == loginData.password
+    })
+
+    cacheEmail2UserPass.get(loginData.email).filter(unPair((_, pw) => pw == loginData.password)).map(userPass => {
       val user = User(userPass._1, generateToken(), loginData.email)
       cacheEmail2LoggedInUser.put(loginData.email, user)
       cacheToken2User.put(user.token, user)
