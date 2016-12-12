@@ -40,7 +40,13 @@ object UserController {
         }
     }
 
-  def logout(user: User, request: Request[AnyContent]): Result = ???
+  def logout(user: User, request: Request[AnyContent]): Result =
+    cacheToken2User.get(user.token).filter(_.name == user.name)
+      .map(usr => cacheEmail2LoggedInUser.remove(usr.email)) match {
+      case None => BadRequest("Not logged in")
+      case Some(_) => Redirect(routes.Application.signUpPage())
+    }
+
 
   def login(request: Request[AnyContent]): Result =
     ViewModel.read[LoginData](request.body) match {
@@ -62,7 +68,7 @@ object UserController {
 
   private def loginUser(loginData: LoginData): Option[User] = {
     cacheEmail2UserPass.get(loginData.email).filter(_._2 == loginData.email).map(userPass => {
-      val user = User(userPass._1, generateToken())
+      val user = User(userPass._1, generateToken(), loginData.email)
       cacheEmail2LoggedInUser.put(loginData.email, user)
       cacheToken2User.put(user.token, user)
       user
