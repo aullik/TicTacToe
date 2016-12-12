@@ -198,8 +198,15 @@ body {
     float: left;
     height: 70px;
     margin-right: 5px;
+    position: relative;
     width: calc(98% / 3);
     background-color: #b0d7d9;
+}
+
+.caption button {
+    position: absolute;
+    right: 0;
+    bottom: 0;
 }
 
 .users div {
