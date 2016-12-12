@@ -33,8 +33,9 @@ object UserController {
       case None => JSONERROR
       case Some(signUpData) =>
         cacheEmail2UserPass.get(signUpData.email) match {
-          case None => BadRequest("Email already exists")
           case Some(_) =>
+            BadRequest("Email already exists")
+          case None =>
             cacheEmail2UserPass.update(signUpData.email, (signUpData.username, signUpData.password))
             doLogin(LoginData(signUpData.email, signUpData.password), request.session)
         }
@@ -67,7 +68,7 @@ object UserController {
 
 
   private def loginUser(loginData: LoginData): Option[User] = {
-    cacheEmail2UserPass.get(loginData.email).filter(_._2 == loginData.email).map(userPass => {
+    cacheEmail2UserPass.get(loginData.email).filter(_._2 == loginData.password).map(userPass => {
       val user = User(userPass._1, generateToken(), loginData.email)
       cacheEmail2LoggedInUser.put(loginData.email, user)
       cacheToken2User.put(user.token, user)
