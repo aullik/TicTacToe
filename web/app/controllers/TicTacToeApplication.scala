@@ -11,12 +11,9 @@ import viewModel.{LoginData, ViewModel}
 /**
   */
 object TicTacToeApplication {
-  var controller: IController = null
 
 
   def index(user: User, request: Request[AnyContent]): Result = {
-
-    //TODO: the list of all users (username) must be send to the view
     val list = UserController.getAllActiveUserNames
     Ok(bootstrap.views.html.index(list))
   }
@@ -25,11 +22,10 @@ object TicTacToeApplication {
     * Start the game internally.
     *
     * @param request
-    * @param player1
-    * @param player2
+    * @param otherPlayer
     * @return
     */
-  def startGame(user: User, request: Request[AnyContent], player1: String, player2: String): Result = {
+  def startGame(user: User, request: Request[AnyContent], otherPlayer: String): Result = {
     null
   }
 
@@ -74,7 +70,7 @@ object TicTacToeApplication {
   }
 
   def move(user: User, data: String, request: Request[AnyContent]): Result = {
-
+    val controller: IController = null
     // TODO: you receive data as a String (grid-column-row) set a move and check if there is a win
     // TODO: if true return status and win with 1 else return status with win with 0
 
@@ -99,6 +95,9 @@ object TicTacToeApplication {
 
   //REMOVE
   def call(caller: String) = Action {
+
+    var controller: IController = null
+
     request =>
 
 

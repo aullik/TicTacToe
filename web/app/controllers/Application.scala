@@ -8,7 +8,7 @@ class Application extends Controller {
 
   def index = LoggedInAction(TicTacToeApplication.index)
 
-  def startGame(player1: String, player2: String) = LoggedInAction(TicTacToeApplication.startGame(_, _, player1, player2))
+  def startGame(other: String) = LoggedInAction(TicTacToeApplication.startGame(_, _, other))
 
   def game = LoggedInAction(TicTacToeApplication.game)
 
