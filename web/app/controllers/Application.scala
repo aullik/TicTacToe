@@ -23,6 +23,9 @@ class Application extends Controller {
 
 }
 
+/**
+  * For all Actions That should be done while logged in.
+  */
 private object LoggedInAction {
   def apply(block: (User, Request[AnyContent]) => Result): Action[AnyContent] = {
     Action(request => checkRequest(request, block))
@@ -34,16 +37,14 @@ private object LoggedInAction {
   }
 }
 
+/**
+  * For all Actions That should be done while logged out.
+  */
 private object LoggedOutAction {
 
   def apply(block: Request[AnyContent] => Result): Action[AnyContent] =
-    Action(request => {
-      val opt: Option[User] = UserController.getUserFromToken(request.session)
-      if (opt.isDefined)
-        Redirect(routes.Application.index())
-      else
-        block(request)
-    })
+    Action(request => UserController.getUserFromToken(request.session)
+      .map(_ => Redirect(routes.Application.index())).getOrElse(block(request)))
 
 
 }
