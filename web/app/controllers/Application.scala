@@ -14,9 +14,9 @@ class Application extends Controller {
 
   def signupPage = LoggedOutAction(TicTacToeApplication.signupPage)
 
-  def signup = Action(TicTacToeApplication.signup _)
+  def signup = Action(UserController.signup _)
 
-  def login = Action(TicTacToeApplication.login _)
+  def login = Action(UserController.login _)
 
   def move(data: String) = LoggedInAction(TicTacToeApplication.move(_, data, _))
 

@@ -5,7 +5,6 @@ import de.htwg.tictactoe.controller.IController
 import play.api.libs.json.Json
 import play.api.mvc.Results._
 import play.api.mvc._
-import viewModel.{LoginData, ViewModel}
 
 
 /**
@@ -41,32 +40,7 @@ object TicTacToeApplication {
 
 
   def signupPage(request: Request[AnyContent]): Result = {
-    println("signupPage: \n" + request.session.data)
-    request.session.data.foreach(println _)
-
-    //TODO: check if there is a cookie for user data if true to to index else go to signup
     Ok(bootstrap.views.html.signup())
-  }
-
-  def signup(request: Request[AnyContent]): Result = {
-    println("data: " + request.body.asJson.get)
-    println("signup: \n" + request.session.data)
-    request.session.data.foreach(println _)
-
-    //TODO: save user in the users list and create an new user object
-    Ok("ok")
-  }
-
-  def login(request: Request[AnyContent]): Result = {
-    println("data: " + ViewModel.read[LoginData](request.body))
-    //TODO Youssef => form should fail, json should work
-    //    val json = request.body.asJson.get
-    //    println(json)
-    //val form = request.body.asFormUrlEncoded.get
-
-    val changedSession = UserController.login(request.session)
-    //TODO: check if the data is from a current user if true go to the index page else return with errors.
-    Ok.withSession(changedSession)
   }
 
   def move(user: User, data: String, request: Request[AnyContent]): Result = {
