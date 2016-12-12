@@ -28,50 +28,43 @@ object UserController {
   }
 
 
-  def signup(request: Request[AnyContent]): Result = {
-    val signUpDataOpt = ViewModel.read[SignUpData](request.body)
-    if (signUpDataOpt.isEmpty)
-      return JSONERROR
-
-    val signUpData = signUpDataOpt.get
-    if (cacheEmail2UserPass.get(signUpData.email).isDefined)
-      return BadRequest("Email already exists")
-
-    cacheEmail2UserPass.update(signUpData.email, (signUpData.username, signUpData.password))
-    doLogin(LoginData(signUpData.email, signUpData.password), request.session)
-  }
-
-  //TODO decide between this and signup
-  def signupFunctional(request: Request[AnyContent]): Result =
-    ViewModel.read[SignUpData](request.body).map(signUpData =>
-      cacheEmail2UserPass.get(signUpData.email).map(_ => BadRequest("Email already exists")).getOrElse {
-        cacheEmail2UserPass.update(signUpData.email, (signUpData.username, signUpData.password))
-        doLogin(LoginData(signUpData.email, signUpData.password), request.session)
-      }).getOrElse(JSONERROR)
+  def signup(request: Request[AnyContent]): Result =
+    ViewModel.read[SignUpData](request.body) match {
+      case None => JSONERROR
+      case Some(signUpData) =>
+        cacheEmail2UserPass.get(signUpData.email) match {
+          case None => BadRequest("Email already exists")
+          case Some(_) =>
+            cacheEmail2UserPass.update(signUpData.email, (signUpData.username, signUpData.password))
+            doLogin(LoginData(signUpData.email, signUpData.password), request.session)
+        }
+    }
 
 
-  def login(request: Request[AnyContent]): Result = {
-    ViewModel.read[LoginData](request.body).map(loginData =>
-      doLogin(loginData, request.session)
-    ).getOrElse(JSONERROR)
-  }
+  def login(request: Request[AnyContent]): Result =
+    ViewModel.read[LoginData](request.body) match {
+      case None => JSONERROR
+      case Some(loginData) => doLogin(loginData, request.session)
+    }
+
 
   private def doLogin(loginData: LoginData, session: Session): Result = {
-    loginUser(loginData).map(user =>
-      Ok.withSession(addUserToSession(session, user))
-    ).getOrElse(BadRequest("Login Failed, Invalid Email-Password combination"))
+    if (cacheEmail2LoggedInUser.get(loginData.email).isDefined)
+      return BadRequest("User already logged in")
+
+    loginUser(loginData) match {
+      case None => BadRequest("Login Failed, Invalid Email-Password combination")
+      case Some(user) => Ok.withSession(addUserToSession(session, user))
+    }
   }
 
+
   private def loginUser(loginData: LoginData): Option[User] = {
-    cacheEmail2UserPass.get(loginData.email).flatMap(userPass => {
-      if (cacheEmail2LoggedInUser.get(loginData.email).isDefined)
-        None
-      else {
-        val user = User(userPass._1, generateToken())
-        cacheEmail2LoggedInUser.put(loginData.email, user)
-        cacheToken2User.put(user.token, user)
-        Some(user)
-      }
+    cacheEmail2UserPass.get(loginData.email).filter(_._2 == loginData.email).map(userPass => {
+      val user = User(userPass._1, generateToken())
+      cacheEmail2LoggedInUser.put(loginData.email, user)
+      cacheToken2User.put(user.token, user)
+      user
     })
   }
 
