@@ -71,11 +71,6 @@ object UserController {
   }
 
   private def loginUser(loginData: LoginData): Option[User] = {
-    cacheEmail2UserPass.get(loginData.email).filter(pair => {
-      val (_, pw) = pair
-      pw == loginData.password
-    })
-
     cacheEmail2UserPass.get(loginData.email).filter(unPair((_, pw) => pw == loginData.password)).map(userPass => {
       val user = User(userPass._1, generateToken(), loginData.email)
       cacheEmail2LoggedInUser.put(loginData.email, user)
