@@ -30,13 +30,12 @@ class Application extends Controller {
   */
 private object LoggedInAction {
   def apply(block: (User, Request[AnyContent]) => Result): Action[AnyContent] = {
-    Action(request => checkRequest(request, block))
+    Action(request => UserController.getUserFromToken(request.session) match {
+      case Some(usr) => block(usr, request)
+      case None => Redirect(routes.Application.signUpPage())
+    })
   }
 
-  private def checkRequest(request: Request[AnyContent], block: (User, Request[AnyContent]) => Result): Result = {
-    val opt: Option[User] = UserController.getUserFromToken(request.session)
-    opt.map(usr => block(usr, request)).getOrElse(Redirect(routes.Application.signUpPage()))
-  }
 }
 
 /**
@@ -44,9 +43,12 @@ private object LoggedInAction {
   */
 private object LoggedOutAction {
 
+
   def apply(block: Request[AnyContent] => Result): Action[AnyContent] =
-    Action(request => UserController.getUserFromToken(request.session)
-      .map(_ => Redirect(routes.Application.index())).getOrElse(block(request)))
+    Action(request => UserController.getUserFromToken(request.session) match {
+      case Some(_) => Redirect(routes.Application.index())
+      case None => block(request)
+    })
 
 
 }
