@@ -15,8 +15,8 @@ object TicTacToeApplication {
   }
 
 
-  def signupPage(request: Request[AnyContent]): Result = {
-    Ok(bootstrap.views.html.signup())
+  def signUpPage(request: Request[AnyContent]): Result = {
+    Ok(bootstrap.views.html.signUp())
   }
 
 }

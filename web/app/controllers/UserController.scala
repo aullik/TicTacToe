@@ -28,7 +28,7 @@ object UserController {
   }
 
 
-  def signup(request: Request[AnyContent]): Result =
+  def signUp(request: Request[AnyContent]): Result =
     ViewModel.read[SignUpData](request.body) match {
       case None => JSONERROR
       case Some(signUpData) =>

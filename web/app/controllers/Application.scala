@@ -12,9 +12,9 @@ class Application extends Controller {
 
   def game = LoggedInAction(GameController.game)
 
-  def signupPage = LoggedOutAction(TicTacToeApplication.signupPage)
+  def signUpPage = LoggedOutAction(TicTacToeApplication.signUpPage)
 
-  def signup = Action(UserController.signup _)
+  def signUp = Action(UserController.signUp _)
 
   def login = Action(UserController.login _)
 
@@ -33,7 +33,7 @@ private object LoggedInAction {
 
   private def checkRequest(request: Request[AnyContent], block: (User, Request[AnyContent]) => Result): Result = {
     val opt: Option[User] = UserController.getUserFromToken(request.session)
-    opt.map(usr => block(usr, request)).getOrElse(Redirect(routes.Application.signupPage()))
+    opt.map(usr => block(usr, request)).getOrElse(Redirect(routes.Application.signUpPage()))
   }
 }
 
