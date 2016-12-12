@@ -20,6 +20,8 @@ class Application extends Controller {
 
   def move(data: String) = LoggedInAction(GameController.move(_, data, _))
 
+  def logout = LoggedInAction(UserController.logout)
+
 
 }
 

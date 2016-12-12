@@ -10,6 +10,8 @@ GET         /index                          controllers.Application.index
 POST        /signup                         controllers.Application.signUp
 POST        /login                          controllers.Application.login
 
+GET         /logout                         controllers.Application.logout
+
 GET         /startGame/:otherPlayer/        controllers.Application.startGame(otherPlayer)
 GET         /tictactoe/                     controllers.Application.game
 

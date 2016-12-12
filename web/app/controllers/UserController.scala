@@ -40,6 +40,7 @@ object UserController {
         }
     }
 
+  def logout(user: User, request: Request[AnyContent]): Result = ???
 
   def login(request: Request[AnyContent]): Result =
     ViewModel.read[LoginData](request.body) match {
