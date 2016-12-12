@@ -8,9 +8,9 @@ class Application extends Controller {
 
   def index = LoggedInAction(TicTacToeApplication.index)
 
-  def startGame(other: String) = LoggedInAction(TicTacToeApplication.startGame(_, _, other))
+  def startGame(other: String) = LoggedInAction(GameController.startGame(_, _, other))
 
-  def game = LoggedInAction(TicTacToeApplication.game)
+  def game = LoggedInAction(GameController.game)
 
   def signupPage = LoggedOutAction(TicTacToeApplication.signupPage)
 
@@ -18,7 +18,7 @@ class Application extends Controller {
 
   def login = Action(UserController.login _)
 
-  def move(data: String) = LoggedInAction(TicTacToeApplication.move(_, data, _))
+  def move(data: String) = LoggedInAction(GameController.move(_, data, _))
 
 
 }
