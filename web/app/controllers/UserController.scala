@@ -2,7 +2,7 @@ package controllers
 
 import play.api.mvc.Results._
 import play.api.mvc.{AnyContent, Request, Result, Session}
-import viewModel.{LoginData, ViewModel}
+import viewModel.{LoginData, SignUpData, ViewModel}
 
 import scala.collection.mutable
 import scala.util.Random
@@ -10,43 +10,80 @@ import scala.util.Random
 /**
   */
 object UserController {
+  private val TOKEN_LENGTH = 32
+  val JSONERROR = BadRequest("JSON did not as expected")
 
-  private val cacheToken2User = Map.empty[String, User]
-  private val cacheUserName2Token = Map.empty[String, String]
+  val TOKEN = "token"
+  val NAME = "name"
+
+  private val cacheToken2User = mutable.Map.empty[String, User]
+
+  //only if logged in
+  private val cacheEmail2LogedInUser = mutable.Map.empty[String, User]
+
+  private val cacheEmail2UserPass = mutable.Map.empty[String, (String, String)]
 
   def getUserFromToken(session: Session): Option[User] = {
-    session.get("name").flatMap(name => session.get("token").flatMap(token => checkUserToken(name, token)))
+    session.get(NAME).flatMap(name => session.get(TOKEN).flatMap(token => checkUserToken(name, token)))
   }
 
 
   def signup(request: Request[AnyContent]): Result = {
-    println("data: " + request.body.asJson.get)
-    println("signup: \n" + request.session.data)
-    request.session.data.foreach(println _)
+    val signUpDataOpt = ViewModel.read[SignUpData](request.body)
+    if (signUpDataOpt.isEmpty)
+      return JSONERROR
 
-    //TODO: save user in the users list and create an new user object
-    Ok("ok")
+    val signUpData = signUpDataOpt.get
+    if (cacheEmail2UserPass.get(signUpData.email).isDefined)
+      return BadRequest("Email already exists")
+
+    cacheEmail2UserPass.update(signUpData.email, (signUpData.username, signUpData.password))
+    doLogin(LoginData(signUpData.email, signUpData.password), request.session)
   }
 
-  def login(request: Request[AnyContent]): Result = {
-    println("data: " + ViewModel.read[LoginData](request.body))
-    //TODO Youssef => form should fail, json should work
-    //    val json = request.body.asJson.get
-    //    println(json)
-    //val form = request.body.asFormUrlEncoded.get
-    val changedSession = request.session
+  //TODO decide between this and signup
+  def signupFunctional(request: Request[AnyContent]): Result =
+    ViewModel.read[SignUpData](request.body).map(signUpData =>
+      cacheEmail2UserPass.get(signUpData.email).map(_ => BadRequest("Email already exists")).getOrElse {
+        cacheEmail2UserPass.update(signUpData.email, (signUpData.username, signUpData.password))
+        doLogin(LoginData(signUpData.email, signUpData.password), request.session)
+      }).getOrElse(JSONERROR)
 
-    //TODO: check if the data is from a current user if true go to the index page else return with errors.
-    Ok.withSession(changedSession)
+
+  def login(request: Request[AnyContent]): Result = {
+    ViewModel.read[LoginData](request.body).map(loginData =>
+      doLogin(loginData, request.session)
+    ).getOrElse(JSONERROR)
+  }
+
+  private def doLogin(loginData: LoginData, session: Session): Result = {
+    loginUser(loginData).map(user =>
+      Ok.withSession(addUserToSession(session, user))
+    ).getOrElse(BadRequest("Login Failed, Invalid Email-Password combination"))
+  }
+
+  private def loginUser(loginData: LoginData): Option[User] = {
+    cacheEmail2UserPass.get(loginData.email).flatMap(userPass => {
+      if (cacheEmail2LogedInUser.get(loginData.email).isDefined)
+        None
+      else {
+        val user = User(userPass._1, generateToken())
+        cacheEmail2LogedInUser.put(loginData.email, user)
+        cacheToken2User.put(user.token, user)
+        Some(user)
+      }
+    })
+  }
+
+  private def addUserToSession(session: Session, usr: User): Session = {
+    val data = session.data.updated(NAME, usr.name).updated(TOKEN, usr.token)
+    session.copy(data = data)
   }
 
 
   private def checkUserToken(username: String, token: String): Option[User] = {
     cacheToken2User.get(token).filter(usr => usr.name == username)
   }
-
-
-  private val TOKEN_LENGTH = 32
 
 
   def getAllActiveUserNames: List[String] = {
