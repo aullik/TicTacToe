@@ -19,7 +19,7 @@ object UserController {
   private val cacheToken2User = mutable.Map.empty[String, User]
 
   //only if logged in
-  private val cacheEmail2LogedInUser = mutable.Map.empty[String, User]
+  private val cacheEmail2LoggedInUser = mutable.Map.empty[String, User]
 
   private val cacheEmail2UserPass = mutable.Map.empty[String, (String, String)]
 
@@ -64,11 +64,11 @@ object UserController {
 
   private def loginUser(loginData: LoginData): Option[User] = {
     cacheEmail2UserPass.get(loginData.email).flatMap(userPass => {
-      if (cacheEmail2LogedInUser.get(loginData.email).isDefined)
+      if (cacheEmail2LoggedInUser.get(loginData.email).isDefined)
         None
       else {
         val user = User(userPass._1, generateToken())
-        cacheEmail2LogedInUser.put(loginData.email, user)
+        cacheEmail2LoggedInUser.put(loginData.email, user)
         cacheToken2User.put(user.token, user)
         Some(user)
       }
@@ -87,7 +87,7 @@ object UserController {
 
 
   def getAllActiveUserNames: List[String] = {
-    List("ysf", "nicolas", "dany", "ysf1", "nicolas1", "dany1", "ysf2", "nicolas2", "dany2", "ysf3", "nicolas3", "dany3")
+    cacheEmail2LoggedInUser.values.toList.map(_.name)
   }
 
   private def generateToken(): String = {
