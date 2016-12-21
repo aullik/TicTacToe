@@ -1,6 +1,30 @@
-//var socket = io.connect('http://' + window.location.hostname + ':3000');
+var socket = io.connect('http://' + window.location.hostname + ':3000');
+
+socket.on('call', function (data) {
+    $('.callRequestTitle').html("call to start a game from : " + data.fromUsername);
+    $('#incomingCallModal').modal({backdrop: 'static', keyboard: false});
+    $('#otherUserModal').val(data.fromUsername);
+});
+socket.on('denyCall', function (data) {
+    alert(data + " deny")
+});
+socket.on('callAccepted', function (data) {
+    window.location.href = 'http://localhost:9001/tictactoe';
+});
+socket.on('acceptCall', function (data) {
+    console.log(data)
+    socket.emit('callAccepted', {
+        fromUsername: data.toUsername,
+        toUsername: data.fromUsername
+    });
+    window.location.href = 'http://localhost:9001/tictactoe';
+});
+
 
 $(document).ready(function () {
+    socket.emit('setUsername', {
+        username: username
+    });
     $('.loginmodal-submit').click(function () {
         var data = $(this).parent().parent().serializeObject();
         $.ajax({
@@ -19,21 +43,37 @@ $(document).ready(function () {
             }
         });
     });
+
+    $('#callButton').click(function () {
+        var otherUser = $(this).parent().children(':last-child').val();
+        socket.emit('call', {
+            fromUsername: username,
+            toUsername: otherUser
+        });
+    });
+    $('.callDeny').click(function () {
+        $('#incomingCallModal').modal('hide');
+        var otherUser = $('#otherUserModal').val();
+        socket.emit('denyCall', {
+            fromUsername: username,
+            toUsername: otherUser
+        });
+    });
+    $('.callAccept').click(function () {
+        $('#incomingCallModal').modal('hide');
+        var otherUser = $('#otherUserModal').val();
+        $.ajax({
+            method: "POST",
+            url: "http://localhost:9001/startGame/" + otherUser,
+            success: function (output) {
+                // output = $.parseJSON(output)
+                console.log(output);
+                socket.emit('acceptCall', {
+                    fromUsername: username,
+                    toUsername: otherUser
+                });
+            }
+        });
+    });
 });
 
-
-$.fn.serializeObject = function () {
-    var o = {};
-    var a = this.serializeArray();
-    $.each(a, function () {
-        if (o[this.name] !== undefined) {
-            if (!o[this.name].push) {
-                o[this.name] = [o[this.name]];
-            }
-            o[this.name].push(this.value || '');
-        } else {
-            o[this.name] = this.value || '';
-        }
-    });
-    return o;
-};

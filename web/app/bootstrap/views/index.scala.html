@@ -1,4 +1,4 @@
-@(users: List[String])
+@(users: List[String], username: String)
 
 @main("Welcome to TicTacToe 3D") {
 
@@ -14,7 +14,8 @@
                         <div class="caption">
                             <p><b>@user</b></p>
                             <p style="float: left"><span>online</span></p>
-                            <button style="float: right"><i class="fa fa-play" aria-hidden="true"></i></button>
+                            <button id="callButton" style="float: right"><i class="fa fa-play" aria-hidden="true"></i></button>
+                            <input type="hidden" id="otherUser" value="@user">
                         </div>
                     </div>
                 }
@@ -35,12 +36,11 @@
                                     <div class="chat-body clearfix">
                                         <div class="header">
                                             <strong class="primary-font">
-                                                Jack Sparrow</strong> <small class="pull-right text-muted">
-                                            <span class="glyphicon glyphicon-time"></span>12 mins ago</small>
+                                                User</strong> <small class="pull-right text-muted">
+                                            <span class="glyphicon glyphicon-time"></span>date</small>
                                         </div>
                                         <p>
-                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare
-                                            dolor, quis ullamcorper ligula sodales.
+                                            text
                                         </p>
                                     </div>
                                 </li>
@@ -50,42 +50,11 @@
                                     <div class="chat-body clearfix">
                                         <div class="header">
                                             <small class=" text-muted"><span class="glyphicon glyphicon-time"></span>
-                                                13 mins ago</small>
-                                            <strong class="pull-right primary-font">Bhaumik Patel</strong>
+                                                date</small>
+                                            <strong class="pull-right primary-font">USER</strong>
                                         </div>
                                         <p>
-                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare
-                                            dolor, quis ullamcorper ligula sodales.
-                                        </p>
-                                    </div>
-                                </li>
-                                <li class="left clearfix"><span class="chat-img pull-left">
-                                    <img src="http://placehold.it/50/55C1E7/fff&text=U" alt="User Avatar" class="img-circle" />
-                                </span>
-                                    <div class="chat-body clearfix">
-                                        <div class="header">
-                                            <strong class="primary-font">
-                                                Jack Sparrow</strong> <small class="pull-right text-muted">
-                                            <span class="glyphicon glyphicon-time"></span>14 mins ago</small>
-                                        </div>
-                                        <p>
-                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare
-                                            dolor, quis ullamcorper ligula sodales.
-                                        </p>
-                                    </div>
-                                </li>
-                                <li class="right clearfix"><span class="chat-img pull-right">
-                                    <img src="http://placehold.it/50/FA6F57/fff&text=ME" alt="User Avatar" class="img-circle" />
-                                </span>
-                                    <div class="chat-body clearfix">
-                                        <div class="header">
-                                            <small class=" text-muted"><span class="glyphicon glyphicon-time"></span>
-                                                15 mins ago</small>
-                                            <strong class="pull-right primary-font">Bhaumik Patel</strong>
-                                        </div>
-                                        <p>
-                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare
-                                            dolor, quis ullamcorper ligula sodales.
+                                            text
                                         </p>
                                     </div>
                                 </li>
@@ -105,4 +74,22 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" tabindex="-1" role="dialog" id="incomingCallModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title callRequestTitle"></h4>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default callDeny">Deny</button>
+                    <button type="button" class="btn btn-primary callAccept">Accept</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+        <input type="hidden" id="otherUserModal" value="">
+    </div> <!-- /.modal -->
+    <script>
+            var username = "@username";
+    </script>
+    <script src="@routes.Assets.at("javascripts/main.js")"></script>
 }

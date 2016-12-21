@@ -1,8 +1,9 @@
 @(status: String, username: String)
 
 @main("Welcome to TicTacToe 3D") {
-    <p id="status">@status</p>
     <div class="row mainRow">
+        <div class="col-xs-10 col-xs-offset-1">
+            <p id="status">@status</p></div>
         <div class="col-xs-10 col-xs-offset-1 mainPart">
             <div class="col-xs-8 allUsers panel panel-primary " id="game">
 
@@ -94,11 +95,11 @@
         </div>
     </div>
     <script>
-            $(document).ready(function () {
-                socket.emit('setUsername', {
-                    username: "user_@username"
-                });
-            })
+            var username = '@username';
+    </script>
+    <script src="@routes.Assets.at("javascripts/main.js")"></script>
+    <script>
+
             !function (Math) {
 
                 "use strict";
@@ -644,10 +645,8 @@
                                 } else {
                                     $('#status').html("Well Played")
                                 }
-                                var otherUser = @username.equals("1") ? "user_2" : "user_1";
                                 socket.emit('move', {
-                                    fromUsername: "user_" +@username,
-                                    toUsername: otherUser,
+                                    fromUsername: '@username',
                                     move: over.id,
                                     status: status,
                                     win: output.win
