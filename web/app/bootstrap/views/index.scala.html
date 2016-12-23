@@ -1,4 +1,4 @@
-@(users: List[String], username: String)
+@()
 
 @main("Welcome to TicTacToe 3D") {
 
@@ -90,6 +90,15 @@
     </div> <!-- /.modal -->
     <script>
             var username = "@username";
+            $.ajax({
+                method: "POST",
+                url: "http://localhost:9001/getUsers",
+                success: function (output) {
+                    // output = $.parseJSON(output)
+                    console.log(output);
+                    //TODO: i have to show username and users
+                }
+            });
     </script>
     <script src="@routes.Assets.at("javascripts/main.js")"></script>
 }

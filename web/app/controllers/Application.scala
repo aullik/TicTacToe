@@ -22,7 +22,14 @@ class Application extends Controller {
 
   def logout = LoggedInAction(UserController.logout)
 
+  def getUsers = LoggedInAction(UserController.getUsers)
 
+  def selectFramework(framework: String) = {
+    //TODO:  Framworks can be :
+    /*polymerjs
+      angular2js
+      bootstrap*/
+  }
 }
 
 /**

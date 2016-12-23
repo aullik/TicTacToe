@@ -27,6 +27,10 @@ object UserController {
     session.get(NAME).flatMap(name => session.get(TOKEN).flatMap(token => checkUserToken(name, token)))
   }
 
+  def getUsers() = {
+    //TODO: get users names.
+    // array in the form  [{username: this user name},{users: all users }]
+  }
 
   def signUp(request: Request[AnyContent]): Result =
     ViewModel.read[SignUpData](request.body) match {

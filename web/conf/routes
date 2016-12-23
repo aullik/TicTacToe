@@ -3,21 +3,25 @@
 # ~~~~
 
 # Home page
-GET         /                              controllers.Application.signUpPage
-GET         /index                         controllers.Application.index
+GET         /                                  controllers.Application.signUpPage
+GET         /index                             controllers.Application.index
 #GET        /tictactoe                controllers.Application.tictactoe
 
-POST        /signup                        controllers.Application.signUp
-POST        /login                         controllers.Application.login
+POST        /signup                            controllers.Application.signUp
+POST        /login                             controllers.Application.login
 
-GET         /logout                        controllers.Application.logout
+POST        /users                             controllers.Application.getUsers()
 
-POST        /startGame/:otherPlayer        controllers.Application.startGame(otherPlayer)
-GET         /tictactoe                     controllers.Application.game
+POST        /selectFramework/:framework        controllers.Application.selectFramework(framework)
 
-POST        /move/:data                    controllers.Application.move(data)
+GET         /logout                            controllers.Application.logout
+
+POST        /startGame/:otherPlayer            controllers.Application.startGame(otherPlayer)
+GET         /tictactoe                         controllers.Application.game
+
+POST        /move/:data                        controllers.Application.move(data)
 
 # Map static resources from the /public folder to the /assets URL path
-GET         /assets/*file                  controllers.Assets.at(path="/public", file)
+GET         /assets/*file                      controllers.Assets.at(path="/public", file)
 
     
