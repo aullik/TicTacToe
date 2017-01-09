@@ -1,15 +1,14 @@
-import { browser, element, by } from 'protractor';
+import { Tictactoe3DPage } from './app.po';
 
-describe('QuickStart E2E Tests', function () {
+describe('tictactoe3-d App', function() {
+  let page: Tictactoe3DPage;
 
-  let expectedMsg = 'Hello Angular';
-
-  beforeEach(function () {
-    browser.get('');
+  beforeEach(() => {
+    page = new Tictactoe3DPage();
   });
 
-  it('should display: ' + expectedMsg, function () {
-    expect(element(by.css('h1')).getText()).toEqual(expectedMsg);
+  it('should display message saying app works', () => {
+    page.navigateTo();
+    expect(page.getParagraphText()).toEqual('app works!');
   });
-
 });

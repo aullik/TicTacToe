@@ -9,7 +9,7 @@ import play.api.mvc._
 object TicTacToeApplication {
 
 
-  def index(request: Request[AnyContent]): Result = {
+  def index(user: User, request: Request[AnyContent]): Result = {
     Ok(bootstrap.views.html.index())
   }
 
