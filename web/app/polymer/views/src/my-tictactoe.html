@@ -12,26 +12,151 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="my-tictactoe">
-  <template>
+    <template>
     <style include="shared-styles">
       :host {
         display: block;
 
         padding: 10px;
       }
+      .content{
+        height: 80%;
+        float: left;
+      }
+      .paddingCenter{
+
+        padding: 11px;
+        text-align: center;
+      }
+      paper-button.green {
+        background-color: var(--paper-green-500);
+        color: white;
+      }
+      .heading{
+        height: 100%;
+        width: calc(100% - 70px);
+        text-align: center;
+        float: left;
+        display: flex;
+      }
+      .imageDiv img{
+        width: 60px;
+        height: 100%;
+        float: left;
+      }
+      .imageDiv{    
+        width: calc(100% - 40px);
+        height: 60px;
+        float: left;
+      }
+      .heading span{margin: auto;}
+      #usersCard{
+        width: 240px;
+        margin-left: 3px;
+      }
+      .actions{
+        float: left;
+        width: 40px;
+        height: 60px;
+        display: flex;
+      }
+      .usersContainerDiv{
+        height: 100%;
+        margin: auto; 
+        overflow-y: auto;
+        width: 100%;
+      }
+      #game{
+        width: 100%;
+        height: 100%;
+        margin: 0;
+      }
+
+canvas {
+    width: 100%;
+    height: 100%;
+    margin: auto;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #111;
+}
     </style>
 
-    <div class="card">
-      <div class="circle">1</div>
-      <h1>View One</h1>
-      <p>Ut labores minimum atomorum pro. Laudem tibique ut has.
-      <p>Lorem ipsum dolor sit amet, per in nusquam nominavi periculis, sit elit oportere ea.Lorem ipsum dolor sit amet, per in nusquam nominavi periculis, sit elit oportere ea.Cu mei vide viris gloriatur, at populo eripuit sit.</p>
+    <!--my-socket id="socketIO" server="http://localhost:3000/"></my-socket>-->
+    
+    <paper-card class="content" style="width:60%;margin-left: 5%;display: flex">
+      <div class="usersContainerDiv" id="gameContainer">
+          <div class="col-xs-8 allUsers panel panel-primary " id="game">
+
+          </div>
+      </div>
+    </paper-card>
+    <div class="content" style="width:25%">
+      <div class="panel panel-primary" style=" height: 100%;
+      border-radius: 0 4px 4px 0;
+      ">
+      <div class="panel-heading" id="accordion">
+        <i class="fa fa-commenting-o" aria-hidden="true"></i> Chat
+      </div>
+      <div class="panel-collapse" style="height: calc(100% - 103px);">
+        <div class="panel-body">
+          <ul class="chat">
+            <li class="left clearfix"><span class="chat-img pull-left">
+              <img src="http://placehold.it/50/55C1E7/fff&text=U" alt="User Avatar" class="img-circle" />
+            </span>
+            <div class="chat-body clearfix">
+              <div class="header">
+                <strong class="primary-font">
+                  User</strong> <small class="pull-right text-muted">
+                  <span class="glyphicon glyphicon-time"></span>date</small>
+                </div>
+                <p>
+                  text
+                </p>
+              </div>
+            </li>
+            <li class="right clearfix"><span class="chat-img pull-right">
+              <img src="http://placehold.it/50/FA6F57/fff&text=ME" alt="User Avatar" class="img-circle" />
+            </span>
+            <div class="chat-body clearfix">
+              <div class="header">
+                <small class=" text-muted"><span class="glyphicon glyphicon-time"></span>
+                  date</small>
+                  <strong class="pull-right primary-font">USER</strong>
+                </div>
+                <p>
+                  text
+                </p>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div class="panel-footer">
+          <div class="input-group">
+            <input id="btn-input" type="text" class="form-control input-sm" placeholder="Type your message here..." />
+            <span class="input-group-btn">
+              <button class="btn btn-warning btn-sm" id="btn-chat">
+                Send</button>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </template>
-
-  <script>
-    Polymer({
-      is: 'my-tictactoe'
-    });
-  </script>
+    <script>
+        Polymer({
+            is: 'my-tictactoe',
+            ready: function() {
+                var s = document.createElement("script");
+                s.type = "text/javascript";
+                s.src = "/play.js";
+                this.$.gameContainer.appendChild(s);
+            }
+        });
+    </script>
 </dom-module>

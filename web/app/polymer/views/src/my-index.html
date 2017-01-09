@@ -69,7 +69,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     </style>
 
-    <my-socket id="socketIO" server="http://localhost:3000/"></my-socket>
+    <!--my-socket id="socketIO" server="http://localhost:3000/"></my-socket>-->
     
     <paper-card class="content" style="width:60%;margin-left: 5%;display: flex">
       <div class="usersContainerDiv">
@@ -162,7 +162,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       },
       ready: function(){
-        this.$.socketIO.emit('setUsername', {
+        socket.emit('setUsername', {
             username: this.username
         });
       },
