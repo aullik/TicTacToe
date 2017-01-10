@@ -1,0 +1,102 @@
+@()
+
+@main("Welcome to TicTacToe 3D") {
+
+   <div class="row mainRow">
+      <div class="col-xs-10 col-xs-offset-1 mainPart">
+         <div class="col-xs-8 allUsers panel panel-primary">
+            <h3>Users</h3>
+            <div class="thumbnail">
+               <div class="userPic">
+                  <img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMTcxIiBoZWlnaHQ9IjE4MCIgdmlld0JveD0iMCAwIDE3MSAxODAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjwhLS0KU291cmNlIFVSTDogaG9sZGVyLmpzLzEwMCV4MTgwCkNyZWF0ZWQgd2l0aCBIb2xkZXIuanMgMi42LjAuCkxlYXJuIG1vcmUgYXQgaHR0cDovL2hvbGRlcmpzLmNvbQooYykgMjAxMi0yMDE1IEl2YW4gTWFsb3BpbnNreSAtIGh0dHA6Ly9pbXNreS5jbwotLT48ZGVmcz48c3R5bGUgdHlwZT0idGV4dC9jc3MiPjwhW0NEQVRBWyNob2xkZXJfMTU4NmVkYzRmMDYgdGV4dCB7IGZpbGw6I0FBQUFBQTtmb250LXdlaWdodDpib2xkO2ZvbnQtZmFtaWx5OkFyaWFsLCBIZWx2ZXRpY2EsIE9wZW4gU2Fucywgc2Fucy1zZXJpZiwgbW9ub3NwYWNlO2ZvbnQtc2l6ZToxMHB0IH0gXV0+PC9zdHlsZT48L2RlZnM+PGcgaWQ9ImhvbGRlcl8xNTg2ZWRjNGYwNiI+PHJlY3Qgd2lkdGg9IjE3MSIgaGVpZ2h0PSIxODAiIGZpbGw9IiNFRUVFRUUiLz48Zz48dGV4dCB4PSI2MSIgeT0iOTQuNSI+MTcxeDE4MDwvdGV4dD48L2c+PC9nPjwvc3ZnPg==" alt="...">
+               </div>
+               <div class="caption">
+                  <p><b></b></p>
+                  <p style="float: left"><span>online</span></p>
+                  <button id="callButton" style="float: right"><i class="fa fa-play" aria-hidden="true"></i></button>
+                  <input type="hidden" id="otherUser" value="user">
+               </div>
+            </div>
+         </div>
+         <div class="col-xs-3 groupChatBar">
+            <div class="panel panel-primary" style=" height: 100%;
+               border-radius: 0 4px 4px 0;
+            ">
+               <div class="panel-heading" id="accordion">
+                  <i class="fa fa-commenting-o" aria-hidden="true"></i> Chat
+               </div>
+               <div class="panel-collapse" style="height: calc(100% - 103px);">
+                  <div class="panel-body">
+                     <ul class="chat">
+                        <li class="left clearfix"><span class="chat-img pull-left">
+                           <img src="http://placehold.it/50/55C1E7/fff&text=U" alt="User Avatar" class="img-circle" />
+                        </span>
+                           <div class="chat-body clearfix">
+                              <div class="header">
+                                 <strong class="primary-font">
+                                    User</strong> <small class="pull-right text-muted">
+                                 <span class="glyphicon glyphicon-time"></span>date</small>
+                              </div>
+                              <p>
+                                 text
+                              </p>
+                           </div>
+                        </li>
+                        <li class="right clearfix"><span class="chat-img pull-right">
+                           <img src="http://placehold.it/50/FA6F57/fff&text=ME" alt="User Avatar" class="img-circle" />
+                        </span>
+                           <div class="chat-body clearfix">
+                              <div class="header">
+                                 <small class=" text-muted"><span class="glyphicon glyphicon-time"></span>
+                                    date</small>
+                                 <strong class="pull-right primary-font">USER</strong>
+                              </div>
+                              <p>
+                                 text
+                              </p>
+                           </div>
+                        </li>
+                     </ul>
+                  </div>
+                  <div class="panel-footer">
+                     <div class="input-group">
+                        <input id="btn-input" type="text" class="form-control input-sm" placeholder="Type your message here..." />
+                        <span class="input-group-btn">
+                           <button class="btn btn-warning btn-sm" id="btn-chat">
+                              Send</button>
+                        </span>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <div class="modal fade" tabindex="-1" role="dialog" id="incomingCallModal">
+      <div class="modal-dialog" role="document">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h4 class="modal-title callRequestTitle"></h4>
+            </div>
+            <div class="modal-footer">
+               <button type="button" class="btn btn-default callDeny">Deny</button>
+               <button type="button" class="btn btn-primary callAccept">Accept</button>
+            </div>
+         </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+      <input type="hidden" id="otherUserModal" value="">
+   </div> <!-- /.modal -->
+   <script>
+         var username = "username";
+         $.ajax({
+            method: "POST",
+            url: "http://localhost:9001/getUsers",
+            success: function (output) {
+               // output = $.parseJSON(output)
+               console.log(output);
+               //TODO: i have to show username and users
+            }
+         });
+   </script>
+   <script src="@routes.Assets.at("../../../public/javascripts/main.js")"></script>
+}
