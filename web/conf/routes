@@ -24,6 +24,12 @@ POST        /move/:data                    controllers.Application.move(data)
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file                  controllers.Assets.at(path="/public", file)
 #GET         /polymer/*file                 controllers.Assets.at(path="/app/polymer/views/src", file)
+
+# Map static resources from the /public folder to the /assets URL path
+
+GET         /assets/webjars/*file          controllers.WebJarAssets.at(file)
+GET         /webjars/*file                 controllers.WebJarAssets.at(file)
+
 # Get Polymer recources
 GET         /polymer/*element              controllers.Application.polymer(element)
 

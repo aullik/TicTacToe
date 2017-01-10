@@ -37,7 +37,7 @@ class Application extends Controller {
 
   def getPolymer(element: String)(request: Request[AnyContent]): Result = {
     try {
-      val elementClass = Class.forName("polymer.views.html." + element)
+      val elementClass = Class.forName("views.html.polymer." + element)
       val htmlRender = elementClass.getMethod("render")
       val ret = htmlRender.invoke(null).toString
       Ok(ret)
