@@ -10,12 +10,12 @@ object TicTacToeApplication {
 
 
   def index(user: User, request: Request[AnyContent]): Result = {
-    Ok(bootstrap.views.html.index())
+    Ok(polymer.views.html.index())
   }
 
 
   def signUpPage(request: Request[AnyContent]): Result = {
-    Ok(bootstrap.views.html.signup())
+    Ok(polymer.views.html.index())
   }
 
 }

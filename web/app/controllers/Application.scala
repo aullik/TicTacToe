@@ -1,5 +1,6 @@
 package controllers
 
+import play.api.i18n.{Messages, MessagesApi}
 import play.api.mvc.Results._
 import play.api.mvc._
 
@@ -30,6 +31,19 @@ class Application extends Controller {
       angular2js
       bootstrap*/
   }
+
+  def polymer(element: String)(request: Request[AnyContent]): Result = {
+    try {
+      val elementClass = Class.forName("polymer.views.html." + element)
+      val htmlRender = elementClass.getMethod("render")
+      val ret = htmlRender.invoke(null).toString
+      Ok(ret)
+    } catch {
+      case e: ClassNotFoundException => BadRequest("Class not found")
+      case e: NoSuchMethodException => BadRequest("NoSuchMethodException")
+      case e: Exception => BadRequest
+    }
+  }
 }
 
 /**
@@ -43,6 +57,17 @@ private object LoggedInAction {
     })
   }
 
+}
+
+private object UnAuthenticatedGet extends play.api.mvc.Results {
+
+  def apply(messagesApi: MessagesApi, block: (Request[AnyContent]) => Result): Action[AnyContent] = apply(messagesApi, (r, m) => block(r))
+
+  def apply(messagesApi: MessagesApi, block: (Request[AnyContent], Messages) => Result): Action[AnyContent] = {
+    Action(request => {
+      block(request, messagesApi.preferred(request))
+    })
+  }
 }
 
 /**
