@@ -12,6 +12,7 @@ lazy val commonSettings = Seq(
     // "javax.inject" % "javax.inject" % "1",
     "junit" % "junit" % "4.12",
     "log4j" % "log4j" % "1.2.17",
+    "org.json4s" %% "json4s-jackson" % "3.4.2",
     "com.google.inject" % "guice" % "3.0",
     "com.fasterxml.jackson.core" % "jackson-databind" % "2.6.3",
     "org.clapper" %% "grizzled-slf4j" % "1.0.2",
@@ -30,7 +31,7 @@ lazy val `web` = (project in file("web"))
   .settings(commonSettings)
   .settings(name := "TicTacToe-web")
   .enablePlugins(PlayScala)
-//.dependsOn(`backend`)
+  .dependsOn(`backend`)
 
 lazy val `backend` = (project in file("backend"))
   .settings(commonSettings)
