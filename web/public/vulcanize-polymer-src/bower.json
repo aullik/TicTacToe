@@ -1,0 +1,21 @@
+{
+  "name": "public",
+
+  "dependencies": {
+    "polymer": null,
+    "paper-button": null,
+    "paper-input": null,
+    "iron-form": null,
+    "gold-email-input": null,
+    "iron-elements": null,
+    "neon-elements": null,
+    "page": null,
+    "paper-elements": null,
+    "platinum-elements": null,
+    "vaadin-grid": null,
+    "paper-menu-button": null
+  },
+  "devDependencies": {
+    "web-component-tester": null
+  }
+}

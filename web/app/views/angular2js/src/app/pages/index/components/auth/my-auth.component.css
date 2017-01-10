@@ -1,0 +1,17 @@
+.inputContainer {
+    display: block;
+    height: 45px;
+}
+
+/deep/ md-tab-group .md-tab-header {
+    background-color: #03A9F4;
+}
+
+/deep/ md-tab-group .md-tab-label {
+    width: 50%;
+}
+
+/deep/ md-tab-group .md-tab-body-wrapper {
+    padding: 40px;
+    height: 75%;
+}

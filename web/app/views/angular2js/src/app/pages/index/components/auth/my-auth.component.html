@@ -1,0 +1,58 @@
+<md-tab-group style="height:100%;">
+    <md-tab label="Log in">
+        <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+            <div class="form-group">
+                <md-input-container class="inputContainer">
+                    <input md-input placeholder="Email" type="email" required [(ngModel)]="loginModel.email" name="loginEmail" #loginEmail="ngModel">
+                </md-input-container>
+                <div style="margin-bottom: 5px;" [hidden]="loginEmail.valid || loginEmail.pristine" class="alert alert-danger">
+                    Email is required
+                </div>
+            </div>
+            <div class="form-group">
+                <md-input-container class="inputContainer">
+                    <input minlength="5" md-input placeholder="Password" type="password" required [(ngModel)]="loginModel.password" name="loginPassword" #loginPassword="ngModel">
+                </md-input-container>
+                <div style="margin-bottom: 5px;" [hidden]="loginPassword.valid || loginPassword.pristine" class="alert alert-danger">
+                    Password is not correct
+                </div>
+            </div>
+            <button type="button" (click)="submitLogin()" md-raised-button [disabled]="!loginForm.form.valid">Submit</button>
+            <img *ngIf="loginModel.loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="
+            />
+
+        </form>
+    </md-tab>
+    <md-tab label="Sign up">
+        <form (ngSubmit)="onSubmit()" #signupForm="ngForm">
+            <div class="form-group">
+                <md-input-container class="inputContainer">
+                    <input md-input placeholder="Email" type="email" required [(ngModel)]="signUpModel.email" name="signupEmail" #signupEmail="ngModel">
+                </md-input-container>
+                <div style="margin-bottom: 5px;" [hidden]="signupEmail.valid || signupEmail.pristine" class="alert alert-danger">
+                    Email is required
+                </div>
+            </div>
+            <div class="form-group">
+                <md-input-container class="inputContainer">
+                    <input md-input placeholder="Username" type="text" required [(ngModel)]="signUpModel.username" name="signupUsername" #signupUsername="ngModel">
+                </md-input-container>
+                <div style="margin-bottom: 5px;" [hidden]="signupUsername.valid || signupUsername.pristine" class="alert alert-danger">
+                    Username is required
+                </div>
+            </div>
+            <div class="form-group">
+                <md-input-container class="inputContainer">
+                    <input md-input minlength="5" placeholder="Password" type="password" required [(ngModel)]="signUpModel.password" name="signupPassword" #signupPassword="ngModel">
+                </md-input-container>
+                <div style="margin-bottom: 5px;" [hidden]="signupPassword.valid || signupPassword.pristine" class="alert alert-danger">
+                    Password is not correct
+                </div>
+            </div>
+            <button type="button" (click)="submitSignup()" md-raised-button [disabled]="!signupForm.form.valid">Submit</button>
+            <img *ngIf="signUpModel.loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="
+            />
+
+        </form>
+    </md-tab>
+</md-tab-group>
