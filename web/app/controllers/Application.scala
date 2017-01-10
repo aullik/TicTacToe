@@ -32,7 +32,10 @@ class Application extends Controller {
       bootstrap*/
   }
 
-  def polymer(element: String)(request: Request[AnyContent]): Result = {
+
+  def polymer(element: String) = Action(getPolymer(element) _)
+
+  def getPolymer(element: String)(request: Request[AnyContent]): Result = {
     try {
       val elementClass = Class.forName("polymer.views.html." + element)
       val htmlRender = elementClass.getMethod("render")
