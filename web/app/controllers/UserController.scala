@@ -27,9 +27,10 @@ object UserController {
     session.get(NAME).flatMap(name => session.get(TOKEN).flatMap(token => checkUserToken(name, token)))
   }
 
-  def getUsers() = {
+  def getUsers(user: User, request: Request[AnyContent]): Result = {
     //TODO: get users names.
     // array in the form  [{username: this user name},{users: all users }]
+    Ok("");
   }
 
   def signUp(request: Request[AnyContent]): Result =

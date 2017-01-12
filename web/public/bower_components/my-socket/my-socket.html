@@ -1,0 +1,53 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<!--<link rel="import" href="/bower_components/paper-ripple/paper-ripple.html">-->
+<!--<link rel="import" href="/bower_components/paper-material/paper-material.html">-->
+<script src="../../js/socket.io-1.3.5.js"></script>
+
+<dom-module name="my-socket" id="my-socket">
+    <!--<style></style>-->
+
+    <!--<template>-->
+    <!--</template>-->
+
+    <script>
+        var socket;
+        Polymer({
+            is: 'my-socket',
+            properties: {
+                server: {
+                    type: String,
+                    value: undefined,
+                    notify: true,
+                    reflectToAttribute: true
+                },
+                username:{
+                    type:String,
+                    value:undefined,
+                    notify: true,
+                    reflectToAttribute: true
+                }
+            },
+//            listeners: {
+//                'btn.tap': '_tapListener',
+//                'btn.down': '_downListener',
+//                'btn.up': '_upListener',
+//                'click': '_clickListener',
+//                'click': '_manageRipple'
+//            },
+            /******************************* READY *********************************/
+            ready: function(){
+                socket = io.connect(this.server);
+                socket.on('connect', function (data) {
+                console.log("socket connected");
+                    socket.emit('my other event', { my: 'data' });
+                });
+                console.log("Socket-io READY");
+            },
+            emit: function(url, data){
+                socket.emit(url, data);
+            },
+
+        });
+    </script>
+
+</dom-module>

@@ -1,0 +1,100 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="my-signup">
+    <template>
+        <style include="shared-styles">
+        :host {
+            display: block;
+            padding: 10px;
+        }
+
+        paper-tabs, paper-toolbar {
+            background-color: #4285f4; /*var(--paper-blue-900);*/
+            color: #fff;
+        }
+
+        .content {
+            display: inline-block;
+            width: 49%;
+            margin-right: 1%;
+        }
+
+        .paddingCenter {
+
+            padding: 11px;
+            text-align: center;
+        }
+
+        .mainContent {
+            display: flex;
+        }
+
+        .formContainer {
+            padding: 50px;
+        }
+        </style>
+        <div class="mainContent">
+            <paper-card class="content paddingCenter" heading="TicTacToe 3D">
+        3D tic-tac-toe, also known by the trade name <strong> Qubic </strong>, is a board game.
+                It is similar in concept to traditional
+                <a href="https://en.wikipedia.org/wiki/Tic-tac-toe">tic-tac-toe </a>
+                but is played in a cubical array of cells.
+                Players take turns placing their markers in blank cells in the array.
+                The first player to achieve three of their own markers in a row wins.
+                The winning row can be horizontal, vertical, or diagonal on a single board as in regular tic-tac-toe,
+                or vertically in a column, or a diagonal line through four boards.
+                <br >
+                <img src="/images/tictactoe.jpg" alt="TicTacToe 3D">
+      </paper-card>
+            <paper-card class="content">
+
+                <paper-tabs selected="{{selected}}">
+                    <paper-tab>Log in</paper-tab>
+                    <paper-tab>Sign up</paper-tab>
+                </paper-tabs>
+                <iron-pages selected="{{selected}}">
+                    <div class="formContainer">
+                        <form is="iron-form" method="post" id="signInForm" action="http://localhost:9001/login" content-type="application/json">
+                            <gold-email-input name="email" label="Email" auto-validate required></gold-email-input>
+                            <paper-input name="password" label="Password" type="password" minlength="4" required></paper-input>
+                            <paper-button raised onclick="_submit(event)">Submit</paper-button>
+                        </form>
+                    </div>
+                    <div class="formContainer">
+                        <form is="iron-form" method="post" id="signUpForm" action="http://localhost:9001/signup" content-type="application/json">
+                            <gold-email-input name="email" label="Email" auto-validate required></gold-email-input>
+                            <paper-input name="username" label="Username" type="text" required></paper-input>
+                            <paper-input name="password" label="Password" type="password" minlength="4" required></paper-input>
+                            <paper-button raised onclick="_submit(event)">Submit</paper-button>
+                        </form>
+                    </div>
+                    <script>
+            function _submit(event) {
+                Polymer.dom(event).localTarget.parentElement.submit();
+            }
+          </script>
+                </iron-pages>
+            </paper-card>
+        </div>
+
+    </template>
+
+    <script>
+        Polymer({
+            is: 'my-signup',
+            properties: {
+                selected: {
+                    type: Number,
+                    value: 0
+                },
+            },
+            _submit: function (event) {
+                console.log(21)
+                //Polymer.dom(event).localTarget.parentElement.submit();
+                console.log(document.getElementById('loginForm'))
+            }
+
+        });
+</script>
+</dom-module>

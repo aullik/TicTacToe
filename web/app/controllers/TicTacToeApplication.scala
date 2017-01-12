@@ -9,13 +9,13 @@ import play.api.mvc._
 object TicTacToeApplication {
 
 
-  def index(request: Request[AnyContent]): Result = {
-    Ok(bootstrap.views.html.index())
+  def index(user: User, request: Request[AnyContent]): Result = {
+    Ok(views.html.polymer.index())
   }
 
 
   def signUpPage(request: Request[AnyContent]): Result = {
-    Ok(bootstrap.views.html.signup())
+    Ok(views.html.polymer.index())
   }
 
 }
