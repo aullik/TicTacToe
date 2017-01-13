@@ -26,3 +26,6 @@ GET         /assets/*file                  controllers.Assets.at(path="/public",
 #GET         /polymer/*file                 controllers.Assets.at(path="/app/polymer/views/src", file)
 # Get Polymer recources
 GET         /polymer/*element              controllers.Application.polymer(element)
+
+# Socket
+GET         /socket/:player                controllers.WebSocketsControl.socket(player: String)
