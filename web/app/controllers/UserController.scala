@@ -46,7 +46,7 @@ object UserController {
             BadRequest("Email already exists")
           case None =>
             cacheEmail2UserPass.update(signUpData.email, (signUpData.username, signUpData.password))
-            doLogin(LoginData(signUpData.email, signUpData.password), request.session)
+            doLogin(LoginData(signUpData.email, signUpData.password, signUpData.rememberMe), request.session)
         }
     }
 

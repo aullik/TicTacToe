@@ -1,18 +1,16 @@
 package viewModel
 
-import play.api.libs.json.Format
-import viewModel.ViewModel.Path
-import play.api.libs.functional.syntax._
+import play.api.libs.json.Json
 
 
 /**
   */
-case class SignUpData(email: String, username: String, password: String)
+case class SignUpData(email: String,
+                      username: String,
+                      password: String,
+                      passwordRepetition: String,
+                      rememberMe: Boolean)
 
 object SignUpData {
-  implicit val format: Format[SignUpData] = (
-    Path[String]("email") and
-      Path[String]("username") and
-      Path[String]("password")
-    ).apply(SignUpData.apply, unlift(SignUpData.unapply))
+  implicit val signUpForm = Json.format[SignUpData]
 }
