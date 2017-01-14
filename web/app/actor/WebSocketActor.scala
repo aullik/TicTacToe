@@ -47,7 +47,7 @@ class WebSocketActor(out: ActorRef, user: User) extends Actor with Logging {
   def handleMsg(msg: String): Unit = {
     val jsonValue = parse(msg)
     try {
-      case "move" =>
+      //case "move" =>
       (jsonValue \ "msgType").values match {
         case _ => throw new IllegalArgumentException("Invalid message")
       }
