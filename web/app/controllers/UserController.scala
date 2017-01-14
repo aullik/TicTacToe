@@ -11,7 +11,7 @@ import scala.util.Random
   */
 object UserController {
   private val TOKEN_LENGTH = 32
-  val JSONERROR = BadRequest("JSON did not as expected")
+  val JSONERROR = BadRequest("JSON not as expected")
 
   val TOKEN = "token"
   val NAME = "name"
@@ -45,7 +45,7 @@ object UserController {
           case Some(_) =>
             BadRequest("Email already exists")
           case None =>
-            cacheEmail2UserPass.update(signUpData.email, (signUpData.username, signUpData.password))
+            cacheEmail2UserPass.update(signUpData.email, (signUpData.name, signUpData.password))
             doLogin(LoginData(signUpData.email, signUpData.password, signUpData.rememberMe), request.session)
         }
     }
