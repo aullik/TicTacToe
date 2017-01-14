@@ -54,7 +54,7 @@ object UserController {
     cacheToken2User.get(user.token).filter(_.name == user.name)
       .map(usr => cacheEmail2LoggedInUser.remove(usr.email)) match {
       case None => BadRequest("Not logged in")
-      case Some(_) => Redirect(routes.Application.signUpPage())
+      case Some(_) => Redirect(routes.Application.signUpPage()).withNewSession
     }
 
 
