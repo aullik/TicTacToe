@@ -10,8 +10,8 @@ import tictactoe.persistence.{DevelopmentPersistenceEnvironment, PersistenceEnvi
 class TicTacToeModule extends AbstractModule with ScalaModule {
 
   def configure(): Unit = {
+    bind[TicTacToeServer].to[TicTacToeServer]
     bind[PersistenceEnvironment].toInstance(DevelopmentPersistenceEnvironment)
-    bind[TicTacToeServer.type].toInstance(TicTacToeServer)
   }
 
 

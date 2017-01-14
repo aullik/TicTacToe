@@ -8,7 +8,8 @@ import tictactoe.actor.user.UserControllerActor
 import tictactoe.exceptions.ShouldBeInjectedException
 import tictactoe.persistence.PersistenceEnvironment
 
-object TicTacToeServer {
+@Singleton
+class TicTacToeServer private() {
 
   Locale.setDefault(Locale.GERMAN)
 
