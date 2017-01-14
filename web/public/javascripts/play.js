@@ -2,7 +2,8 @@
 WEB_SOCKET_SWF_LOCATION = "/javascript/WebSocketMain.swf";
 
 // Write your code in the same way as for native WebSocket:
-//var socket = new WebSocket("ws://localhost:9000/socket/y@h.de");
+//FIXME fix email
+var socket = new WebSocket("ws://" + window.location.host + "/socket/test@email.de");
 
 !function (Math) {
 
@@ -532,18 +533,18 @@ WEB_SOCKET_SWF_LOCATION = "/javascript/WebSocketMain.swf";
     }
 
     // ---- click sphere ----
-/*
+    /*
 
-    socket.on('move', function (data) {
-        console.log(JSON.stringify(data))
-        var sphere = fSphere(data.move)
-        sphere.s = machine
-        if (data.status !== "") $('#status').html(data.status)
-        if (data.win == "1") {
-            end = machine
-            manageEnd()
-        }
-    });*/
+     socket.on('move', function (data) {
+     console.log(JSON.stringify(data))
+     var sphere = fSphere(data.move)
+     sphere.s = machine
+     if (data.status !== "") $('#status').html(data.status)
+     if (data.win == "1") {
+     end = machine
+     manageEnd()
+     }
+     });*/
     pointer.click = function () {
         if (end) {
             reinit();
@@ -574,13 +575,14 @@ WEB_SOCKET_SWF_LOCATION = "/javascript/WebSocketMain.swf";
                         status = "";
                     } else {
                         $('#status').html("Well Played")
-                    }/*
-                    socket.emit('move', {
-                        fromUsername: '@username',
-                        move: over.id,
-                        status: status,
-                        win: output.win
-                    });*/
+                    }
+                    /*
+                     socket.emit('move', {
+                     fromUsername: '@username',
+                     move: over.id,
+                     status: status,
+                     win: output.win
+                     });*/
                 },
                 error: function (request, status, error) {
                     console.log(error)

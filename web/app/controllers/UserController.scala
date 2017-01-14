@@ -28,7 +28,7 @@ object UserController {
   }
 
   def getUserFromEmail(email: String): Option[User] = {
-    cacheToken2User.get(email)
+    cacheEmail2LoggedInUser.get(email)
   }
 
   def getUsers(user: User, request: Request[AnyContent]): Result = {
