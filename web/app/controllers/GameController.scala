@@ -43,7 +43,7 @@ object GameController {
     val gameopt = cacheUserName2Game.get(user.name)
 
     gameopt.map(game => {
-      Ok(views.html.bootstrap.tictactoe(game.getController.getStatus, user.name))
+      Ok(views.html.bootstrap.tictactoe())
     }).getOrElse(BadRequest("No game for user"))
   }
 

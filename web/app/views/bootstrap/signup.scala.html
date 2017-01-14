@@ -24,9 +24,8 @@
                 <li role="presentation"><a href="#signUp" data-toggle="tab">Sign Up</a></li>
             </ul>
             <div class="tab-content">
-                <div class="tab-pane loginmodal-container active" id="login" >
-                    <h1>Login and start playing</h1><br>
-                    <form method="POST" action='@routes.Application.login' Content-type="application/json" id="loginForm">
+                <div class="tab-pane loginmodal-container active" id="login">
+                    <form method="POST" action='@routes.Application.login()' Content-type="application/json" id="loginForm">
                         <div class="form-group">
                             <label for="email">Email address</label>
                             <input type="email" class="form-control" name="email" id="email" placeholder="Enter email" value="">
@@ -34,6 +33,10 @@
                         <div class="form-group">
                             <label for="password">Password</label>
                             <input type="password" class="form-control" name="password" id="password" placeholder="Password">
+                        </div>
+                        <div class="form-group">
+                            <label for="rememberMe">Remember me</label>
+                            <input style="float: left;margin: 9px;" type="checkBox" name="rememberMe" id="rememberMe">
                         </div>
                         <div class="btn-group">
                             <input type="button" class="login loginmodal-submit" value="Submit" />
@@ -41,19 +44,26 @@
                     </form>
                 </div>
                 <div class="tab-pane loginmodal-container" id="signUp">
-                    <h1>Sign Up</h1><br>
-                    <form method="POST" action='@routes.Application.signUp' Content-type="application/json" id="signupForm">
+                    <form method="POST" action='@routes.Application.signUp()' Content-type="application/json" id="signupForm">
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            <input type="text" class="form-control" name="name" id="username" placeholder="Enter username" value="">
+                        </div>
                         <div class="form-group">
                             <label for="email">Email address</label>
                             <input type="email" class="form-control" name="email" id="email" placeholder="Enter email" value="">
                         </div>
                         <div class="form-group">
-                            <label for="username">Username</label>
-                            <input type="text" class="form-control" name="username" id="username" placeholder="Enter username" value="">
-                        </div>
-                        <div class="form-group">
                             <label for="password">Password</label>
                             <input type="password" class="form-control" name="password" id="password" placeholder="Password">
+                        </div>
+                        <div class="form-group">
+                            <label for="passwordRepetition">Repeat Password</label>
+                            <input type="password" class="form-control" name="passwordRepetition" id="repeatPassword" placeholder="Repeat Password">
+                        </div>
+                        <div class="form-group">
+                            <label for="rememberMe">Remember me</label>
+                            <input style="float: left;margin: 9px;" type="checkBox" name="rememberMe" id="rememberMe">
                         </div>
                         <div class="btn-group">
                             <input type="button" class="login loginmodal-submit" value="Submit" />
@@ -68,6 +78,7 @@
             $(document).ready(function () {
                 $('.loginmodal-submit').click(function () {
                     var data = $(this).parent().parent().serializeObject();
+                    data.rememberMe = data.rememberMe == undefined ? false : true;
                     $.ajax({
                         url: $(this).parent().parent().attr('action'), // php script to retern json encoded string
                         data: JSON.stringify(data),  // serialized data to send on server
@@ -75,11 +86,12 @@
                         type: 'POST', // set sending HTTP Request type
                         contentType: 'application/json',
                         success: function (data) {
-                            console.log(data)
-                            window.location.href = 'http://localhost:9000/index';
+                            if(data.length == 0){//" + window.location.host + "
+                                window.location.href = "http://localhost:9000/index";
+                            }
                         },
                         error: function (data) { // if error occured
-
+                            console.log('cannot sign up now ')
                         }
                     });
                 });
