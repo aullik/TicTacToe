@@ -59,8 +59,8 @@
                             <gold-email-input name="email" label="Email" auto-validate required></gold-email-input>
                             <paper-input name="password" label="Password" type="password" minlength="4" required></paper-input>
                             <paper-input hidden name="rememberMe" value="[[rememberMe]]"></paper-input>
+                            <paper-button raised onclick="_submit(event)">Submit</paper-button>
                         </form>
-                        <paper-button raised onclick="_submit(event)">Submit</paper-button>
                         <paper-toggle-button checked="{{rememberMe}}">Remember Me</paper-toggle-button>
                     </div>
                     <div class="formContainer">
@@ -69,8 +69,8 @@
                             <gold-email-input name="email" label="Email" auto-validate required></gold-email-input>
                             <paper-input name="password" label="Password" type="password" minlength="4" required></paper-input>
                             <paper-input id="passwordRepetition" name="passwordRepetition" label="Repeat Password" type="password" minlength="4"></paper-input>
+                            <paper-button raised onclick="_submit(event)">Submit</paper-button>
                         </form>
-                        <paper-button raised onclick="_submit(event)">Submit</paper-button>
                     </div>
                     <script>
             function _submit(event) {
