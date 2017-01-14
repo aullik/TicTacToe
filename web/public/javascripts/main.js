@@ -62,7 +62,8 @@ $(document).ready(function () {
     $('.callAccept').click(function () {
         $('#incomingCallModal').modal('hide');
         var otherUser = $('#otherUserModal').val();
-        $.ajax({
+        //emit call accepted
+       /*$.ajax({
             method: "POST",
             url: "http://localhost:9001/startGame/" + otherUser,
             success: function (output) {
@@ -73,7 +74,7 @@ $(document).ready(function () {
                     toUsername: otherUser
                 });
             }
-        });
+        });*/
     });
 });
 
