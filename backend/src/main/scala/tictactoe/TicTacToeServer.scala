@@ -2,7 +2,9 @@ package tictactoe
 
 import java.util.Locale
 
+import akka.actor.ActorSystem
 import com.google.inject.Inject
+import tictactoe.actor.user.UserControllerActor
 import tictactoe.exceptions.ShouldBeInjectedException
 import tictactoe.persistence.PersistenceEnvironment
 
@@ -11,9 +13,14 @@ object TicTacToeServer {
   Locale.setDefault(Locale.GERMAN)
 
   @Inject
-  private lazy val environment: PersistenceEnvironment = throw ShouldBeInjectedException()
+  private val system: ActorSystem = throw ShouldBeInjectedException()
 
-  lazy val persistence = environment.persistence
+  @Inject
+  private val environment: PersistenceEnvironment = throw ShouldBeInjectedException()
+
+  val userControllerActor = system.actorOf(UserControllerActor())
+
+  val persistence = environment.persistence
 
 }
 
