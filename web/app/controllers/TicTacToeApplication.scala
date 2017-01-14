@@ -2,6 +2,7 @@ package controllers
 
 import play.api.mvc.Results._
 import play.api.mvc._
+import tictactoe.model.User
 
 
 /**

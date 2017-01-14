@@ -2,6 +2,7 @@ package controllers
 
 import play.api.mvc.Results._
 import play.api.mvc.{AnyContent, Request, Result, Session}
+import tictactoe.model.User
 import viewModel.{LoginData, SignUpData, ViewModel}
 
 import scala.collection.mutable
