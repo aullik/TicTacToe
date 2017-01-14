@@ -59,9 +59,9 @@
                             <gold-email-input name="email" label="Email" auto-validate required></gold-email-input>
                             <paper-input name="password" label="Password" type="password" minlength="4" required></paper-input>
                             <paper-input hidden name="rememberMe" value="[[rememberMe]]"></paper-input>
+                            <paper-toggle-button checked="{{rememberMe}}">Remember Me</paper-toggle-button>
                             <paper-button raised onclick="_submit(event)">Submit</paper-button>
                         </form>
-                        <paper-toggle-button checked="{{rememberMe}}">Remember Me</paper-toggle-button>
                     </div>
                     <div class="formContainer">
                         <form is="iron-form" method="post" id="signUpForm" action="@routes.Application.signUp()" content-type="application/json">
@@ -69,6 +69,8 @@
                             <gold-email-input name="email" label="Email" auto-validate required></gold-email-input>
                             <paper-input name="password" label="Password" type="password" minlength="4" required></paper-input>
                             <paper-input id="passwordRepetition" name="passwordRepetition" label="Repeat Password" type="password" minlength="4"></paper-input>
+                            <paper-input hidden name="rememberMe" value="[[rememberMe]]"></paper-input>
+                            <paper-toggle-button checked="{{rememberMe}}">Remember Me</paper-toggle-button>
                             <paper-button raised onclick="_submit(event)">Submit</paper-button>
                         </form>
                     </div>
