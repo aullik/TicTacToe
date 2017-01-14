@@ -1,4 +1,4 @@
-var socket = io.connect('http://' + window.location.hostname + ':3000');
+/*var socket = io.connect('http://' + window.location.hostname + ':3000');
 
 socket.on('call', function (data) {
     $('.callRequestTitle').html("call to start a game from : " + data.fromUsername);
@@ -18,13 +18,13 @@ socket.on('acceptCall', function (data) {
         toUsername: data.fromUsername
     });
     window.location.href = 'http://localhost:9001/tictactoe';
-});
+});*/
 
 
 $(document).ready(function () {
-    socket.emit('setUsername', {
+    /*socket.emit('setUsername', {
         username: username
-    });
+    });*/
     $('.loginmodal-submit').click(function () {
         var data = $(this).parent().parent().serializeObject();
         $.ajax({
