@@ -1,8 +1,8 @@
 // Let the library know where WebSocketMain.swf is:
-WEB_SOCKET_SWF_LOCATION = "./js/WebSocketMain.swf";
+WEB_SOCKET_SWF_LOCATION = "/javascript/WebSocketMain.swf";
 
 // Write your code in the same way as for native WebSocket:
-//var socket = new WebSocket("ws://localhost:3000/");
+//var socket = new WebSocket("ws://localhost:9000/socket/y@h.de");
 
 !function (Math) {
 
