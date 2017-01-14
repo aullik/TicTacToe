@@ -1,7 +1,8 @@
 package tictactoe.persistence.entityManagement
 
 import grizzled.slf4j.Logging
-import tictactoe.model.PersistenceException._
+import tictactoe.exceptions.PersistenceException
+import PersistenceException._
 import tictactoe.model.entity.{Entity, EntityId}
 import tictactoe.persistence.databaseAccess.PersistenceAccessor
 import tictactoe.persistence.databaseAccess.parser.DocumentParser

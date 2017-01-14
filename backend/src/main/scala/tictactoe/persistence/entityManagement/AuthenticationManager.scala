@@ -2,7 +2,7 @@
 //
 //import grizzled.slf4j.Logging
 //import org.bson.Document
-//import tictactoe.model.PersistenceException.{EntityNotFoundException, IllegalPasswordException, PasswordAlreadySetException}
+//import tictactoe.exceptions.PersistenceException.{EntityNotFoundException, IllegalPasswordException, PasswordAlreadySetException}
 //import tictactoe.model.entity.UserId
 //import tictactoe.persistence
 //import tictactoe.persistence.databaseAccess.PersistenceAccessor

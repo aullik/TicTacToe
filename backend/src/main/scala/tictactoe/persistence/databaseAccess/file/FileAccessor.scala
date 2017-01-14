@@ -3,7 +3,8 @@ package tictactoe.persistence.databaseAccess.file
 import java.io.File
 
 import org.bson.Document
-import tictactoe.model.PersistenceException.DuplicateKeyException
+import tictactoe.exceptions.PersistenceException
+import PersistenceException.DuplicateKeyException
 import tictactoe.model.entity.EntityId
 import tictactoe.persistence.ReadWriteLockWrapper
 import tictactoe.persistence.databaseAccess.PersistenceAccessor

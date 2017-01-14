@@ -4,11 +4,11 @@ import com.mongodb.MongoException
 import com.mongodb.client.MongoCollection
 import com.mongodb.client.model.{Filters, Projections}
 import org.bson.Document
-import tictactoe.model.PersistenceException.DuplicateKeyException
 import tictactoe.model.entity.EntityId
 import tictactoe.persistence.databaseAccess.PersistenceAccessor
 import tictactoe.persistence.databaseAccess.PersistenceAccessor._
 import MongoAccessor._
+import tictactoe.exceptions.PersistenceException._
 
 /**
   */

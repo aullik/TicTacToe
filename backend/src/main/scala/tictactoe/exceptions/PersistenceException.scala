@@ -1,17 +1,6 @@
-package tictactoe.model
+package tictactoe.exceptions
 
-import java.util.{Locale, ResourceBundle}
-
-sealed abstract class PersistenceException(name: String) extends RuntimeException {
-
-  final def getMessage(locale: Locale): String = {
-    ResourceBundle.getBundle("ExceptionMessages", locale).getString(name)
-  }
-
-  override final def getMessage: String = {
-    getMessage(Locale.getDefault)
-  }
-
+sealed abstract class PersistenceException(name: String) extends RuntimeException(name) {
 }
 
 object PersistenceException {

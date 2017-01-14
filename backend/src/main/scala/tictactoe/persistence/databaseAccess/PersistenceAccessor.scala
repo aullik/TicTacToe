@@ -4,7 +4,8 @@ import java.{util => ju}
 
 import com.mongodb.client.FindIterable
 import org.bson.Document
-import tictactoe.model.PersistenceException.{DuplicateKeyException, EntityNotFoundException}
+import tictactoe.exceptions.PersistenceException
+import PersistenceException.{DuplicateKeyException, EntityNotFoundException}
 import tictactoe.model.entity.EntityId
 
 import scala.collection.Iterator
