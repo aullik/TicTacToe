@@ -71,7 +71,8 @@ object UserController {
 
     loginUser(loginData) match {
       case None => BadRequest("Login Failed, Invalid Email-Password combination")
-      case Some(user) => Ok.withSession(addUserToSession(session, user))
+      case Some(user) =>
+        Redirect(routes.Application.index()).withSession(addUserToSession(session, user))
     }
   }
 
