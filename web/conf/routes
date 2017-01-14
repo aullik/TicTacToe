@@ -28,4 +28,4 @@ GET         /assets/*file                  controllers.Assets.at(path="/public",
 GET         /polymer/*element              controllers.Application.polymer(element)
 
 # Socket
-GET         /socket/:player                controllers.WebSocketsControl.socket(player: String)
+GET         /socket/                       controllers.WebSocketsControl.socket

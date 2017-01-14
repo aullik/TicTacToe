@@ -49,6 +49,7 @@ class WebSocketActor(out: ActorRef, user: User) extends Actor with Logging {
     try {
       //case "move" =>
       (jsonValue \ "msgType").values match {
+        case "move" => println("this is a test")
         case _ => throw new IllegalArgumentException("Invalid message")
       }
       //      mediator ! Publish(teamId, new RefreshRequest(userId, jsonValue \ "page"))

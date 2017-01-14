@@ -15,14 +15,14 @@ import scala.concurrent.Future
   */
 class WebSocketsControl @Inject()(implicit system: ActorSystem, mat: Materializer) extends Controller {
 
-  def socket(playerEmail: String): WebSocket =
-    WebSocket.acceptOrResult[String, String](_ =>
-      Future.successful(getFlow(playerEmail))
+  def socket(): WebSocket =
+    WebSocket.acceptOrResult[String, String](request =>
+      Future.successful(getFlow(request.session))
     )
 
 
-  private def getFlow(playerEmail: String): Either[Result, Flow[String, String, _]] = {
-    UserController.getUserFromEmail(playerEmail).map(usr => ActorFlow.actorRef(WebSocketActor(_, usr))) match {
+  private def getFlow(session: Session): Either[Result, Flow[String, String, _]] = {
+    UserController.getUserFromToken(session).map(usr => ActorFlow.actorRef(WebSocketActor(_, usr))) match {
       case Some(flow) => Right(flow)
       case None => Left(BadRequest("invalid email"))
     }
