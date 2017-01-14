@@ -1,9 +1,7 @@
-@(status: String, username: String)
-
 @main("Welcome to TicTacToe 3D") {
    <div class="row mainRow">
       <div class="col-xs-10 col-xs-offset-1">
-         <p id="status">@status</p></div>
+         <p id="status">status</p></div>
       <div class="col-xs-10 col-xs-offset-1 mainPart">
          <div class="col-xs-8 allUsers panel panel-primary " id="game">
 
@@ -646,7 +644,7 @@
                            $('#status').html("Well Played")
                         }
                         socket.emit('move', {
-                           fromUsername: '@username',
+                           fromUsername: 'username',
                            move: over.id,
                            status: status,
                            win: output.win

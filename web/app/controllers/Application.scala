@@ -54,6 +54,7 @@ class Application extends Controller {
   */
 private object LoggedInAction {
   def apply(block: (User, Request[AnyContent]) => Result): Action[AnyContent] = {
+
     Action(request => UserController.getUserFromToken(request.session) match {
       case Some(usr) => block(usr, request)
       case None => Redirect(routes.Application.signUpPage())
