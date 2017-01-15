@@ -9,11 +9,11 @@ lazy val commonSettings = Seq(
   classpathTypes += "maven-plugin",
   libraryDependencies ++= Seq(
     // "com.google.guava" % "guava" % "19.0",
-    // "javax.inject" % "javax.inject" % "1",
     "junit" % "junit" % "4.12",
     "log4j" % "log4j" % "1.2.17",
+    "org.mongodb" % "mongo-java-driver" % "3.3.0",
+    "org.mongodb" % "bson" % "3.3.0",
     "org.json4s" %% "json4s-jackson" % "3.4.2",
-    //    "com.google.inject" % "guice" % "3.0",
     "net.codingwell" %% "scala-guice" % "4.0.1",
     "com.fasterxml.jackson.core" % "jackson-databind" % "2.6.3",
     "org.clapper" %% "grizzled-slf4j" % "1.0.2",

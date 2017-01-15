@@ -2,6 +2,8 @@ package controllers
 
 import play.api.mvc.Results._
 import play.api.mvc.{AnyContent, Request, Result, Session}
+import tictactoe.model.User
+import tictactoe.model.entity.UserId
 import viewModel.{LoginData, SignUpData, ViewModel}
 
 import scala.collection.mutable
@@ -86,7 +88,7 @@ object UserController {
     })
 
     cacheEmail2UserPass.get(loginData.email).filter(unPair((_, pw) => pw == loginData.password)).map(userPass => {
-      val user = User(userPass._1, generateToken(), loginData.email)
+      val user = User(UserId(), userPass._1, generateToken(), loginData.email)
       cacheEmail2LoggedInUser.put(loginData.email, user)
       cacheToken2User.put(user.token, user)
       user

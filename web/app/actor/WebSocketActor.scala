@@ -4,12 +4,12 @@ import actor.WebSocketActor._
 import akka.actor._
 import akka.cluster.pubsub.DistributedPubSub
 import akka.cluster.pubsub.DistributedPubSubMediator.{Publish, Subscribe}
-import controllers.User
 import grizzled.slf4j.Logging
 import org.json4s.JsonDSL._
 import org.json4s._
 import org.json4s.jackson.JsonMethods._
 import org.json4s.jackson.Serialization
+import tictactoe.model.User
 
 
 /**

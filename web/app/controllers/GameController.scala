@@ -5,6 +5,7 @@ import de.htwg.tictactoe.controller.IController
 import play.api.libs.json.Json
 import play.api.mvc.Results._
 import play.api.mvc.{AnyContent, Request, Result}
+import tictactoe.model.User
 
 import scala.collection.mutable
 

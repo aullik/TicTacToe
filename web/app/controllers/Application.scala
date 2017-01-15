@@ -3,6 +3,7 @@ package controllers
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.mvc.Results._
 import play.api.mvc._
+import tictactoe.model.User
 
 
 class Application extends Controller {
