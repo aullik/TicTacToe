@@ -86,8 +86,8 @@
                         type: 'POST', // set sending HTTP Request type
                         contentType: 'application/json',
                         success: function (data) {
-                            if(data.length == 0){//" + window.location.host + "
-                                window.location.href = "http://localhost:9000/index";
+                            if(data.length == 0){
+                                window.location.href = "http://" + window.location.host + "/index";
                             }
                         },
                         error: function (data) { // if error occured

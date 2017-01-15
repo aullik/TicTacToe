@@ -233,8 +233,8 @@ var socket = new WebSocket("ws://" + window.location.host + "/socket/");
 
     function manageEnd() {
         if (end === nul) message = "the game ended in a draw...";
-        if (end === machine) message = "Other user wins";
-        if (end === human) message = "you win";
+        if (end === machine) message = "You lost";
+        if (end === human) message = "You win";
         spheres.forEach(
             function (sphere) {
                 if (sphere.s == end) {
@@ -242,8 +242,16 @@ var socket = new WebSocket("ws://" + window.location.host + "/socket/");
                 }
             }
         );
+        setTimedOut(function () {
+            this.showFinishModal(message);
+        }, 5000);
     }
-
+    function showFinishModal(message){
+        if(framework == 0){
+            $('.gameFinishedModal').html(message);
+            $('#gameFinishModal').modal({backdrop: 'static', keyboard: false});
+        }
+    }
     // ---- machine IA minimax alpha-beta 2 levels ----
     /*
      function machinePlay() {
@@ -533,6 +541,38 @@ var socket = new WebSocket("ws://" + window.location.host + "/socket/");
     }
 
     // ---- click sphere ----
+    socket.onmessage(function(event){
+        var msg = JSON.parse(event.data);
+        switch (msg.msgType) {
+            case "move":
+                this.handleMove(msg.action);
+                break;
+            case 'status':
+                this.handleStatus(msg.action);
+                break;
+            case 'win':
+                this.handleWin(msg.action);
+                break;
+            default:
+                console.warn("Could not handle this message: " + msg);
+        }
+
+    });
+    function handleMove(data) {
+        console.log(JSON.stringify(data))
+        var sphere = fSphere(data)
+        sphere.s = machine
+    }
+    function handleStatus(data) {
+        if (data !== "")
+            $('#status').html(data)
+    }
+    function handleWin(data) {
+        if (data) {
+            end = machine
+            manageEnd()
+        }
+    }
     /*
 
      socket.on('move', function (data) {
@@ -560,6 +600,18 @@ var socket = new WebSocket("ws://" + window.location.host + "/socket/");
             }
         );
         if (over) {
+            socket.send({
+                msgType:'move',
+                action : over.id
+            })
+            /*
+             socket.emit('move', {
+             fromUsername: '@username',
+             move: over.id,
+             status: status,
+             win: output.win
+             });*/
+            /*
             $.ajax({
                 method: "POST",
                 url: "http://localhost:9001/move/" + over.id,
@@ -576,18 +628,11 @@ var socket = new WebSocket("ws://" + window.location.host + "/socket/");
                     } else {
                         $('#status').html("Well Played")
                     }
-                    /*
-                     socket.emit('move', {
-                     fromUsername: '@username',
-                     move: over.id,
-                     status: status,
-                     win: output.win
-                     });*/
                 },
                 error: function (request, status, error) {
                     console.log(error)
                 }
-            });
+            });*/
         }
 
         if (over && over.s === 0) {
