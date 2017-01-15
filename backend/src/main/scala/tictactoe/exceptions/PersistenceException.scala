@@ -21,5 +21,15 @@ object PersistenceException {
 
   case class DuplicateKeyException() extends PersistenceException("DuplicateKey")
 
+  case class PasswordNotSetException() extends PersistenceException("PasswordNotSet")
+
+  case class PasswordsDoNotMatchException() extends PersistenceException("PasswordsDoNotMatch")
+
+  case class WrongPasswordException() extends PersistenceException("WrongPassword")
+
+  case class InvalidAuthenticationException() extends PersistenceException("InvalidAuthentication")
+
+  case class NoAuthorizationException() extends PersistenceException("NoAuthorization")
+
 
 }
