@@ -102,7 +102,7 @@ object Auth extends AuthController {
           _ <- authInfoRepository.add(loginInfo, passwordHasherRegistry.current.hash(signUpData.password))
           _ <- tokenService.create(token)
         } yield {
-          Mailer.welcome(savedUser, link = routes.Application.signUpEmail(token.id).url)(ms, messages)
+          Mailer.welcome(savedUser, link = routes.Application.signUpEmail(token.id).absoluteURL()(request))(ms, messages)
           Ok("Registered")
         }
     }
