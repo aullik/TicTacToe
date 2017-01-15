@@ -33,6 +33,14 @@
         .formContainer {
             padding: 50px;
         }
+        .welcomeErrors{
+            --paper-toast-background-color: red;
+            --paper-toast-color: white;
+        }
+        .welcomeSuccess{
+            --paper-toast-background-color: green;
+            --paper-toast-color: white;
+        }
         </style>
         <div class="mainContent">
             <paper-card class="content paddingCenter" heading="TicTacToe 3D">
@@ -74,7 +82,6 @@
                             <paper-button raised onclick="_submit(event)">Submit</paper-button>
                         </form>
                     </div>
-                    <paper-toast id="signUpToast" class="welcomeErrors" text=""></paper-toast>
                     <script>
                         function _submit(event) {
                             Polymer.dom(event).localTarget.parentElement.submit();
@@ -83,6 +90,8 @@
                 </iron-pages>
             </paper-card>
         </div>
+        <paper-toast id="signUpToastError" class="welcomeErrors" text=""></paper-toast>
+        <paper-toast id="signUpToastSuccess" class="welcomeSuccess" text=""></paper-toast>
         <a style="display: none" id="redirect" href='@routes.Application.index()'></a>
     </template>
 
@@ -90,10 +99,10 @@
         Polymer({
             is: 'my-signup',
             listeners: {
-                'signUpForm.iron-form-error': 'handleSignUpError',
-                'signInForm.iron-form-error': 'handleSignInError',
+                'signUpForm.iron-form-error': 'handleError',
+                'signInForm.iron-form-error': 'handleError',
                 'signUpForm.iron-form-response': 'handleSuccess',
-                'signInForm.iron-form-response': 'handleSuccess',
+                'signInForm.iron-form-response': 'handleSuccessIn',
             },
             properties: {
                 selected: {
@@ -101,15 +110,15 @@
                     value: 0
                 },
             },
-            handleSignUpError: function () {
-                this.$.signUpToast.text = "Sign up error, please try later";
-                this.$.signUpToast.open();
-            },
-            handleSignInError: function () {
-                this.$.signUpToast.text = "Log in error, please try later";
-                this.$.signUpToast.open();
+            handleError: function (e) {
+                this.$.signUpToastError.text = e.detail.error.message;
+                this.$.signUpToastError.open();
             },
             handleSuccess: function (data) {
+                this.$.signUpToastSuccess.text = 'Successfuly registered, we"ve send you a confirmation email';
+                this.$.signUpToastSuccess.open();
+            },
+            handleSuccessIn: function () {
                 this.$.redirect.click();
             }
         });
