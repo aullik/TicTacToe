@@ -1,14 +1,14 @@
-package controllers
+package controllers.webControllers
 
-import com.google.inject.Inject
+import com.google.inject.{Inject, Singleton}
 import com.mohiva.play.silhouette.api.actions.SecuredRequest
+import controllers.routes
 import grizzled.slf4j.Logging
 import play.api.mvc.Results._
 import play.api.mvc.{AnyContent, Request, Result, Session}
 import silhouette.TicTacToeEnv
 import tictactoe.TicTacToeServer
 import tictactoe.exceptions.PersistenceException._
-import tictactoe.exceptions.ShouldBeInjectedException
 import tictactoe.model.User
 import tictactoe.model.entity.UserId
 import tictactoe.persistence.entityManagement.mutator.Wrapper
@@ -19,7 +19,8 @@ import scala.util.Random
 
 /**
   */
-object UserController extends Logging {
+@Singleton
+class UserController @Inject private(server: TicTacToeServer) extends Logging {
   private val TOKEN_LENGTH = 32
   val JSONERROR = BadRequest("JSON not as expected")
 
@@ -129,10 +130,6 @@ object UserController extends Logging {
   }
 
   //==============================================================================================
-
-  @Inject
-  lazy val server: TicTacToeServer = throw ShouldBeInjectedException()
-
 
   /** Register and login a player.
     *

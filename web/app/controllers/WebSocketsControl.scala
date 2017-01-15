@@ -6,6 +6,8 @@ import actor.WebSocketActor
 import akka.actor.ActorSystem
 import akka.stream.Materializer
 import akka.stream.scaladsl.Flow
+import com.google.inject.Provider
+import controllers.webControllers.{WebController, WebControllerContainer}
 import play.api.libs.streams.ActorFlow
 import play.api.mvc._
 
@@ -13,7 +15,10 @@ import scala.concurrent.Future
 
 /**
   */
-class WebSocketsControl @Inject()(implicit system: ActorSystem, mat: Materializer) extends Controller {
+class WebSocketsControl @Inject()(implicit system: ActorSystem,
+                                  mat: Materializer,
+                                  val webProvider: Provider[WebControllerContainer]
+                                 ) extends WebController with Controller {
 
   def socket(): WebSocket =
     WebSocket.acceptOrResult[String, String](request =>
@@ -27,4 +32,6 @@ class WebSocketsControl @Inject()(implicit system: ActorSystem, mat: Materialize
       case None => Left(BadRequest("invalid email"))
     }
   }
+
+
 }

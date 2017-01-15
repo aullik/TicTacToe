@@ -1,15 +1,17 @@
-package controllers
+package controllers.webControllers
 
 import javax.inject.Inject
 
-import _root_.silhouette.{MailTokenService, UserService, TicTacToeEnv}
+import _root_.silhouette.{MailTokenService, TicTacToeEnv, UserService}
+import com.google.inject.{Provider, Singleton}
+import com.mohiva.play.silhouette.api._
 import com.mohiva.play.silhouette.api.actions.SecuredRequest
 import com.mohiva.play.silhouette.api.exceptions.ProviderException
 import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
 import com.mohiva.play.silhouette.api.util.{Clock, Credentials, PasswordHasherRegistry}
-import com.mohiva.play.silhouette.api._
 import com.mohiva.play.silhouette.impl.authenticators.CookieAuthenticator
 import com.mohiva.play.silhouette.impl.providers.CredentialsProvider
+import controllers.routes
 import mailer.{MailService, MailTokenUser, Mailer}
 import net.ceedubs.ficus.Ficus._
 import org.json4s.NoTypeHints
@@ -18,7 +20,6 @@ import org.json4s.jackson.Serialization._
 import play.api.Configuration
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.mvc.{AnyContent, Request, Result}
-import tictactoe.exceptions.ShouldBeInjectedException
 import tictactoe.silhouette.Implicits._
 import viewModel.{LoginData, SignUpData}
 
@@ -28,10 +29,6 @@ import scala.concurrent.duration._
 
 /** Authentication Controller for the Application
   *
-  */
-object Auth extends AuthController {
-
-  /*
   * @param silhouette             Silhouette Stack which provides all the Silhouette actions
   * @param messagesApi            The internationalisation API
   * @param playerService          The playerService to interact with the silhouette Identity
@@ -41,38 +38,22 @@ object Auth extends AuthController {
   * @param credentialsProvider    A provider for authenticating with credentials
   * @param mailService            A MailService to send emails
   * @param conf                   Play Configuration
-  * @param clock                  Clock implementation
-   */
+  * @param clock                  Clock implementation*
+  */
+@Singleton
+class Auth @Inject private(val silhouette: Silhouette[TicTacToeEnv],
+                           val messagesApi: MessagesApi,
+                           val webProvider: Provider[WebControllerContainer],
+                           playerService: UserService,
+                           authInfoRepository: AuthInfoRepository,
+                           tokenService: MailTokenService[MailTokenUser],
+                           passwordHasherRegistry: PasswordHasherRegistry,
+                           credentialsProvider: CredentialsProvider,
+                           mailService: MailService,
+                           conf: Configuration,
+                           clock: Clock
+                          ) extends AuthController with WebController {
 
-  @Inject
-  lazy val silhouette: Silhouette[TicTacToeEnv] = throw ShouldBeInjectedException()
-
-  @Inject
-  lazy val messagesApi: MessagesApi = throw ShouldBeInjectedException()
-
-  @Inject
-  lazy val playerService: UserService = throw ShouldBeInjectedException()
-
-  @Inject
-  lazy val authInfoRepository: AuthInfoRepository = throw ShouldBeInjectedException()
-
-  @Inject
-  lazy val tokenService: MailTokenService[MailTokenUser] = throw ShouldBeInjectedException()
-
-  @Inject
-  lazy val passwordHasherRegistry: PasswordHasherRegistry = throw ShouldBeInjectedException()
-
-  @Inject
-  lazy val credentialsProvider: CredentialsProvider = throw ShouldBeInjectedException()
-
-  @Inject
-  lazy val mailService: MailService = throw ShouldBeInjectedException()
-
-  @Inject
-  lazy val conf: Configuration = throw ShouldBeInjectedException()
-
-  @Inject
-  lazy val clock: Clock = throw ShouldBeInjectedException()
 
   implicit val formats = Serialization.formats(NoTypeHints)
 

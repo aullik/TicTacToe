@@ -3,6 +3,8 @@ resolvers += "Typesafe repository" at "http://repo.typesafe.com/typesafe/release
 
 // unmanagedResourceDirectories in Test <+=  baseDirectory ( _ /"target/web/public/test" )
 
+unmanagedJars in Compile += (baseDirectory.value / "target/scala-2.11/classes")
+
 lazy val commonSettings = Seq(
   version := "0.1",
   scalaVersion := "2.11.7",

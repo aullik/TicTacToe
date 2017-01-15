@@ -1,4 +1,4 @@
-package controllers
+package controllers.webControllers
 
 import com.mohiva.play.silhouette.api.actions.SecuredRequest
 import de.htwg.tictactoe.TicTacToe

@@ -1,4 +1,4 @@
-package controllers
+package controllers.webControllers
 
 import com.mohiva.play.silhouette.api.{Environment, Silhouette}
 import grizzled.slf4j.Logging

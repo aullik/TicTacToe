@@ -1,6 +1,6 @@
 package silhouette
 
-import com.google.inject.{AbstractModule, Provides}
+import com.google.inject.{AbstractModule, Provides, Singleton}
 import com.mohiva.play.silhouette.api.actions.{SecuredErrorHandler, UnsecuredErrorHandler}
 import com.mohiva.play.silhouette.api.crypto.{CookieSigner, Crypter, CrypterAuthenticatorEncoder}
 import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
@@ -14,14 +14,13 @@ import com.mohiva.play.silhouette.impl.util.{DefaultFingerprintGenerator, Secure
 import com.mohiva.play.silhouette.password.BCryptPasswordHasher
 import com.mohiva.play.silhouette.persistence.daos.DelegableAuthInfoDAO
 import com.mohiva.play.silhouette.persistence.repositories.DelegableAuthInfoRepository
-import controllers.UserController
 import mailer.{MailService, MailServiceImpl, MailTokenUser}
+import net.ceedubs.ficus.Ficus._
 import net.ceedubs.ficus._
 import net.ceedubs.ficus.readers.ArbitraryTypeReader._
 import net.codingwell.scalaguice.ScalaModule
 import play.api.Configuration
 import tictactoe.model.User
-import net.ceedubs.ficus.Ficus._
 
 import scala.concurrent.ExecutionContext.Implicits.{global => executionContext}
 
@@ -32,8 +31,6 @@ import scala.concurrent.ExecutionContext.Implicits.{global => executionContext}
 class TicTacToeWebModule extends AbstractModule with ScalaModule {
 
   def configure(): Unit = {
-    bind[UserController.type].toInstance(UserController)
-
     bind[Silhouette[TicTacToeEnv]].to[SilhouetteProvider[TicTacToeEnv]]
     bind[SecuredErrorHandler].to[TicTacToeSecuredErrorHandler]
     bind[UnsecuredErrorHandler].to[TicTacToeUnsecuredErrorHandler]
@@ -47,7 +44,7 @@ class TicTacToeWebModule extends AbstractModule with ScalaModule {
     bind[EventBus].toInstance(EventBus())
     bind[Clock].toInstance(Clock())
 
-    bind[DelegableAuthInfoDAO[PasswordInfo]].toInstance(new PasswordInfoDAO())
+    bind[DelegableAuthInfoDAO[PasswordInfo]].to[PasswordInfoDAO].in[Singleton]
   }
 
   /**

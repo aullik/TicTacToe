@@ -2,14 +2,19 @@ package controllers
 
 import javax.inject.Inject
 
+import com.google.inject.Provider
 import com.mohiva.play.silhouette.api.Silhouette
 import controllers.authentication.{AuthenticatedAction, BasicAction, UnAuthenticatedAction}
+import controllers.webControllers.{AuthController, WebController, WebControllerContainer}
 import play.api.i18n.MessagesApi
 import play.api.mvc._
 import silhouette.TicTacToeEnv
 
 
-class Application @Inject()(val messagesApi: MessagesApi, val silhouette: Silhouette[TicTacToeEnv]) extends AuthController {
+class Application @Inject()(val messagesApi: MessagesApi,
+                            val silhouette: Silhouette[TicTacToeEnv],
+                            val webProvider: Provider[WebControllerContainer]
+                           ) extends AuthController with WebController {
 
   def index = AuthenticatedGet(TicTacToeApplication.index _)
 
