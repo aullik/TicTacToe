@@ -1,9 +1,11 @@
 package controllers
 
 import com.google.inject.Inject
+import com.mohiva.play.silhouette.api.actions.SecuredRequest
 import grizzled.slf4j.Logging
 import play.api.mvc.Results._
 import play.api.mvc.{AnyContent, Request, Result, Session}
+import silhouette.TicTacToeEnv
 import tictactoe.TicTacToeServer
 import tictactoe.exceptions.PersistenceException._
 import tictactoe.exceptions.ShouldBeInjectedException
@@ -58,12 +60,14 @@ object UserController extends Logging {
         }
     }
 
-  def logout(user: User, request: Request[AnyContent]): Result =
+  def logout(request: SecuredRequest[TicTacToeEnv, AnyContent]): Result = {
+    val user = request.identity
     cacheToken2User.get(user.token).filter(_.name == user.name)
       .map(usr => cacheEmail2LoggedInUser.remove(usr.email)) match {
       case None => BadRequest("Not logged in")
       case Some(_) => Redirect(routes.Application.signUpPage()).withNewSession
     }
+  }
 
 
   def login(request: Request[AnyContent]): Result =

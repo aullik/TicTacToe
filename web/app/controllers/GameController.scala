@@ -1,10 +1,12 @@
 package controllers
 
+import com.mohiva.play.silhouette.api.actions.SecuredRequest
 import de.htwg.tictactoe.TicTacToe
 import de.htwg.tictactoe.controller.IController
 import play.api.libs.json.Json
 import play.api.mvc.Results._
 import play.api.mvc.{AnyContent, Request, Result}
+import silhouette.TicTacToeEnv
 import tictactoe.model.User
 
 import scala.collection.mutable
@@ -23,7 +25,7 @@ object GameController {
     * @param otherPlayer
     * @return
     */
-  def startGame(user: User, request: Request[AnyContent], otherPlayer: String): Result = {
+  def startGame(otherPlayer: String)(user: User, request: Request[AnyContent]): Result = {
     if (cacheUserName2Game.get(otherPlayer).isDefined || cacheUserName2Game.get(user.name).isDefined)
       BadRequest("User already in game")
 
@@ -40,8 +42,8 @@ object GameController {
     * @param request
     * @return
     */
-  def game(user: User, request: Request[AnyContent]): Result = {
-    val gameopt = cacheUserName2Game.get(user.name)
+  def game(request: SecuredRequest[TicTacToeEnv, AnyContent]): Result = {
+    val gameopt = cacheUserName2Game.get(request.identity.name)
 
     gameopt.map(game => {
       Ok(views.html.bootstrap.tictactoe())
