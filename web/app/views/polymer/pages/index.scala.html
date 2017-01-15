@@ -69,6 +69,9 @@
             overflow-y: auto;
             width: 95%;
         }
+        .disableClick{
+            pointer-events:none;
+        }
         </style>
 
             <!--my-socket id="socketIO" server="http://localhost:3000/"></my-socket>-->
@@ -81,7 +84,7 @@
         <paper-card class="content" style="width: 60%;
             margin-left: 5%;
             display: flex">
-            <div class="usersContainerDiv">
+            <div class="usersContainerDiv" id="usersContDiv">
                 <h3>Users</h3>
                 <template is="dom-repeat" items="{{users}}" as="user">
                     <paper-card id="usersCard">
@@ -94,6 +97,11 @@
                         </div>
                     </paper-card>
                 </template>
+                <paper-toast id="callToast" text=""></paper-toast>
+                <paper-dialog id="activatePaperSpinner" no-cancel-on-esc-key no-cancel-on-outside-click>
+                    <h5>Calling...</h5>
+                    <p><paper-spinner active id="spinner"></paper-spinner></p>
+                </paper-dialog>
             </div>
         </paper-card>
         <div class="content" style="width: 25%">
@@ -148,6 +156,14 @@
                 </div>
             </div>
         </div>
+        <paper-dialog id="paperDialogAnimated" no-cancel-on-esc-key no-cancel-on-outside-click>
+            <h2 id="callRequestTitle">{{ modalTitle }}</h2>
+            <div class="buttons">
+                <paper-button raised raised  id="denyCall">deny</paper-button>
+                <paper-button raised  id="acceptCall">accept</paper-button>
+            </div>
+        </paper-dialog>
+        <a style="display: none" id="redirect" href='@routes.Application.game()'></a>
     </template>
 
     <script>
@@ -157,7 +173,8 @@
         Polymer({
         is: 'my-index',
         listeners: {
-            //"startGame.tap":"clickEvent"
+            'denyCall.tap': '_denyCall',
+            'acceptCall.tap': '_acceptCall',
         },
         properties: {
             users: {
@@ -176,12 +193,81 @@
                 type: Object,
                 observer: 'webSocketChanged'
             },
+            modalTitle: String,
+            otherToken: String
         },
         ready: function () {
             this.$.userAjax.generateRequest();
             this.socket = new WebSocket("ws://" + window.location.host + "/socket/");
         },
         webSocketChanged: function () {
+            this.socket.onmessage = this.onMessage.bind(this);
+            this.socket.onopen = this.onOpen.bind(this);
+            this.socket.onerror = this.onError.bind(this);
+            this.socket.onclose = this.onClose.bind(this);
+        },
+        onMessage: function (event) {
+            var msg = JSON.parse(event.data);
+            switch (msg.msgType) {
+                case "call":
+                    this.handleCall(msg.action);
+                    break;
+                case 'denyCall':
+                    this.handleDenyCall(msg.action);
+                    break;
+                case 'acceptCall':
+                    this.handleAcceptCall(msg.action);
+                    break;
+                case 'callAccepted':
+                    this.handleCallAccepted(msg.action);
+                    break;
+                case 'newUser':
+                    this.handleNewUser(msg.action);
+                    break;
+                default:
+                    console.warn("Could not handle this message: " + msg);
+            }
+        },
+        handleNewUser: function(data) {
+            if(data.name && data.token){
+                this.users.push(data);
+            }
+        },
+        handleCall: function(data) {
+            var user = users.find(x => x.token == data);
+            if(user){
+                this.modalTitle = "Call to start a game with " + user.name;
+                this.otherToken = user.token;
+                this.$.paperDialogAnimated.open()
+            }
+        },
+        handleDenyCall: function(data) {
+            alert("call denied")
+            this.$.activatePaperSpinner.close();
+            this.$.usersContDiv.classList.remove('disableClick')
+        },
+        handleAcceptCall: function(data) {
+            this.socket.send({
+                msgType:'callAccepted',
+                action : data
+            });
+            this.$.activatePaperSpinner.close();
+            this.$.usersContDiv.classList.remove('disableClick')
+            this.$.redirect.click();
+        },
+        handleCallAccepted: function(data) {
+            this.$.redirect.click();
+        },
+        onOpen: function (event) {
+            console.log('Socket opened')
+        },
+
+        onError: function (event) {
+            console.error("Error: " + event.reason);
+        },
+
+        onClose: function (event) {
+            console.log("Web socket closed");
         },
         handleUsrResponse: function (e) {
             data = {
@@ -203,8 +289,30 @@
         _startGameOnClick: function (event) {
             var id = event.srcElement.id;
             if (id === 'icon') id = event.srcElement.parentElement.id;
-
-            console.log("Item id=", id);
+            this.socket.send({
+                msgType:'call',
+                action : id
+            });
+            this.$.callToast.text = "call has been sent";
+            this.$.callToast.open();
+            this.$.usersContDiv.classList.add('disableClick')
+            this.$.activatePaperSpinner.open();
+        },
+        _denyCall: function (event) {
+            this.$.paperDialogAnimated.close()
+            var token = this.otherToken
+            this.socket.send({
+                msgType:'denyCall',
+                action : token
+            })
+        },
+        _acceptCall: function () {
+            this.$.paperDialogAnimated.close()
+            var token = this.otherToken
+            this.socket.send({
+                msgType:'acceptCall',
+                action : token
+            })
         },
         getRandomColor: function() {
             var letters = '0123456789ABCDEF';
