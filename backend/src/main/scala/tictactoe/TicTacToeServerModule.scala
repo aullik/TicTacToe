@@ -7,12 +7,10 @@ import tictactoe.persistence.{DevelopmentPersistenceEnvironment, PersistenceEnvi
 /** Configuration for dependency injection with Guice
   *
   */
-class TicTacToeModule extends AbstractModule with ScalaModule {
+class TicTacToeServerModule extends AbstractModule with ScalaModule {
 
   def configure(): Unit = {
-    bind[TicTacToeServer].to[TicTacToeServer]
     bind[PersistenceEnvironment].toInstance(DevelopmentPersistenceEnvironment)
   }
-
 
 }

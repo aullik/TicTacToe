@@ -8,6 +8,7 @@ GET         /index                         controllers.Application.index
 #GET        /tictactoe                controllers.Application.tictactoe
 
 POST        /signup                        controllers.Application.signUp
+GET         /signup/:token                 controllers.Application.signUpEmail(token: String)
 POST        /login                         controllers.Application.login
 
 POST        /users                         controllers.Application.getUsers()

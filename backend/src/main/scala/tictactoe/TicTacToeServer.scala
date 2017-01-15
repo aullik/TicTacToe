@@ -1,6 +1,7 @@
 package tictactoe
 
 import java.util.Locale
+import javax.inject.Singleton
 
 import akka.actor.ActorSystem
 import com.google.inject.Inject

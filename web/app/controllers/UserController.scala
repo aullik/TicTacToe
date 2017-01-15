@@ -1,9 +1,15 @@
 package controllers
 
+import com.google.inject.Inject
+import grizzled.slf4j.Logging
 import play.api.mvc.Results._
 import play.api.mvc.{AnyContent, Request, Result, Session}
+import tictactoe.TicTacToeServer
+import tictactoe.exceptions.PersistenceException._
+import tictactoe.exceptions.ShouldBeInjectedException
 import tictactoe.model.User
 import tictactoe.model.entity.UserId
+import tictactoe.persistence.entityManagement.mutator.Wrapper
 import viewModel.{LoginData, SignUpData, ViewModel}
 
 import scala.collection.mutable
@@ -11,7 +17,7 @@ import scala.util.Random
 
 /**
   */
-object UserController {
+object UserController extends Logging {
   private val TOKEN_LENGTH = 32
   val JSONERROR = BadRequest("JSON not as expected")
 
@@ -118,6 +124,66 @@ object UserController {
     builder.toString
   }
 
+  //==============================================================================================
+
+  @Inject
+  lazy val server: TicTacToeServer = throw ShouldBeInjectedException()
+
+
+  /** Register and login a player.
+    *
+    * @param email e-mail
+    * @param name  name
+    * @return controllers.authentication of the player */
+  @throws[IllegalNameException]
+  @throws[IllegalEmailException]
+  @throws[EmailInUseException]
+  @throws[IllegalPasswordException]
+  @throws[PasswordsDoNotMatchException]
+  def register(email: String,
+               name: String): User = {
+    info(s"register(email=$email, name=$name, password=***, passwordRepetition=***)")
+    val usr = User(email = email, name = name)
+    server.persistence.userManager.add(usr)
+    usr
+  }
+
+
+  def confirmEmail(email: String): User = {
+    info(s"confirmEmail(email=$email")
+    val targetId = server.persistence.authenticationManager.getPlayerIdByEmail(email)
+    server.persistence.userManager.directUpdate(targetId, _.copy(emailConfirmed = true))
+    get(targetId).get
+  }
+
+  def get(id: UserId): Wrapper[User] = {
+    info(s"getPlayer(id=$id)")
+    server.persistence.userManager.get(id).wrapper
+  }
+
+
+  /** Get a player by email
+    *
+    * @param email email of the user
+    * @return Player
+    */
+  @throws[EntityNotFoundException]("Player not found")
+  def getUserByEmail(email: String): Wrapper[User] = {
+    val playerId = server.persistence.authenticationManager.getPlayerIdByEmail(email)
+    get(playerId)
+  }
+
+
+  def modifyPasswordHash(userId: UserId,
+                         passwordHash: String): Unit = {
+    info(s"modifyPasswordHash(auth.id=$userId, passwordHash=***)")
+    server.persistence.authenticationManager.addPasswordHash(userId, passwordHash)
+  }
+
+  def getPassword(userId: UserId): String = {
+    info(s"getPassword(playerId=$userId")
+    server.persistence.authenticationManager.readPasswordHash(userId).get
+  }
 
 }
 

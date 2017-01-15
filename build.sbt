@@ -17,7 +17,16 @@ lazy val commonSettings = Seq(
     "net.codingwell" %% "scala-guice" % "4.0.1",
     "com.fasterxml.jackson.core" % "jackson-databind" % "2.6.3",
     "org.clapper" %% "grizzled-slf4j" % "1.0.2",
-    "com.typesafe.akka" %% "akka-cluster-tools" % "2.4.6"
+    "com.typesafe.akka" %% "akka-cluster-tools" % "2.4.6",
+    "com.mohiva" %% "play-silhouette" % "4.0.0",
+    "com.mohiva" %% "play-silhouette-password-bcrypt" % "4.0.0",
+    "com.mohiva" %% "play-silhouette-crypto-jca" % "4.0.0",
+    "com.mohiva" %% "play-silhouette-persistence" % "4.0.0",
+    "com.mohiva" %% "play-silhouette-testkit" % "4.0.0" % "test",
+    "com.mohiva" %% "play-silhouette-cas" % "4.0.0",
+    "com.mohiva" %% "play-silhouette-persistence-reactivemongo" % "4.0.1",
+    "com.typesafe.play" %% "play-mailer" % "5.0.0",
+    "com.iheart" %% "ficus" % "1.4.0"
   )
 )
 
