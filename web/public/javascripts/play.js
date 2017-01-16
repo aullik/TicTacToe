@@ -1,9 +1,4 @@
-// Let the library know where WebSocketMain.swf is:
-WEB_SOCKET_SWF_LOCATION = "/javascript/WebSocketMain.swf";
 
-// Write your code in the same way as for native WebSocket:
-//FIXME fix email
-var socket = new WebSocket("ws://" + window.location.host + "/socket/");
 
 !function (Math) {
 
@@ -539,37 +534,51 @@ var socket = new WebSocket("ws://" + window.location.host + "/socket/");
         });
         return m;
     }
-
+    socket.send({
+        msgType:'gameStatus'
+    })
     // ---- click sphere ----
     socket.onmessage(function(event){
         var msg = JSON.parse(event.data);
         switch (msg.msgType) {
-            case "move":
-                this.handleMove(msg.action);
+            case "moveAck":
+                this.handleMoveAck(msg.value);
                 break;
-            case 'status':
-                this.handleStatus(msg.action);
+            case 'gameStatusResponse':
+                this.handleGameStatusResponse(msg.value);
                 break;
-            case 'win':
-                this.handleWin(msg.action);
+            case 'gameFinished':
+                this.handleGameFinished(msg.value);
                 break;
             default:
                 console.warn("Could not handle this message: " + msg);
         }
 
     });
-    function handleMove(data) {
-        console.log(JSON.stringify(data))
-        var sphere = fSphere(data)
-        sphere.s = machine
+    function handleMoveAck(data) {
+        if(data.split('-')[0] == "O"){
+            var sphere = fSphere(data.slice( 2 ))
+            sphere.s = machine
+        }
     }
-    function handleStatus(data) {
-        if (data !== "")
-            $('#status').html(data)
+    function handleGameStatusResponse(data) {
+        if(data){
+            user = data.me;
+            otherUser = data.other;
+            for (var i = 0; i < data.moves; i++){
+                var me = data.moves[i].split('-')[0] == "M" ? human: machine;
+                console.log(me+" "+data.moves[i].slice( 2 ));
+                var sphere = fSphere(data.moves[i].slice( 2 ));
+                sphere.s = me
+
+            }
+        }
     }
-    function handleWin(data) {
+    function handleGameFinished(data) {
         if (data) {
-            end = machine
+            handleMoveAck(data.move);
+            end = data.move.split('-')[0] == "O" ? machine : human;
+            end = data.tie == false ? end : nul;
             manageEnd()
         }
     }
@@ -602,7 +611,7 @@ var socket = new WebSocket("ws://" + window.location.host + "/socket/");
         if (over) {
             socket.send({
                 msgType:'move',
-                action : over.id
+                value : over.id
             })
             /*
              socket.emit('move', {
