@@ -1,10 +1,10 @@
 // Let the library know where WebSocketMain.swf is:
-WEB_SOCKET_SWF_LOCATION = "/javascript/WebSocketMain.swf";
+/*WEB_SOCKET_SWF_LOCATION = "/javascript/WebSocketMain.swf";
 
 // Write your code in the same way as for native WebSocket:
 //FIXME fix email
 var socket = new WebSocket("ws://" + window.location.host + "/socket/");
-
+*/
 !function (Math) {
 
     "use strict";
@@ -538,38 +538,51 @@ var socket = new WebSocket("ws://" + window.location.host + "/socket/");
             return s.id === id;
         });
         return m;
-    }
-
+    }/*
+    socket.send({
+        msgType:'gameStatus'
+    });
     // ---- click sphere ----
     socket.onmessage(function(event){
         var msg = JSON.parse(event.data);
         switch (msg.msgType) {
-            case "move":
-                this.handleMove(msg.action);
+            case "moveAck":
+                this.handleMoveAck(msg.value);
                 break;
-            case 'status':
-                this.handleStatus(msg.action);
+            case 'gameStatusResponse':
+                this.handleGameStatusResponse(msg.value);
                 break;
-            case 'win':
-                this.handleWin(msg.action);
+            case 'gameFinished':
+                this.handleGameFinished(msg.value);
                 break;
             default:
                 console.warn("Could not handle this message: " + msg);
         }
 
-    });
-    function handleMove(data) {
-        console.log(JSON.stringify(data))
-        var sphere = fSphere(data)
-        sphere.s = machine
+    });*/
+    function handleMoveAck(data) {
+        if(data.split('-')[0] == "O"){
+            var sphere = fSphere(data.slice( 2 ))
+            sphere.s = machine
+            played = true;
+        }
     }
-    function handleStatus(data) {
-        if (data !== "")
-            $('#status').html(data)
+    function handleGameStatusResponse(data) {
+        if(data){
+            for (var i = 0; i < data.moves; i++){
+                var me = data.moves[i].split('-')[0] == "M" ? human: machine;
+                console.log(me+" "+data.moves[i].slice( 2 ));
+                var sphere = fSphere(data.moves[i].slice( 2 ));
+                sphere.s = me
+
+            }
+        }
     }
-    function handleWin(data) {
+    function handleGameFinished(data) {
         if (data) {
-            end = machine
+            handleMoveAck(data.move);
+            end = data.move.split('-')[0] == "O" ? machine : human;
+            end = data.tie == false ? end : nul;
             manageEnd()
         }
     }
@@ -585,68 +598,31 @@ var socket = new WebSocket("ws://" + window.location.host + "/socket/");
      manageEnd()
      }
      });*/
+    var played= false;
     pointer.click = function () {
-        if (end) {
-            reinit();
-
-        }
-        message = "";
-        var over = null;
-        spheres.forEach(
-            function (sphere) {
-                var dx = pointer.x - sphere.x,
-                    dy = pointer.y - sphere.y;
-                if (Math.sqrt(dx * dx + dy * dy) < sphere.w) over = sphere;
+        if(!played){
+            if (end) {
+                reinit();
             }
-        );
-        if (over) {
-            socket.send({
-                msgType:'move',
-                action : over.id
-            })
-            /*
-             socket.emit('move', {
-             fromUsername: '@username',
-             move: over.id,
-             status: status,
-             win: output.win
-             });*/
-            /*
-            $.ajax({
-                method: "POST",
-                url: "http://localhost:9001/move/" + over.id,
-                success: function (output) {
-                    output = $.parseJSON(output)
-                    console.log(output);
-                    var status = output.status;
-                    if (output.win == "1") {
-                        end = human
-                        manageEnd()
-                    } else if (status.includes("Already been setted")) {
-                        $('#status').html(status)
-                        status = "";
-                    } else {
-                        $('#status').html("Well Played")
-                    }
-                },
-                error: function (request, status, error) {
-                    console.log(error)
+            message = "";
+            var over = null;
+            spheres.forEach(
+                function (sphere) {
+                    var dx = pointer.x - sphere.x,
+                        dy = pointer.y - sphere.y;
+                    if (Math.sqrt(dx * dx + dy * dy) < sphere.w) over = sphere;
                 }
-            });*/
-        }
-
-        if (over && over.s === 0) {
-            over.s = human;
-            //var move = updateGame(over.id, human);
-            /*if  (true)
-             console.log("check if game ededd");
-             //(end) manageEnd();
-             // check if the game has ended
-             else {
-             //move = machinePlay();
-             //fSphere(move).s = machine;
-             //if (end) manageEnd();
-             }*/
+            );
+            if (over) {
+                played = true;
+                /*socket.send({
+                 msgType:'move',
+                 value : over.id
+                 })*/
+            }
+            if (over && over.s === 0) {
+                over.s = human;
+            }
         }
     }
     run();
