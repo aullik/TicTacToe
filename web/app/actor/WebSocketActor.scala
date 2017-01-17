@@ -2,13 +2,13 @@ package actor
 
 import actor.WebSocketActor._
 import akka.actor._
-import akka.cluster.pubsub.DistributedPubSub
-import akka.cluster.pubsub.DistributedPubSubMediator.{Publish, Subscribe}
 import grizzled.slf4j.Logging
-import org.json4s.JsonDSL._
+import org.json4s.JsonAST.JObject
 import org.json4s._
 import org.json4s.jackson.JsonMethods._
 import org.json4s.jackson.Serialization
+import play.api.libs.json.{JsValue, OFormat, Json}
+import tictactoe.actor.user.UserManagerActor
 import tictactoe.model.User
 
 
@@ -18,17 +18,14 @@ class WebSocketActor(out: ActorRef, user: User) extends Actor with Logging {
 
 
   implicit val formats = Serialization.formats(NoTypeHints)
-  val mediator = DistributedPubSub(context.system).mediator
 
-  mediator ! Subscribe(CHANNEL, self)
-  mediator ! Publish(CHANNEL, LoggedInAnnouncement(self, user))
+  val userManager = context.actorSelection(context.system / UserManagerActor.NAME)
+
+  userManager ! UserManagerActor.SubscribeToUserAnnouncement(user)
 
   object ExtendedFunction extends PartialFunction[Any, Unit] {
     private val pf: PartialFunction[Any, Unit] = {
       case msg: String => handleMsg(msg)
-      //      case refreshRequest: RefreshRequest => handleRefreshRequest(refreshRequest)
-      case startWorkAnnouncement: LoggedInAnnouncement => handleStartWorkAnnouncement(startWorkAnnouncement)
-      case stopWorkAnnouncement: LoggedOutAnnouncement => handleStopWorkAnnouncement(stopWorkAnnouncement)
     }
 
     override def isDefinedAt(x: Any): Boolean = pf.isDefinedAt(x)
@@ -45,68 +42,83 @@ class WebSocketActor(out: ActorRef, user: User) extends Actor with Logging {
   def receive = ExtendedFunction
 
   def handleMsg(msg: String): Unit = {
-    val jsonValue = parse(msg)
     try {
-      //case "move" =>
-      (jsonValue \ "msgType").values match {
-        case "move" => println("this is a test")
+      val jsonValue = Json.parse(msg)
+      val msgType = (jsonValue \ MSG_TYPE).get.validate[String].get
+      val values: JsValue = (jsonValue \ VALUE).get
+      InMessage.getMessage(msgType) match {
+        case UserStatus => handleUserStatus()
+        case AskForGame => handleAskForGame(AskForGame.getValue(values))
+        case GameRequested => handleGameRequested(GameRequested.getValue(values))
+        case GameStatus => handleGameStatus()
+        case GamePlayers => handleGamePlayers()
+        case Move => handleMove(Move.getValue(values))
+        case Message => handleMessage(Message.getValue(values))
         case _ => throw new IllegalArgumentException("Invalid message")
       }
-      //      mediator ! Publish(teamId, new RefreshRequest(userId, jsonValue \ "page"))
-      //      sendSaveAckToClient((jsonValue \ "page").extract[String], success = true, "")
     } catch {
       case e: Exception =>
-        info(e)
-      //        sendSaveAckToClient((jsonValue \ "page").extract[String], success = false, e.getMessage)
+        warn(e)
     }
   }
 
+  private def sendMessage[OM <: OutMessage](msg: OM, value: OM#outValue, sendTo: ActorRef = out)(implicit writer: OFormat[OM#outValue]): Unit = {
+    sendTo ! compact(JObject(MSG_TYPE -> JString(msg.outMsg), VALUE -> Extraction.decompose(value)))
+  }
 
-  //  def handleRefreshRequest(request: RefreshRequest): Unit = {
-  //    if (!request.sender.equals(userId)) {
-  //      val outMsg = passRefreshRequestToClient(request.page.extract[String])
-  //      out ! outMsg
-  //    }
-  //  }
+  def handleUserStatus(): Unit = {
+    sendMessage[UserStatus.type](UserStatus, UserStatus("alice", "aliceToken", inGame = false, List(UserElement("bob", "bobToken"))))
+  }
 
-  def handleStartWorkAnnouncement(loggedInAnnouncement: LoggedInAnnouncement): Unit = {
-    if (sender() == self)
-      return
+  def handleGameRequested(value: AcceptGame): Unit = {
+    //send this to the other player
+    sendMessage[AskForGame.type](AskForGame, AcceptGame("bob", "token", accept = true))
+  }
 
-    out ! compact(render(("msgType" -> "LoggedInAnnouncement") ~ ("user" -> loggedInAnnouncement.user.name)))
+  def handleAskForGame(value: UserElement): Unit = {
+    handleGameRequested(AcceptGame(value.name, value.token, accept = true))
+  }
+
+  def handleGameStatus(): Unit = {
+    sendMessage[GameStatus.type](GameStatus, GameStatus(PlayerMove.list("M-1-2-3", "O-2-2-2")))
+  }
+
+  def handleGamePlayers(): Unit = {
+    sendMessage[GamePlayers.type](GamePlayers, GamePlayers(UserElement("alice", "aliceToken"), UserElement("bob", "bobToken")))
+  }
+
+  //FIXME only for testing
+  var finishNextTurn = false
+
+  def handleMove(value: Move): Unit = {
+    if (finishNextTurn)
+      sendMessage[GameFinish.type](GameFinish, GameFinish("M" + value.move, tie = true))
+    else {
+      finishNextTurn = true
+      sendMessage[PlayerMove.type](PlayerMove, PlayerMove("M" + value.move))
+    }
 
   }
 
-  def handleStopWorkAnnouncement(stopWorkAnnouncement: LoggedOutAnnouncement): Unit = {
-    if (sender() == self)
-      return
-
-    out ! compact(render(("msgType" -> "StopWorkAnnouncement") ~ ("user" -> stopWorkAnnouncement.user.name)))
+  def handleMessage(value: Message): Unit = {
+    sendMessage[Message.type](Message, value)
   }
 
-
-  //  def passRefreshRequestToClient(pageToRefresh: String): String = {
-  //    compact(render(("msgType" -> "refreshRequest") ~ ("page" -> pageToRefresh)))
-  //  }
-
-  def sendStopWorkAnnouncementToClient(userName: String): Unit = {
-  }
 
   override def postStop() = {
-    mediator ! Publish(CHANNEL, LoggedOutAnnouncement(user))
+    userManager ! UserManagerActor.UnSubscribeFromUserAnnouncement(user)
   }
 }
 
 object WebSocketActor {
 
+
   val CHANNEL = "userChannel"
 
-  case class LoggedInAnnouncement(sender: ActorRef, user: User)
+  val NOVALUE: JObject = JObject(Nil)
 
-  //  case class RefreshRequest(sender: String, page: JValue)
-
-  case class LoggedOutAnnouncement(user: User)
-
+  val MSG_TYPE = "msgType"
+  val VALUE = "value"
 
   def apply(out: ActorRef, usr: User) = {
     Props(new WebSocketActor(out, usr))
