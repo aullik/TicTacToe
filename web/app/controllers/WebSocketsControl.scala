@@ -34,7 +34,7 @@ class WebSocketsControl @Inject()(implicit system: ActorSystem,
 
       case Failure(e) =>
         warn(e)
-        HandlerResult(InternalServerError, None)
+        HandlerResult(WebSocketsControl.onFailure, None)
     }
   }
 
@@ -43,7 +43,12 @@ class WebSocketsControl @Inject()(implicit system: ActorSystem,
       Future.successful(getFlow(securedRequest))
     })(request).map {
       case HandlerResult(r, Some(flow)) => Right(flow)
-      case HandlerResult(r, None) => Left(r)
+      case HandlerResult(r, None) =>
+        r match {
+          case WebSocketsControl.onFailure =>
+          case any => info(s"silhouette returned result: $any")
+        }
+        Left(WebSocketsControl.onFailure)
     }(executionContext)
   }
 
@@ -54,4 +59,8 @@ class WebSocketsControl @Inject()(implicit system: ActorSystem,
     })
   }
 
+}
+
+object WebSocketsControl extends Controller {
+  private[WebSocketsControl] val onFailure = InternalServerError
 }
