@@ -26,6 +26,8 @@ class WebSocketActor(out: ActorRef, user: User) extends Actor with Logging {
   object ExtendedFunction extends PartialFunction[Any, Unit] {
     private val pf: PartialFunction[Any, Unit] = {
       case msg: String => handleMsg(msg)
+      case any => warn(s"illegal message + $any")
+        throw new IllegalArgumentException("Invalid message")
     }
 
     override def isDefinedAt(x: Any): Boolean = pf.isDefinedAt(x)
@@ -58,7 +60,7 @@ class WebSocketActor(out: ActorRef, user: User) extends Actor with Logging {
       }
     } catch {
       case e: Exception =>
-        warn(e)
+        warn(s"couldn't handle message: $msg. Exception: $e")
     }
   }
 
