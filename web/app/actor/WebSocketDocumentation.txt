@@ -1,0 +1,195 @@
+IN: all calls TO the server
+OUT: all calls FROM the server
+
+#example values
+String: "???", "1-2-3", "M-1-2-3"
+Numbers: 123
+Boolean: true
+
+# user status
+
+  IN: renamed from 'getStatus'
+  {
+    "msgType": "userStatus",
+    "value": {}
+  }
+
+  OUT: renamed from 'getStatusResponse'. ret for return
+  {
+    "msgType": "userStatusRet",
+    "value": {
+      "name": "???",
+      "token": "???",
+      "inGame": true,
+      "users": [
+        {
+          "name": "???",
+          "token": "???"
+        },
+        {
+          "name": "???",
+          "token": "???"
+        }
+      ]
+    }
+  }
+
+# user changes
+
+  OUT:
+  {
+    "msgType": "userLoggedIn",
+    "value": {
+      "name": "???",
+      "token": "???"
+    }
+  }
+
+  OUT:
+  {
+    "msgType": "userLoggedOut",
+    "value": {
+      "name": "???",
+      "token": "???"
+    }
+  }
+
+# ask for game
+
+  IN: #ask player with 'name'
+  {
+    "msgType": "askForGame",
+    "value": {
+      "name": "???",
+      "token": "???"
+    }
+  }
+
+  OUT: renamed from 'requestGame'
+  {
+    "msgType": "gameRequested",
+    "value": {
+      "name": "???",
+      "token": "???"
+    }
+  }
+
+  IN: renamed from 'responseGame'
+  {
+    "msgType": "gameRequestedRet",
+    "value": {
+      "name": "???",
+      "token": "???",
+      "accept": true
+    }
+  }
+
+  OUT: renamed from 'askForGameAck'
+  {
+    "msgType": "askForGameRet",
+    "value": {
+      "name": "???",
+      "token": "???",
+      "accept": true
+    }
+  }
+
+# Start the game
+
+  OUT:
+  {
+    "msgType": "startGame",
+    "value": {}
+  }
+
+  IN:
+  {
+    "msgType": "gameStatus",
+    "value": {}
+  }
+
+  OUT: renamed from 'gameStatusResponse'
+  {
+    "msgType": "gameStatusRet",
+    "value": {
+      "moves": [
+        {
+          "pMove": "M-1-2-3"
+        },
+        {
+          "pMove": "M-1-2-3"
+        }
+      ]
+    }
+  }
+
+  IN:
+  {
+    "msgType": "gamePlayers",
+    "value": {}
+  }
+
+  OUT: renamed from 'gamePlayersAck'
+  {
+    "msgType": "gamePlayersRet",
+    "value": {
+      "me": {
+        "name": "???",
+        "token": "???"
+      },
+      "other": {
+        "name": "???",
+        "token": "???"
+      }
+    }
+  }
+
+  IN:
+  {
+    "msgType": "move",
+    "value": {
+      "move": "1-2-3"
+    }
+  }
+
+  OUT: renamed from 'moveAck'
+  {
+    "msgType": "playerMoved",
+    "value": {
+      "pMove": "M-1-2-3"
+    }
+  }
+
+  OUT:
+  {
+    "msgType": "gameFinish",
+    "value": {
+      "pMove": "M-1-2-3",
+      "tie": true
+    }
+  }
+
+# handling Messages
+
+  IN:
+  {
+    "msgType": "message",
+    "value": {
+      "avatarColor": "???",
+      "timestamp": "???",
+      "body": "???"
+    }
+  }
+
+
+  OUT: renamed from 'messageAck'
+  {
+    "msgType": "acceptMessage",
+    "value": {
+      "avatarColor": "???",
+      "timestamp": "???",
+      "body": "???"
+    }
+  }
+
+

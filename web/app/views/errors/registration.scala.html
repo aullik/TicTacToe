@@ -1,0 +1,12 @@
+@()(implicit messages: Messages)
+<!doctype html>
+<html lang="en">
+   <head>
+      <title>@messages("error.oops")</title>
+   </head>
+   <body>
+      <h1>@messages("error.oops")</h1>
+      <p>@messages("error.registration")</p>
+      <a href="@routes.Application.signUpPage()"></a>
+   </body>
+</html>
