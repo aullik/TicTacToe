@@ -155,9 +155,11 @@
         },
         onMessage: function (event) {
             var msg = JSON.parse(event.data);
+            console.log(event)
+            console.log(msg)
             switch (msg.msgType) {
-                case "getStatusResponse":
-                    this.handleStatusResponse(msg.value);
+                case "userStatusRet":
+                    this.userHandleStatusRet(msg.value);
                     break;
                 case "userLoggedIn":
                     this.handleUserLoggedIn(msg.value);
@@ -178,7 +180,7 @@
                     console.warn("Could not handle this message: " + msg);
             }
         },
-        handleStatusResponse: function(data) {
+         userHandleStatusRet: function(data) {
             this.users = data.users;
             this.username = data.name;
             this.token = data.token;
@@ -210,8 +212,8 @@
         },
         onOpen: function (event) {
             console.log('Socket opened');;
-            socket.send({
-                msgType:'getStatus'
+            this.socket.send({
+                msgType:'userStatus'
             })
         },
 
