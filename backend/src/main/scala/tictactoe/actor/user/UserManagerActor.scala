@@ -1,9 +1,7 @@
 package tictactoe.actor.user
 
 import akka.actor.{Actor, ActorRef, Props}
-import akka.cluster.pubsub.DistributedPubSub
-import akka.cluster.pubsub.DistributedPubSubMediator.Subscribe
-import tictactoe.actor.user.UserControllerActor.{CHANNEL, SubscribeToUserAnnouncement, UnSubscribeFromUserAnnouncement}
+import tictactoe.actor.user.UserManagerActor.{SubscribeToUserAnnouncement, UnSubscribeFromUserAnnouncement}
 import tictactoe.model.User
 import util.ListUtils
 
@@ -11,18 +9,18 @@ import scala.collection.mutable
 
 /**
   */
-class UserControllerActor private() extends Actor {
+class UserManagerActor private() extends Actor {
 
-  val mediator = DistributedPubSub(context.system).mediator
-
-  val loggedInUserCache = mutable.Map.empty[String, User]
-
-  mediator ! Subscribe(CHANNEL, self)
 
   override def receive: Receive = {
     case SubscribeToUserAnnouncement(usr) =>
     case UnSubscribeFromUserAnnouncement(usr) =>
   }
+
+  //  mediator ! Subscribe(CHANNEL, self)
+  //  val mediator = DistributedPubSub(context.system).mediator
+
+  val loggedInUserCache = mutable.Map.empty[String, User]
 }
 
 private case class Container(usr: User, subscribers: List[ActorRef]) {
@@ -38,9 +36,9 @@ private case class Container(usr: User, subscribers: List[ActorRef]) {
 }
 
 
-object UserControllerActor {
+object UserManagerActor {
 
-  val CHANNEL = "userChannel"
+  val NAME = "UserManager"
 
   case class SubscribeToUserAnnouncement(user: User)
 
@@ -48,7 +46,7 @@ object UserControllerActor {
 
 
   def apply() = {
-    Props(new UserControllerActor())
+    Props(new UserManagerActor())
   }
 }
 
