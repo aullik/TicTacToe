@@ -212,9 +212,7 @@
         },
         onOpen: function (event) {
             console.log('Socket opened');;
-            this.socket.send({
-                msgType:'userStatus'
-            })
+            this.socket.send(JSON.stringify({msgType:'userStatus', value: {}}));
         },
 
         onError: function (event) {
@@ -229,10 +227,10 @@
             if (id === 'icon') id = event.srcElement.parentElement.id;
             var user = this.users.find(x => x.token == id);
             console.log(user)
-            this.socket.send({
+            this.socket.send(JSON.stringify({
                 msgType:'askForGame',
-                action : user
-            });
+                value : user
+            }));
             this.$.callToast.text = "call has been sent";
             this.$.callToast.open();
             this.$.usersContDiv.classList.add('disableClick')
