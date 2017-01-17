@@ -7,14 +7,33 @@ import scala.collection.mutable
 /**
   */
 object WebSocketActorMessages {
-
+  val allSocketObjects: Seq[SocketObject] =
+    List[SocketObject](
+      AcceptGame,
+      UserElement,
+      UserStatus,
+      UserLoggedIn,
+      UserLoggedOut,
+      AskForGame,
+      GameRequested,
+      StartGame,
+      PlayerMove,
+      GameStatus,
+      GamePlayers,
+      Move,
+      GameFinish,
+      Message
+    )
 }
 
+sealed trait SocketObject
 
-sealed trait InMessage {
+sealed trait InMessage extends SocketObject {
   self =>
 
-  InMessage.map.put(self.inMsg, self)
+  private[InMessage] def doInit(): Unit = {
+    InMessage.map.put(self.inMsg, self)
+  }
 
   val inMsg: String
   type inValue
@@ -25,9 +44,18 @@ sealed trait InMessage {
 }
 
 object InMessage {
+
+  private lazy val init: Unit = {
+    WebSocketActorMessages.allSocketObjects.flatMap {
+      case im: InMessage => Some(im)
+      case _ => None
+    }.foreach(_.doInit())
+  }
+
   private[InMessage] val map = mutable.Map.empty[String, InMessage]
 
   def getMessage(s: String): InMessage = {
+    init
     map.get(s) match {
       case Some(ret) => ret
       case None => throw new IllegalArgumentException(s"This is no valid message: $s")
@@ -35,9 +63,22 @@ object InMessage {
   }
 }
 
-trait OutMessage {
+trait OutMessage extends SocketObject {
   val outMsg: String
   type outValue
+}
+
+
+case class AcceptGame(name: String, token: String, accept: Boolean)
+
+object AcceptGame extends SocketObject {
+  implicit val form = Json.format[AcceptGame]
+}
+
+case class UserElement(name: String, token: String)
+
+object UserElement extends SocketObject {
+  implicit val form = Json.format[UserElement]
 }
 
 case class UserStatus(name: String,
@@ -151,14 +192,3 @@ object Message extends InMessage with OutMessage {
 }
 
 
-case class AcceptGame(name: String, token: String, accept: Boolean)
-
-object AcceptGame {
-  implicit val form = Json.format[AcceptGame]
-}
-
-case class UserElement(name: String, token: String)
-
-object UserElement {
-  implicit val form = Json.format[UserElement]
-}
