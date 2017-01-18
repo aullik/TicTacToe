@@ -31,6 +31,7 @@ var socket = new WebSocket("ws://" + window.location.host + "/socket/");
 
 socket.onmessage(function(event){
     var msg = JSON.parse(event.data);
+    console.log(msg)
     switch (msg.msgType) {
         case "call":
             this.handleCall(msg.action);

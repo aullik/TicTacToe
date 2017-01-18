@@ -82,7 +82,7 @@ class WebSocketActor(out: ActorRef, user: User) extends Actor with Logging {
   }
 
   def handleGameStatus(): Unit = {
-    sendMessage[GameStatus.type](GameStatus, GameStatus(PlayerMove.list("M-1-2-3", "O-2-2-2")))
+    sendMessage[GameStatus.type](GameStatus, GameStatus(PlayerMove.list("M-1-2-2", "O-2-2-2")))
   }
 
   def handleGamePlayers(): Unit = {
@@ -94,10 +94,10 @@ class WebSocketActor(out: ActorRef, user: User) extends Actor with Logging {
 
   def handleMove(value: Move): Unit = {
     if (finishNextTurn)
-      sendMessage[GameFinish.type](GameFinish, GameFinish("M" + value.move, tie = true))
+      sendMessage[GameFinish.type](GameFinish, GameFinish("M-" + value.move, tie = true))
     else {
       finishNextTurn = true
-      sendMessage[PlayerMove.type](PlayerMove, PlayerMove("M" + value.move))
+      sendMessage[PlayerMove.type](PlayerMove, PlayerMove("M-" + value.move))
     }
 
   }

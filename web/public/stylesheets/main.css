@@ -26,11 +26,12 @@ body {
     margin-top: 9px;
 }
 
-.indexWrapper {
+.indexWrapper, .mainRow {
     margin: 0;
-    height: 90%;
+    height: calc(100% - 53px);
     width: 100%;
     display: flex;
+    margin-top: 32px;
 }
 
 .indexWrapper div {
@@ -166,19 +167,20 @@ body {
     font-size: 12px;
 }
 
-/* index page */
+/* index page *//*
 .mainRow {
-    height: 100%;
+    height: 90%;
     width: 100%;
     margin: 0;
     padding: 0;
     display: flex;
-}
+}*/
 
 .mainRow .mainPart {
     margin: auto;
-    height: 75%;
+    height: 90%;
 }
+
 
 .mainPart .allUsers, .mainPart .groupChatBar {
     float: left;
@@ -200,9 +202,20 @@ body {
     margin-right: 5px;
     position: relative;
     width: calc(98% / 3);
-    background-color: #b0d7d9;
+    background-color: #ecf4f5;
 }
-
+.chat li.right .chat-body p{
+    text-align: right;
+}
+.chat li.right .chat-body .header{
+    text-align: right;
+}
+.chat li.left .chat-body p{
+    text-align: left;
+}
+.chat li.left .chat-body .header{
+    text-align: left;
+}
 .caption button {
     border: none;
     background: none;

@@ -117,7 +117,7 @@
                                 <div class="chat-body clearfix">
                                     <div class="header">
                                         <strong class="primary-font">
-                  {{ message.username }}</strong> <small class$="text-muted {{ getIfMe1(message) }}">
+                  {{ message.user.name }}</strong> <small class$="text-muted {{ getIfMe1(message) }}">
                                         <span class="glyphicon glyphicon-time"></span>{{ message.timestamp }}</small>
                                     </div>
                                     <p>
@@ -145,10 +145,6 @@
         // Let the library know where WebSocketMain.swf is:
         WEB_SOCKET_SWF_LOCATION = "/javascript/WebSocketMain.swf";
 
-        // Write your code in the same way as for native WebSocket:
-        //FIXME fix email
-        var socket = new WebSocket("ws://" + window.location.host + "/socket/");
-
         Polymer({
             is: 'my-tictactoe',
             listeners: {
@@ -157,16 +153,13 @@
             properties: {
                 user: {
                     type: Object,
-                    value: {
-                            username: "ysf",
-                            token: 222
-                        }
+                    value: {}
                 },
                 otherUser: {
                     type: Object,
                     value: {}
                 },
-                socket: {
+                ticSocket: {
                     type: Object,
                     observer: 'webSocketChanged'
                 },
@@ -176,37 +169,11 @@
                 },
                 messages:{
                     type: Array,
-                    value: [{
-                        user:{
-                            username: "momo",
-                            token: 123
-                        },
-                        avatarColor: "f81010",
-                        timestamp: "22:00",
-                        body: "hello whatsapp"
-                    },
-                        {
-                            user:{
-                            username: "ysf",
-                            token: 222
-                            },
-                            avatarColor: "4caf50",
-                            timestamp: "10:00",
-                            body: "hello man hello man hello man hello man hello man hello man hello man hello man hello man"
-                        },
-                        {
-                            user:{
-                                username: "momo",
-                                token: 123
-                            },
-                            avatarColor: "f81010",
-                            timestamp: "22:00",
-                            body: "kiss"
-                        }]
+                    value: []
                 }
             },
             getFirstChart: function(myUser){
-                return myUser.username.charAt(0);
+                return myUser.name.charAt(0).toUpperCase();
             },
             getIfMe: function(message){
                 return message.user.token == this.user.token ? 'pull-right' : 'pull-left';
@@ -218,7 +185,7 @@
                 return message.user.token == this.user.token ? 'right' : 'left';
             },
             ready: function () {
-                this.socket = new WebSocket("ws://" + window.location.host + "/socket/");
+                this.ticSocket = new WebSocket("ws://" + window.location.host + "/socket/");
                 var s = document.createElement("script");
                 s.type = "text/javascript";
                 s.src = '@routes.Assets.at("javascripts/play.js")';
@@ -234,12 +201,12 @@
                         timestamp: timeNow.getHours()+":"+timeNow.getMinutes(),
                         body: input
                     }
-                    console.log(data)
-                    this.push('messages', data);
-                    socket.send(JSON.stringify({
+                    this.ticSocket.send(JSON.stringify({
                         msgType:'message',
                         value:data
                     }));
+                    data.user = this.user
+                    this.push('messages', data);
                     this.$.btnInput.value = "";
                 }
             },
@@ -252,17 +219,18 @@
                 return color;
             },
             webSocketChanged: function () {
-                this.socket.onmessage = this.onMessage.bind(this);
-                this.socket.onopen = this.onOpen.bind(this);
-                this.socket.onerror = this.onError.bind(this);
-                this.socket.onclose = this.onClose.bind(this);
+                this.ticSocket.onmessage = this.onMessage.bind(this);
+                this.ticSocket.onopen = this.onOpen.bind(this);
+                this.ticSocket.onerror = this.onError.bind(this);
+                this.ticSocket.onclose = this.onClose.bind(this);
             },
             onOpen: function (event) {
                 console.log('socket opened');
-                socket.send(JSON.stringify({
+                this.ticSocket.send(JSON.stringify({
                     msgType:'gamePlayers',
                     value: {}
                 }));
+
             },
             onError: function (event) {
                 console.error("Error: " + JSON.stringify(event.reason));
@@ -287,8 +255,8 @@
                 this.messages.push(message);
             },
             handleGamePlayersRet: function (data) {
-                this.user = data.me;
-                this.otherUser = data.other;
+                this.set('user', data.me)
+                this.set('otherUser', data.other)
             }
         });
     </script>

@@ -192,7 +192,6 @@
             }
         },
         handleCallAskForGameRet: function (data) {
-            console.log(data)
             if(data.accept !== undefined && data.accept == false){
                 this.$.callToast.text = "call denied";
                 this.$.callToast.open();

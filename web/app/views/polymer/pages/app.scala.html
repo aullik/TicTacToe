@@ -78,8 +78,21 @@
 
             font-weight: bold;
         }
+        paper-button.green {
+            background-color: #00bcd4;
+            color: white;
+        }
+            paper-button.frameworks{
+                padding: 10px;
+            }
         </style>
-
+        <iron-ajax id="frameworkAjax"
+        url=""
+        method="POST"
+        handle-as="json"
+        on-error="handleError"
+        on-response="handleResponse"
+        debounce-duration="300"></iron-ajax>
         <app-location route="{{route}}"></app-location>
         <app-route
         route="{{route}}"
@@ -88,23 +101,16 @@
         tail="{{subroute}}"></app-route>
 
         <app-drawer-layout fullbleed>
-                <!-- Drawer content -
-      <app-drawer>
-        <app-toolbar>Menu</app-toolbar>
-        <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-          <a name="view1" href="/view1">View One</a>
-          <a name="view2" href="/view2">View Two</a>
-          <a name="view3" href="/view3">View Three</a>
-        </iron-selector>
-      </app-drawer>-->
 
                 <!-- Main content -->
             <app-header-layout has-scrolling-region>
 
                 <app-header condenses reveals effects="waterfall">
                     <app-toolbar>
-                        <paper-icon-button icon="menu" drawer-toggle></paper-icon-button>
                         <div main-title style="text-align: center;">TicTacToe 3D</div>
+                        <paper-button class="frameworks" id="0" raised on-tap="_sendFramework"> bootstrap </paper-button>
+                        <paper-button raised class="custom green frameworks"> Polymer </paper-button>
+                        <paper-button  class="frameworks" id="1" raised on-tap="_sendFramework"> Angular2js </paper-button>
                     </app-toolbar>
                 </app-header>
 
@@ -129,8 +135,7 @@
       properties: {
           page: {
               type: String,
-              reflectToAttribute: true,
-              observer: '_pageChanged'
+              reflectToAttribute: true
           },
 
       },
@@ -142,14 +147,17 @@
       _routePageChanged: function (page) {
           this.page = page || 'signup';
       },
-
-      _pageChanged: function (page) {
-          // Load page import on demand. Show 404 page if fails
-          //var resolvedPageUrl = this.resolveUrl(page + '.scala.html');
-          //this.set('route.path', '/');
-          //his.importHref(resolvedPageUrl, null, this._showPage404, true);
+      _sendFramework: function (e) {
+          this.$.frameworkAjax.url = "http://"+window.location.host + "/selectFramework/"+e.target.id;
+          this.$.frameworkAjax.generateRequest();
       },
-
+      handleError: function (data) {
+          console.log("response: "+data)
+      },
+      handleResponse: function (data) {
+          window.location.href = window.location.href;
+          console.log("response: "+data)
+      },
       _showPage404: function () {
           this.page = 'view404';
       }
