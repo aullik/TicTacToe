@@ -1,12 +1,12 @@
 @main("Welcome to TicTacToe 3D") {
    <div class="row mainRow">
-      <div class="col-xs-10 col-xs-offset-1">
-         <p id="status">status</p></div>
+      <!--div class="col-xs-10 col-xs-offset-1">
+         <p id="status">status</p></div>-->
       <div class="col-xs-10 col-xs-offset-1 mainPart">
          <div class="col-xs-8 allUsers panel panel-primary " id="game">
 
          </div>
-         <div class="col-xs-3 groupChatBar">
+         <div class="col-xs-4 groupChatBar">
             <div class="panel panel-primary" style=" height: 100%;
                border-radius: 0 4px 4px 0;
             ">
@@ -58,41 +58,59 @@
 
       // Write your code in the same way as for native WebSocket:
       //FIXME fix email
-      var socket = new WebSocket("ws://" + window.location.host + "/socket/");
+      var ticSocket = new WebSocket("ws://" + window.location.host + "/socket/");
 
       $(document).ready(function () {
          $('.redirectButton').on('click', function () {
             $('#gameFinishModal').modal('hide');
          });
          $('#btn-chat').on('click', function () {
-         });
          if($('#btn-input').val().length !== 0){
             var timeNow = new Date();
             var data = {
-               username: user.username,
                avatarColor:myAvatarColor,
                timestamp: timeNow.getHours()+":"+timeNow.getMinutes(),
                body: $('#btn-input').val()
-         }
-            socket.send({
+            }
+            ticSocket.send(JSON.stringify({
                msgType:'message',
                value:data
-            });
+            }));
+            data.user = user;
+            $('#chatContainer').append(addMessage(data));
+            $('#btn-input').val('');
          }
+         });
       });
-      socket.onmessage(function (event) {
+      ticSocket.onopen = function () {
+          console.log('socket connected')
+         ticSocket.send(JSON.stringify({
+            msgType:'gamePlayers',
+            value: {}
+         }));
+      }
+      ticSocket.onmessage = function (event) {
          var msg = JSON.parse(event.data);
          switch (msg.msgType) {
-            case "messageAck":
-               this.handleMessageAck(msg.value);
+            case "acceptMessage":
+               handleAcceptMessage(msg.value);
+               break;
+            case "gamePlayersRet":
+               handleGamePlayersRet(msg.value);
                break;
          }
-      });
+      };
 
-      function handleMessageAck(message){
+      function handleAcceptMessage(message){
+         //message = message.user = this.otherUser;
+         //console.log(message)
          if(message){
-             $('#chatContainer').append(addMessage(message));
+             //$('#chatContainer').append(addMessage(message));
          }
+      }
+      function handleGamePlayersRet(data) {
+         user = data.me;
+         otherUser = data.other;
       }
       function getRandomColor() {
          var letters = '0123456789ABCDEF';
@@ -105,12 +123,12 @@
       function addMessage(message){
             var data = [];
          data.push('<li class="left clearfix"><span class="chat-img pull-left">');
-         data.push('<img src="http://placehold.it/50/'+message.avatarColor+'/fff&text='+message.username.charAt(0)+'" alt="User Avatar" class="img-circle" />');
+         data.push('<img src="http://placehold.it/50/'+message.avatarColor+'/fff&text='+message.user.name.charAt(0).toUpperCase()+'" alt="User Avatar" class="img-circle" />');
          data.push('</span>');
          data.push('<div class="chat-body clearfix">');
          data.push('<div class="header">');
          data.push('<strong class="primary-font">');
-         data.push(message.username+'</strong> <small class="pull-right text-muted">');
+         data.push(message.user.name+'</strong> <small class="pull-right text-muted">');
          data.push('<span class="glyphicon glyphicon-time"></span>'+message.timestamp+'</small>');
          data.push('</div>');
          data.push('<p>');

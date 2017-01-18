@@ -5,9 +5,9 @@
 <html>
    <head>
       <title>@title</title>
-      <link rel="stylesheet" media="screen" href="@routes.Assets.at("/stylesheets/main.css")">
       <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("/images/favicon.png")">
       <link rel="stylesheet" href="@routes.Assets.at("/stylesheets/bootstrap.min.css")">
+      <link rel="stylesheet" media="screen" href="@routes.Assets.at("/stylesheets/main.css")">
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
          <!-- Optional theme -->
       <link rel="stylesheet" href="@routes.Assets.at("/stylesheets/bootstrap-theme.min.css")">
@@ -21,6 +21,26 @@
       <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
    </head>
    <body>
+      <<!--div class="col-xs-4 col-xs-offset-4 title">
+         <h1 class="titleHeader">Welcome to TicTacToe 3D</h1>
+      </div>
+      <div class="frameworksButtons">
+
+
+
+      </div>-->
+      <nav class="navbar navbar-default" style="position: absolute;left: 0;right: 0;top: 0;">
+         <div class="container-fluid">
+            <div class="navbar-header" style="width: 100%;">
+               <a style="margin-left: calc(50% - 130px);" class="navbar-brand" href="@routes.Application.index()">Welcome to TicTacToe 3D</a>
+               <ul class="nav navbar-nav navbar-right" style=" padding: 8px;">
+                  <li style="margin-left: 5px;"><button type="button" class="btn btn-success">Bootstrap</button></li>
+                  <li style="margin-left: 5px;"><button type="button" class="btn btn-default">Polymer</button></li>
+                  <li style="margin-left: 5px;"><button type="button" class="btn btn-default">Angular2js</button></li>
+               </ul>
+            </div>
+         </div>
+      </nav>
    @content
    </body>
 </html>

@@ -179,7 +179,7 @@ function userBlock(user,token) {
     var randomColor = getRandomColor();
     data.push('<div class="thumbnail users" id="'+token+'">');
     data.push('<div class="userPic">');
-    data.push('<img src="http://placehold.it/50/'+ randomColor +'/fff&text='+user.charAt(0)+'" alt="User Avatar" class="img-circle" >');
+    data.push('<img src="http://placehold.it/50/'+ randomColor +'/fff&text='+user.charAt(0).toUpperCase()+'" alt="User Avatar" class="img-circle" >');
     data.push('</div>');
     data.push('<div class="caption" style="display: flex;padding-right: 0px;">');
     data.push('<p style="margin: auto;margin-left: 0;"><b>'+user+'</b></p>');
