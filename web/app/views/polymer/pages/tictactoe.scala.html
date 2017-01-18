@@ -230,20 +230,16 @@
                 if(input){
                     var timeNow = new Date();
                     var data = {
-                        user:{
-                            username: this.user.username,
-                            token: this.user.token,
-                        },
                         avatarColor: this.myAvatarColor,
                         timestamp: timeNow.getHours()+":"+timeNow.getMinutes(),
                         body: input
                     }
                     console.log(data)
                     this.push('messages', data);
-                    socket.send({
+                    socket.send(JSON.stringify({
                         msgType:'message',
                         value:data
-                    });
+                    }));
                     this.$.btnInput.value = "";
                 }
             },
@@ -263,9 +259,10 @@
             },
             onOpen: function (event) {
                 console.log('socket opened');
-                socket.send({
-                    msgType:'players'
-                });
+                socket.send(JSON.stringify({
+                    msgType:'gamePlayers',
+                    value: {}
+                }));
             },
             onError: function (event) {
                 console.error("Error: " + JSON.stringify(event.reason));
@@ -277,18 +274,19 @@
             onMessage: function (event) {
                 var msg = JSON.parse(event.data);
                 switch (msg.msgType) {
-                    case "messageAck":
-                        this.handleMessageAck(msg.value);
+                    case "acceptMessage":
+                        this.handleAcceptMessage(msg.value);
                         break;
-                    case "playersAck":
-                        this.handlePlayersAck(msg.value);
+                    case "gamePlayersRet":
+                        this.handleGamePlayersRet(msg.value);
                         break;
                 }
             },
-            handleMessageAck: function(message){
+            handleAcceptMessage: function(message){
+                message = message.user = this.otherUser;
                 this.messages.push(message);
             },
-            handlePlayersAck: function (data) {
+            handleGamePlayersRet: function (data) {
                 this.user = data.me;
                 this.otherUser = data.other;
             }

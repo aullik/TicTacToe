@@ -94,7 +94,7 @@
                 <paper-toast id="callToast" text=""></paper-toast>
                 <paper-dialog id="activatePaperSpinner" no-cancel-on-esc-key no-cancel-on-outside-click>
                     <h5>Calling...</h5>
-                    <p stye="text-align: center;"><paper-spinner active id="spinner"></paper-spinner></p>
+                    <p style="text-align: center;"><paper-spinner active id="spinner"></paper-spinner></p>
                 </paper-dialog>
             </div>
         </paper-card>
@@ -121,13 +121,7 @@
         properties: {
             users: {
                 type: Array,
-                value: [{
-                        name: "spieler1",
-                        token: "asdf"
-                    },{
-                        name: "spieler2",
-                        token: "fjosid"
-                    }]
+                value: []
             },
             username: {
                 type: String,
@@ -155,8 +149,6 @@
         },
         onMessage: function (event) {
             var msg = JSON.parse(event.data);
-            console.log(event)
-            console.log(msg)
             switch (msg.msgType) {
                 case "userStatusRet":
                     this.userHandleStatusRet(msg.value);
@@ -167,11 +159,11 @@
                 case 'userLoggedOut':
                     this.handleUserLoggedOut(msg.value);
                     break;
-                case 'requestGame':
+                case 'gameRequested':
                     this.handleRequestGame(msg.value);
                     break;
-                case 'askForGameAck':
-                    this.handleCallAskForGameAck(msg.value);
+                case 'askForGameRet':
+                    this.handleCallAskForGameRet(msg.value);
                     break;
                 case 'startGame':
                     this.handleStartGame(msg.value);
@@ -193,13 +185,14 @@
             this.splice('users', index, 1);
         },
         handleRequestGame: function(data) {
-            if(user){
+            if(data){
                 this.modalTitle = "Call to start a game with " + data.name;
                 this.otherToken = data;
                 this.$.paperDialogAnimated.open()
             }
         },
-        handleCallAskForGameAck: function (data) {
+        handleCallAskForGameRet: function (data) {
+            console.log(data)
             if(data.accept !== undefined && data.accept == false){
                 this.$.callToast.text = "call denied";
                 this.$.callToast.open();
@@ -226,7 +219,6 @@
             var id = event.srcElement.id;
             if (id === 'icon') id = event.srcElement.parentElement.id;
             var user = this.users.find(x => x.token == id);
-            console.log(user)
             this.socket.send(JSON.stringify({
                 msgType:'askForGame',
                 value : user
@@ -240,19 +232,19 @@
             this.$.paperDialogAnimated.close()
             var user = this.otherToken;
             user.accept = false;
-            this.socket.send({
-                msgType:'responseGame',
-                action : user
-            })
+            this.socket.send(JSON.stringify({
+                msgType:'gameRequestedRet',
+                value : user
+            }))
         },
         _acceptCall: function () {
             this.$.paperDialogAnimated.close()
             var user = this.otherToken;
             user.accept = true;
-            this.socket.send({
-                msgType:'responseGame',
-                action : user
-            })
+            this.socket.send(JSON.stringify({
+                msgType:'gameRequestedRet',
+                value : user
+            }));
         },
         getRandomColor: function() {
             var letters = '0123456789ABCDEF';
