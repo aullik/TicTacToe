@@ -33,6 +33,14 @@
         .formContainer {
             padding: 50px;
         }
+        .welcomeErrors{
+            --paper-toast-background-color: red;
+            --paper-toast-color: white;
+        }
+        .welcomeSuccess{
+            --paper-toast-background-color: green;
+            --paper-toast-color: white;
+        }
         </style>
         <div class="mainContent">
             <paper-card class="content paddingCenter" heading="TicTacToe 3D">
@@ -59,7 +67,7 @@
                             <gold-email-input name="email" label="Email" auto-validate required></gold-email-input>
                             <paper-input name="password" label="Password" type="password" minlength="4" required></paper-input>
                             <paper-input hidden name="rememberMe" value="[[rememberMe]]"></paper-input>
-                            <paper-toggle-button checked="{{rememberMe}}">Remember Me</paper-toggle-button>
+                            <paper-toggle-button style="height: 62px;" checked="{{rememberMe}}">Remember Me</paper-toggle-button>
                             <paper-button raised onclick="_submit(event)">Submit</paper-button>
                         </form>
                     </div>
@@ -70,36 +78,49 @@
                             <paper-input name="password" label="Password" type="password" minlength="4" required></paper-input>
                             <paper-input id="passwordRepetition" name="passwordRepetition" label="Repeat Password" type="password" minlength="4"></paper-input>
                             <paper-input hidden name="rememberMe" value="[[rememberMe]]"></paper-input>
-                            <paper-toggle-button checked="{{rememberMe}}">Remember Me</paper-toggle-button>
+                            <paper-toggle-button style="height: 62px;" checked="{{rememberMe}}">Remember Me</paper-toggle-button>
                             <paper-button raised onclick="_submit(event)">Submit</paper-button>
                         </form>
                     </div>
                     <script>
-            function _submit(event) {
-                Polymer.dom(event).localTarget.parentElement.submit();
-            }
-          </script>
+                        function _submit(event) {
+                            Polymer.dom(event).localTarget.parentElement.submit();
+                        }
+                      </script>
                 </iron-pages>
             </paper-card>
         </div>
-
+        <paper-toast id="signUpToastError" class="welcomeErrors" text=""></paper-toast>
+        <paper-toast id="signUpToastSuccess" class="welcomeSuccess" text=""></paper-toast>
+        <a style="display: none" id="redirect" href='@routes.Application.index()'></a>
     </template>
 
     <script>
         Polymer({
             is: 'my-signup',
+            listeners: {
+                'signUpForm.iron-form-error': 'handleError',
+                'signInForm.iron-form-error': 'handleError',
+                'signUpForm.iron-form-response': 'handleSuccess',
+                'signInForm.iron-form-response': 'handleSuccessIn',
+            },
             properties: {
                 selected: {
                     type: Number,
                     value: 0
                 },
             },
-            _submit: function (event) {
-                console.log(21)
-                //Polymer.dom(event).localTarget.parentElement.submit();
-                console.log(document.getElementById('loginForm'))
+            handleError: function (e) {
+                this.$.signUpToastError.text = e.detail.error.message;
+                this.$.signUpToastError.open();
+            },
+            handleSuccess: function (data) {
+                this.$.signUpToastSuccess.text = 'Successfuly registered, we"ve send you a confirmation email';
+                this.$.signUpToastSuccess.open();
+            },
+            handleSuccessIn: function () {
+                this.$.redirect.click();
             }
-
         });
 </script>
 </dom-module>

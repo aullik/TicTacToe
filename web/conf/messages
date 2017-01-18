@@ -1,0 +1,74 @@
+# Common
+common.name=Name
+common.username=Benutzername
+common.email=Email
+common.cancel=Zurück
+common.ok=Ok
+common.change=Ändern
+common.players=Spieler
+common.create=Erstellen
+common.team=Team
+common.remaining=Übrig
+#Errors
+error.oops=Oops, es ist ein Fehler aufgetreten
+error.registration=Ihre Resgistrierung war nicht erfolgreich. Bitte versuchen Sie es erneut
+error.return=zurück zur Registrierung
+# Welcome Page
+welcome.welcome=Willkommen
+welcome.login=Anmeldung
+welcome.logIn=Anmelden
+welcome.signup=Registrierung
+welcome.signUp=Registrieren
+welcome.password=Passwort
+welcome.verifyPassword=Passwort bestätigen
+welcome.language=Sprache
+welcome.german=Deutsch
+welcome.english=Englisch
+welcome.loginError=Die Kombination aus Benutzername und Passwort konnte nicht gefunden werden
+welcome.registerError=Registrierung fehlgeschlagen
+welcome.signUp.user.notUnique=Die eingegebene E-Mail-Adresse wird bereits von einem anderen Benutzer verwendet
+welcome.signUp.thanks=Danke für ihre Registrierung!
+welcome.signUp.sent=Wir haben ihnen eine E-Mail mit weiteren Anweisungen gesendet, um ihrer Registrierung zu vollenden.
+welcome.signUp.passwordMatch=Passwörter stimmen nicht überein
+welcome.signIn.resetPassword=Passwort zurücksetzen
+welcome.signIn.reset=Zurücksetzen
+welcome.resetRequest.Success=Wir haben ihnen eine E-Mail geschickt mit Anweisungen zum Zurücksetzen ihres Passworts.
+# Menu
+menu.menu=Menü
+menu.signOut=Abmelden
+menu.home=Home
+menu.lobby=Lobby
+menu.settings=Einstellungen
+menu.administration=Administration
+menu.managePlayers=Spieler verwalten
+menu.gameMaster=Spielleiter
+menu.manageGames=Spiele verwalten
+# Lobby Page
+lobby.name=Name
+lobby.teams=Teams
+lobby.createTeam=Team erstellen
+lobby.joinTeam=Team beitreten
+lobby.enterGame=Spiel beitreten
+lobby.createNewTeam=Neues Team erstellen
+lobby.pleaseEnterTeam=Bitte ein Teamname angeben
+lobby.create=Erstellen
+lobby.joinTeamSuccess=Team erfolgreich beigetreten
+lobby.joinTeamFailure=Team konnte nicht beigetreten werden
+lobby.createTeamSuccess=Team erfolgreich erzeugt
+lobby.createTeamFailure=Team konnte nicht erzeugt werden
+lobby.enterGoals=Vergeben Sie 10 Punkte auf drei Kategorien
+# Settings Page
+settings.myAccount=Mein Konto
+settings.changeNameSuccess=Name erfolgreich geändert
+settings.changeNameFailure=Name konnte nicht geändert werden
+settings.changeEmailSuccess=Email erfolgreich geändert
+settings.changeEmailFailure=Email konnte nicht geändert werden
+# Mails
+mail.welcome.subject=Willkommen bei TicTacToe! Bitte bestätige deinen Account
+mail.welcome.hello=Willkommen {0}!
+mail.welcome.preLink=Bitte bestätige deine E-Mail-Adresse durch Klicken des unteren Links.
+mail.welcome.postLink=Beachte das dieser Link verfallen wird, wenn er nicht innerhalb von 24 aktiviert wird.
+mail.forgotPassword.subject=Zurücksetzen deines TicTacToe Passworts
+mail.forgotPassword.preLink=Jemand (hoffentlich Sie) hat beantragt das Passwort für ihren TicTacToe Account zurückzusetzen. Folgen Sie dem unteren Link zum Zurücksetzen ihres Passworts:
+mail.forgotPassword.postLink=Beachte das dieser Link nach 24 Stunden ungültig wird. Wenn Sie nicht ihr Passwort zurücksetzen möchten, ignorieren Sie diese E-Mail einfach.
+mail.sign=TicTacToe

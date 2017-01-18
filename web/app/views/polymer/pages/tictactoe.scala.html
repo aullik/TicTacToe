@@ -109,58 +109,186 @@
                 <div class="panel-collapse" style="height: calc(100% - 103px);">
                     <div class="panel-body">
                         <ul class="chat">
-                            <li class="left clearfix"><span class="chat-img pull-left">
-                                <img src="http://placehold.it/50/55C1E7/fff&text=U" alt="User Avatar" class="img-circle" />
+
+                            <template is="dom-repeat" items="{{messages}}" as="message">
+                            <li class$="{{ getIfMe2(message) }} clearfix"><span class$="chat-img {{ getIfMe(message) }}">
+                                <img src="http://placehold.it/50/{{ message.avatarColor }}/fff&text={{getFirstChart(message.user)}}" alt="User Avatar" class="img-circle" />
                             </span>
                                 <div class="chat-body clearfix">
                                     <div class="header">
                                         <strong class="primary-font">
-                  User</strong> <small class="pull-right text-muted">
-                                        <span class="glyphicon glyphicon-time"></span>date</small>
+                  {{ message.username }}</strong> <small class$="text-muted {{ getIfMe1(message) }}">
+                                        <span class="glyphicon glyphicon-time"></span>{{ message.timestamp }}</small>
                                     </div>
                                     <p>
-                  text
+                                  {{ message.body }}
                                     </p>
                                 </div>
                             </li>
-                            <li class="right clearfix"><span class="chat-img pull-right">
-                                <img src="http://placehold.it/50/FA6F57/fff&text=ME" alt="User Avatar" class="img-circle" />
-                            </span>
-                                <div class="chat-body clearfix">
-                                    <div class="header">
-                                        <small class=" text-muted"><span class="glyphicon glyphicon-time"></span>
-                                            date</small>
-                                        <strong class="pull-right primary-font">USER</strong>
-                                    </div>
-                                    <p>
-                  text
-                                    </p>
-                                </div>
-                            </li>
+                            </template>
                         </ul>
                     </div>
                     <div class="panel-footer">
                         <div class="input-group">
-                            <input id="btn-input" type="text" class="form-control input-sm" placeholder="Type your message here..." />
+                            <input id="btnInput" type="text" class="form-control input-sm" placeholder="Type your message here..." />
                             <span class="input-group-btn">
-                                <button class="btn btn-warning btn-sm" id="btn-chat">
+                                <button class="btn btn-warning btn-sm" id="btnChat">
                 Send</button>
                             </span>
                         </div>
                     </div>
                 </div>
             </div>
-
         </div>
     </template>
     <script>
+        // Let the library know where WebSocketMain.swf is:
+        WEB_SOCKET_SWF_LOCATION = "/javascript/WebSocketMain.swf";
+
+        // Write your code in the same way as for native WebSocket:
+        //FIXME fix email
+        var socket = new WebSocket("ws://" + window.location.host + "/socket/");
+
         Polymer({
             is: 'my-tictactoe',
+            listeners: {
+                'btnChat.tap': '_sendMessage',
+            },
+            properties: {
+                user: {
+                    type: Object,
+                    value: {
+                            username: "ysf",
+                            token: 222
+                        }
+                },
+                otherUser: {
+                    type: Object,
+                    value: {}
+                },
+                socket: {
+                    type: Object,
+                    observer: 'webSocketChanged'
+                },
+                myAvatarColor :{
+                    type: String,
+                    value: ""
+                },
+                messages:{
+                    type: Array,
+                    value: [{
+                        user:{
+                            username: "momo",
+                            token: 123
+                        },
+                        avatarColor: "f81010",
+                        timestamp: "22:00",
+                        body: "hello whatsapp"
+                    },
+                        {
+                            user:{
+                            username: "ysf",
+                            token: 222
+                            },
+                            avatarColor: "4caf50",
+                            timestamp: "10:00",
+                            body: "hello man hello man hello man hello man hello man hello man hello man hello man hello man"
+                        },
+                        {
+                            user:{
+                                username: "momo",
+                                token: 123
+                            },
+                            avatarColor: "f81010",
+                            timestamp: "22:00",
+                            body: "kiss"
+                        }]
+                }
+            },
+            getFirstChart: function(myUser){
+                return myUser.username.charAt(0);
+            },
+            getIfMe: function(message){
+                return message.user.token == this.user.token ? 'pull-right' : 'pull-left';
+            },
+            getIfMe1: function (message) {
+                return message.user.token == this.user.token ? 'pull-left' : 'pull-right';
+            },
+            getIfMe2: function(message){
+                return message.user.token == this.user.token ? 'right' : 'left';
+            },
             ready: function () {
+                this.socket = new WebSocket("ws://" + window.location.host + "/socket/");
                 var s = document.createElement("script");
                 s.type = "text/javascript";
-                s.src = "@routes.Assets.at("javascripts/play.js")";
+                s.src = '@routes.Assets.at("javascripts/play.js")';
                 this.$.gameContainer.appendChild(s);
+                this.myAvatarColor = this.getRandomColor();
+            },
+            _sendMessage: function () {
+                var input = this.$.btnInput.value;
+                if(input){
+                    var timeNow = new Date();
+                    var data = {
+                        avatarColor: this.myAvatarColor,
+                        timestamp: timeNow.getHours()+":"+timeNow.getMinutes(),
+                        body: input
+                    }
+                    console.log(data)
+                    this.push('messages', data);
+                    socket.send(JSON.stringify({
+                        msgType:'message',
+                        value:data
+                    }));
+                    this.$.btnInput.value = "";
+                }
+            },
+            getRandomColor: function() {
+                var letters = '0123456789ABCDEF';
+                var color = '';
+                for (var i = 0; i < 6; i++ ) {
+                    color += letters[Math.floor(Math.random() * 16)];
+                }
+                return color;
+            },
+            webSocketChanged: function () {
+                this.socket.onmessage = this.onMessage.bind(this);
+                this.socket.onopen = this.onOpen.bind(this);
+                this.socket.onerror = this.onError.bind(this);
+                this.socket.onclose = this.onClose.bind(this);
+            },
+            onOpen: function (event) {
+                console.log('socket opened');
+                socket.send(JSON.stringify({
+                    msgType:'gamePlayers',
+                    value: {}
+                }));
+            },
+            onError: function (event) {
+                console.error("Error: " + JSON.stringify(event.reason));
+            },
+
+            onClose: function (event) {
+                console.log("Web socket closed");
+            },
+            onMessage: function (event) {
+                var msg = JSON.parse(event.data);
+                switch (msg.msgType) {
+                    case "acceptMessage":
+                        this.handleAcceptMessage(msg.value);
+                        break;
+                    case "gamePlayersRet":
+                        this.handleGamePlayersRet(msg.value);
+                        break;
+                }
+            },
+            handleAcceptMessage: function(message){
+                message = message.user = this.otherUser;
+                this.messages.push(message);
+            },
+            handleGamePlayersRet: function (data) {
+                this.user = data.me;
+                this.otherUser = data.other;
             }
         });
     </script>
