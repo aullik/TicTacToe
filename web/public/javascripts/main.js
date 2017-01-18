@@ -1,4 +1,20 @@
-
+toastr.options = {
+    "closeButton": false,
+    "debug": false,
+    "newestOnTop": false,
+    "progressBar": false,
+    "positionClass": "toast-bottom-center",
+    "preventDuplicates": false,
+    "onclick": null,
+    "showDuration": "300",
+    "hideDuration": "1000",
+    "timeOut": "5000",
+    "extendedTimeOut": "1000",
+    "showEasing": "swing",
+    "hideEasing": "linear",
+    "showMethod": "fadeIn",
+    "hideMethod": "fadeOut"
+}
 
 // Let the library know where WebSocketMain.swf is:
 WEB_SOCKET_SWF_LOCATION = "/javascript/WebSocketMain.swf";
@@ -8,7 +24,7 @@ WEB_SOCKET_SWF_LOCATION = "/javascript/WebSocketMain.swf";
 var socket = new WebSocket("ws://" + window.location.host + "/socket/");
 
 var username;
-var users;
+var users;/*
 $(document).ready(function () {
     output = {
         name: "alice",
@@ -38,42 +54,47 @@ $(document).ready(function () {
         }
         $('.allUsers').append(usersData.join(''));
     }
-});
-/*
-socket.onopen(function () {
-    socket.send({
-        msgType:'getStatus'
-    });
-    socket.onmessage(socketOnMessage);
 });*/
-function socketOnMessage(event){
+
+this.socket.onopen = function onOpen(event) {
+    console.log('Socket opened');;
+    socket.send(JSON.stringify({msgType:'userStatus', value: {}}));
+}
+
+this.socket.onerror = function onError(event) {
+    console.error("Error: " + JSON.stringify(event.reason));
+}
+
+this.socket.onclose = function onClose(event) {
+    console.log("Web socket closed");
+}
+this.socket.onmessage = function socketOnMessage(event){
     var msg = JSON.parse(event.data);
     switch (msg.msgType) {
-        case "getStatusResponse":
-            this.handleStatusResponse(msg.value);
+        case "userStatusRet":
+            userHandleStatusRet(msg.value);
             break;
         case "userLoggedIn":
-            this.handleUserLoggedIn(msg.value);
+            handleUserLoggedIn(msg.value);
             break;
         case 'userLoggedOut':
-            this.handleUserLoggedOut(msg.value);
+            handleUserLoggedOut(msg.value);
             break;
-        case 'requestGame':
-            this.handleRequestGame(msg.value);
+        case 'gameRequested':
+            handleRequestGame(msg.value);
             break;
-        case 'askForGameAck':
-            this.handleCallAskForGameAck(msg.value);
+        case 'askForGameRet':
+            handleCallAskForGameRet(msg.value);
             break;
         case 'startGame':
-            this.handleStartGame(msg.value);
+            handleStartGame(msg.value);
             break;
         default:
             console.warn("Could not handle this message: " + msg);
     }
 
 };
-function handleStatusResponse(data) {
-    data = $.parseJSON(data);
+function userHandleStatusRet(data) {
     username = data.name;
     token = data.token;
     users = data.users;
@@ -96,13 +117,14 @@ function handleUserLoggedOut(data) {
     }
 }
 function handleRequestGame(data) {
-    if(data.user && data.token){
+    if(data.name && data.token){
         $('.callRequestTitle').html("call to start a game with " + data.name);
         $('#incomingCallModal').modal({backdrop: 'static', keyboard: false});
         $('#otherUserModal').val(data.token);
     }
 }
-function handleCallAskForGameAck(data) {
+function handleCallAskForGameRet(data) {
+    console.log(data)
     if(data.accept !== undefined && data.accept == false){
         $('#waitingModal').modal('hide');
         toastr.info('Game request denied');
@@ -116,13 +138,14 @@ $(document).on('click','#callButton', function (){
     var otherUser = $(this).parent().children(':last-child').val();
     var user = users.find(x => x.token == otherUser);
     if(user){
-        $('#waitingModal').modal({backdrop: 'static', keyboard: false});
         console.log("ask for game to: ")
         console.log(user)
-        socket.send({
+        socket.send(JSON.stringify({
             msgType:'askForGame',
             value : user
-        })
+        }));
+        toastr.success('call has been sent');
+        $('#waitingModal').modal({backdrop: 'static', keyboard: false});
     }
 });
 $(document).on('click','.callDeny', function (){
@@ -136,12 +159,12 @@ function hideRequestGameModalAndSendResp(accept) {
     var otherUser = $('#otherUserModal').val();
     var user = users.find(x => x.token == otherUser);
     user.accept = accept;
-    console.log('responseGame: ');
+    console.log('gameRequestedRet: ');
     console.log(user);
-    socket.send({
-        msgType:'responseGame',
+    socket.send(JSON.stringify({
+        msgType:'gameRequestedRet',
         value : user
-    })
+    }));
 }
 function getRandomColor() {
     var letters = '0123456789ABCDEF';

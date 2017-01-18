@@ -103,7 +103,7 @@
                         type: 'POST', // set sending HTTP Request type
                         contentType: 'application/json',
                         success: function (data) {
-                            if(data === "Registered"){
+                            if(data === "Registered" || data === ""){
                                 toastr.success('Successfuly registered, we"ve send you a confirmation email');
                             }
                         },

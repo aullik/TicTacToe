@@ -565,7 +565,7 @@ var socket = new WebSocket("ws://" + window.location.host + "/socket/");
         if(data.pMove.split('-')[0] == "O"){
             var sphere = fSphere(data.pMove.slice( 2 ))
             sphere.s = machine
-            played = true;
+            played = false;
         }
     }
     function handleGameStatusRet(data) {
