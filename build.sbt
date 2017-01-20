@@ -2,7 +2,6 @@
 resolvers += "scalaz-bintray" at "https://dl.bintray.com/scalaz/releases"
 resolvers += "Typesafe repository" at "http://repo.typesafe.com/typesafe/releases/"
 
-// unmanagedResourceDirectories in Test <+=  baseDirectory ( _ /"target/web/public/test" )
 
 lazy val commonSettings = Seq(
   version := "0.1",
@@ -49,13 +48,13 @@ lazy val commonSettings = Seq(
 lazy val root = (project in file("."))
   .settings(commonSettings)
   .settings(name := "TicTacToe")
-  .enablePlugins(PlayScala)
+  .enablePlugins(PlayScala, SbtWeb)
 
 
 lazy val `web` = (project in file("web"))
   .settings(commonSettings)
   .settings(name := "TicTacToe-web")
-  .enablePlugins(PlayScala)
+  .enablePlugins(PlayScala, SbtWeb)
   .dependsOn(`backend`)
 
 lazy val `backend` = (project in file("backend"))
@@ -72,5 +71,5 @@ resolveFromWebjarsNodeModulesDir := true
   ng2LintRulesDir.value
 ))
 
-logLevel in tslint := Level.Debug
+//logLevel in tslint := Level.Debug
 routesGenerator := InjectedRoutesGenerator
