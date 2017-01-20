@@ -87,5 +87,9 @@ private[controllers] abstract class AbstractAction[REQ <: Request[AnyContent]](m
     def apply(r: Request[AnyContent]) = messagesApi.preferred(r)
   }
 
+  private object FWS {
+    def apply(r: Request[AnyContent]) = framework.FrameworkSelector.getFramework(r)
+  }
+
 }
 
