@@ -24,11 +24,11 @@ class Application @Inject()(val messagesApi: MessagesApi,
 
   def signUp = UnAuthenticatedPost(Auth.startSignUp _)
 
-  def signUpEmail(token: String) = UnAuthenticatedPost(Auth.signUpEmail(token) _)
+  def signUpEmail(token: String) = UnAuthenticatedGet(Auth.signUpEmail(token) _)
 
-  def login = UnAuthenticatedPost(UserController.login _)
+  def login = UnAuthenticatedPost(Auth.authenticate _)
 
-  def logout = AuthenticatedGet(UserController.logout _)
+  def logout = AuthenticatedGet(Auth.signOut _)
 
   def selectFramework(framework: String) = {
     //TODO:  Framworks can be :
