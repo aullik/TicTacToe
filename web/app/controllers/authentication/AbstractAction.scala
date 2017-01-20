@@ -26,20 +26,20 @@ private[controllers] abstract class AbstractAction[REQ <: Request[AnyContent]](m
     }
   }
 
-  protected[authentication] def handleFutureRequest(block: (REQ, () => Messages) => Future[Result],
+  protected[authentication] def handleFutureRequest(block: (REQ) => Future[Result],
                                                     ec: ExecutionContext)
                                                    (request: Request[AnyContent]): Future[Result]
 
-  protected[authentication] def doAction(block: (REQ, () => Messages) => Result): Action[AnyContent] = {
+  protected[authentication] def doAction(block: (REQ, () => Messages) => Result): Action[AnyContent] =
     doActionFuture((r, m) => Future.successful(block(r, m)))
-  }
+
 
   protected[authentication] def doActionFuture(block: (REQ, () => Messages) => Future[Result]): Action[AnyContent] =
-    Async.async(handleFutureRequest(block, Async.executionContext) _)
+    Async.async(handleFutureRequest(buildBlock(block) _, Async.executionContext) _)
 
-
-  protected[authentication] def getMessages(request: Request[AnyContent]): Messages = messagesApi.preferred(request)
-
+  private def buildBlock(block: (REQ, () => Messages) => Future[Result])(r: REQ): Future[Result] = {
+    block(r, () => messagesApi.preferred(r))
+  }
 
   implicit class ResultFunction(val fnc: () => Result) {}
 

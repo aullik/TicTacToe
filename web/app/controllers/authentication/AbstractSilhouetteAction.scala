@@ -1,7 +1,7 @@
 package controllers.authentication
 
 import com.mohiva.play.silhouette.api.{HandlerResult, Silhouette}
-import play.api.i18n.{Messages, MessagesApi}
+import play.api.i18n.MessagesApi
 import play.api.mvc.{Results => HTMLResults, _}
 import silhouette.TicTacToeEnv
 
@@ -18,10 +18,10 @@ private[controllers] abstract class AbstractSilhouetteAction[REQ <: Request[AnyC
     executeChecked(block).map(HandlerResult[Nothing](_))(ec)
   }
 
-  protected[authentication] def handleSilhouetteRequest(block: (REQ, () => Messages) => Future[Result],
+  protected[authentication] def handleSilhouetteRequest(block: (REQ) => Future[Result],
                                                         ec: ExecutionContext): (Request[AnyContent]) => Future[HandlerResult[Nothing]]
 
-  override protected[authentication] def handleFutureRequest(block: (REQ, () => Messages) => Future[Result],
+  override protected[authentication] def handleFutureRequest(block: (REQ) => Future[Result],
                                                              ec: ExecutionContext)
                                                             (request: Request[AnyContent]): Future[Result] = {
     handleSilhouetteRequest(block, ec)(request).map(_.result)(ec)

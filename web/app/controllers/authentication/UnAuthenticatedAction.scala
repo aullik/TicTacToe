@@ -13,10 +13,10 @@ private[controllers] class UnAuthenticatedAction(messagesApi: MessagesApi, silho
                                                 ) extends AbstractSilhouetteAction[Request[AnyContent]](messagesApi, silhouette) {
 
 
-  override protected[authentication] def handleSilhouetteRequest(block: (Request[AnyContent], () => Messages) => Future[Result],
+  override protected[authentication] def handleSilhouetteRequest(block: (Request[AnyContent]) => Future[Result],
                                                                  ec: ExecutionContext): (Request[AnyContent]) => Future[HandlerResult[Nothing]] = {
     (request: Request[AnyContent]) => silhouette.UnsecuredRequestHandler(request)(req => {
-      executeCheckedHandlerResult(() => block(req, () => getMessages(req)), ec)
+      executeCheckedHandlerResult(() => block(req), ec)
     })
   }
 

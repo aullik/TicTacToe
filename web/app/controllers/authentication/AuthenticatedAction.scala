@@ -14,10 +14,10 @@ private[controllers] class AuthenticatedAction(messagesApi: MessagesApi, silhoue
                                               ) extends AbstractSilhouetteAction[SecuredRequest[TicTacToeEnv, AnyContent]](messagesApi, silhouette) {
 
 
-  override protected[authentication] def handleSilhouetteRequest(block: (SecuredRequest[TicTacToeEnv, AnyContent], () => Messages) => Future[Result],
+  override protected[authentication] def handleSilhouetteRequest(block: (SecuredRequest[TicTacToeEnv, AnyContent]) => Future[Result],
                                                                  ec: ExecutionContext): (Request[AnyContent]) => Future[HandlerResult[Nothing]] = {
     (request: Request[AnyContent]) => silhouette.SecuredRequestHandler(request)((req: SecuredRequest[TicTacToeEnv, AnyContent]) => {
-      executeCheckedHandlerResult(() => block(req, () => getMessages(req)), ec)
+      executeCheckedHandlerResult(() => block(req), ec)
     })
   }
 }
