@@ -2,12 +2,13 @@ package actor
 
 import actor.WebSocketActor._
 import akka.actor._
+import com.mohiva.play.silhouette.impl.User
 import grizzled.slf4j.Logging
 import org.json4s.JsonAST.JObject
 import org.json4s._
 import org.json4s.jackson.JsonMethods._
 import org.json4s.jackson.Serialization
-import play.api.libs.json.{JsValue, OFormat, Json}
+import play.api.libs.json.{JsValue, Json, OFormat}
 import tictactoe.actor.user.UserManagerActor
 import tictactoe.model.User
 
