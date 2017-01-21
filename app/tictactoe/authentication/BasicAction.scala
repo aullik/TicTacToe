@@ -10,7 +10,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 /**
   */
-private[controllers] class BasicAction(messagesApi: MessagesApi, silhouette: Silhouette[TicTacToeEnv]
+class BasicAction(messagesApi: MessagesApi, silhouette: Silhouette[TicTacToeEnv]
                                       ) extends AbstractAction[Request[AnyContent]](messagesApi, silhouette) {
 
 

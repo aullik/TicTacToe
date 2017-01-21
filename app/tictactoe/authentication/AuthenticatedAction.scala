@@ -10,7 +10,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 /**
   */
-private[controllers] class AuthenticatedAction(messagesApi: MessagesApi, silhouette: Silhouette[TicTacToeEnv]
+class AuthenticatedAction(messagesApi: MessagesApi, silhouette: Silhouette[TicTacToeEnv]
                                               ) extends AbstractSilhouetteAction[SecuredRequest[TicTacToeEnv, AnyContent]](messagesApi, silhouette) {
 
 

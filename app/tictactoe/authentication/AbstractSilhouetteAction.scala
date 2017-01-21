@@ -9,7 +9,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 /**
   */
-private[controllers] abstract class AbstractSilhouetteAction[REQ <: Request[AnyContent]](messagesApi: MessagesApi, silhouette: Silhouette[TicTacToeEnv]
+private[authentication] abstract class AbstractSilhouetteAction[REQ <: Request[AnyContent]](messagesApi: MessagesApi, silhouette: Silhouette[TicTacToeEnv]
                                                                                         ) extends AbstractAction[REQ](messagesApi, silhouette) {
 
 

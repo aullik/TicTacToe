@@ -12,7 +12,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 /**
   */
-private[controllers] abstract class AbstractAction[REQ <: Request[AnyContent]](messagesApi: MessagesApi, silhouette: Silhouette[TicTacToeEnv]) extends HTMLResults with Logging {
+private[authentication] abstract class AbstractAction[REQ <: Request[AnyContent]](messagesApi: MessagesApi, silhouette: Silhouette[TicTacToeEnv]) extends HTMLResults with Logging {
 
 
   protected[authentication] def executeChecked[R](block: () => R): R = {

@@ -81,7 +81,7 @@ class TicTacToeWebModule extends AbstractModule with ScalaModule {
     */
   @Provides
   def provideAuthenticatorCookieSigner(configuration: Configuration): CookieSigner = {
-    val config = configuration.underlying.as[JcaCookieSignerSettings]("tictactoe.silhouette.authenticator.cookie.signer")
+    val config = configuration.underlying.as[JcaCookieSignerSettings]("silhouette.authenticator.cookie.signer")
 
     //    val config = ficusConfig(configuration).as[JcaCookieSignerSettings]("tictactoe.silhouette.authenticator.cookie.signer")
     new JcaCookieSigner(config)
@@ -95,7 +95,7 @@ class TicTacToeWebModule extends AbstractModule with ScalaModule {
     */
   @Provides
   def provideAuthenticatorCrypter(configuration: Configuration): Crypter = {
-    val config = ficusConfig(configuration).as[JcaCrypterSettings]("tictactoe.silhouette.authenticator.crypter")
+    val config = ficusConfig(configuration).as[JcaCrypterSettings]("silhouette.authenticator.crypter")
     new JcaCrypter(config)
   }
 
@@ -130,7 +130,7 @@ class TicTacToeWebModule extends AbstractModule with ScalaModule {
                                    configuration: Configuration,
                                    clock: Clock
                                  ): AuthenticatorService[CookieAuthenticator] = {
-    val config = ficusConfig(configuration).as[CookieAuthenticatorSettings]("tictactoe.silhouette.authenticator")
+    val config = ficusConfig(configuration).as[CookieAuthenticatorSettings]("silhouette.authenticator")
     val encoder = new CrypterAuthenticatorEncoder(crypter)
     new CookieAuthenticatorService(config, None, cookieSigner, encoder, fingerprintGenerator, idGenerator, clock)
   }

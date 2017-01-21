@@ -57,15 +57,9 @@ lazy val commonSettings = Seq(
 )
 
 
-lazy val root = (project in file("."))
+lazy val `tictactoe` = (project in file("."))
   .settings(commonSettings)
   .settings(name := "TicTacToe")
-  .enablePlugins(PlayScala, SbtWeb)
-
-
-lazy val `web` = (project in file("web"))
-  .settings(commonSettings)
-  .settings(name := "TicTacToe-web")
   .enablePlugins(PlayScala, SbtWeb)
   .dependsOn(`backend`)
 

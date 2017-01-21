@@ -2,7 +2,7 @@ package tictactoe.actor
 
 import tictactoe.actor.WebSocketActor._
 import akka.actor._
-import com.mohiva.play.silhouette.impl.User
+
 import grizzled.slf4j.Logging
 import org.json4s.JsonAST.JObject
 import org.json4s._
@@ -18,9 +18,9 @@ import tictactoe.model.User
 class WebSocketActor(out: ActorRef, user: User) extends Actor with Logging {
 
 
-  implicit val formats = Serialization.formats(NoTypeHints)
+  private implicit val formats = Serialization.formats(NoTypeHints)
 
-  val userManager = context.actorSelection(context.system / UserManagerActor.NAME)
+  private val userManager = context.actorSelection(context.system / UserManagerActor.NAME)
 
   userManager ! UserManagerActor.SubscribeToUserAnnouncement(user)
 
@@ -108,7 +108,7 @@ class WebSocketActor(out: ActorRef, user: User) extends Actor with Logging {
   }
 
 
-  override def postStop() = {
+  override def postStop(): Unit = {
     userManager ! UserManagerActor.UnSubscribeFromUserAnnouncement(user)
   }
 }
@@ -123,7 +123,7 @@ object WebSocketActor {
   val MSG_TYPE = "msgType"
   val VALUE = "value"
 
-  def apply(out: ActorRef, usr: User) = {
+  def apply(out: ActorRef, usr: User): Props = {
     Props(new WebSocketActor(out, usr))
   }
 }
