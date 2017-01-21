@@ -1,26 +1,20 @@
-
-
-/*var socket = io.connect('http://' + window.location.hostname + ':3000');
-
-socket.on('call', function (data) {
-    $('.callRequestTitle').html("call to start a game from : " + data.fromUsername);
-    $('#incomingCallModal').modal({backdrop: 'static', keyboard: false});
-    $('#otherUserModal').val(data.fromUsername);
-});
-socket.on('denyCall', function (data) {
-    alert(data + " deny")
-});
-socket.on('callAccepted', function (data) {
-    window.location.href = 'http://localhost:9001/tictactoe';
-});
-socket.on('acceptCall', function (data) {
-    console.log(data)
-    socket.emit('callAccepted', {
-        fromUsername: data.toUsername,
-        toUsername: data.fromUsername
-    });
-    window.location.href = 'http://localhost:9001/tictactoe';
-});*/
+toastr.options = {
+    "closeButton": false,
+    "debug": false,
+    "newestOnTop": false,
+    "progressBar": false,
+    "positionClass": "toast-bottom-center",
+    "preventDuplicates": false,
+    "onclick": null,
+    "showDuration": "300",
+    "hideDuration": "1000",
+    "timeOut": "5000",
+    "extendedTimeOut": "1000",
+    "showEasing": "swing",
+    "hideEasing": "linear",
+    "showMethod": "fadeIn",
+    "hideMethod": "fadeOut"
+}
 
 // Let the library know where WebSocketMain.swf is:
 WEB_SOCKET_SWF_LOCATION = "/javascript/WebSocketMain.swf";
@@ -29,78 +23,171 @@ WEB_SOCKET_SWF_LOCATION = "/javascript/WebSocketMain.swf";
 //FIXME fix email
 var socket = new WebSocket("ws://" + window.location.host + "/socket/");
 
-socket.onmessage(function(event){
+var username;
+var users;/*
+$(document).ready(function () {
+    output = {
+        name: "alice",
+        token: "alicetoken",
+        users: [{
+            name: "spieler1",
+            token: "asdf"
+        },{
+            name: "spieler2",
+            token: "fjosid"
+        },
+            {
+                name: "spieler1",
+                token: "asdf"
+            },{
+                name: "spieler2",
+                token: "fjosid"
+            }]
+    }
+    username = output.name;
+    token = output.token;
+    users = output.users;
+    if(output.users){
+        var usersData = [];
+        for (var i = 0; i < output.users.length; i++){
+            usersData.push(userBlock(output.users[i].name, output.users[i].token))
+        }
+        $('.allUsers').append(usersData.join(''));
+    }
+});*/
+
+this.socket.onopen = function onOpen(event) {
+    console.log('Socket opened');;
+    socket.send(JSON.stringify({msgType:'userStatus', value: {}}));
+}
+
+this.socket.onerror = function onError(event) {
+    console.error("Error: " + JSON.stringify(event.reason));
+}
+
+this.socket.onclose = function onClose(event) {
+    console.log("Web socket closed");
+}
+this.socket.onmessage = function socketOnMessage(event){
     var msg = JSON.parse(event.data);
     console.log(msg)
     switch (msg.msgType) {
-        case "call":
-            this.handleCall(msg.action);
+        case "userStatusRet":
+            userHandleStatusRet(msg.value);
             break;
-        case 'denyCall':
-            this.handleDenyCall(msg.action);
+        case "userLoggedIn":
+            handleUserLoggedIn(msg.value);
             break;
-        case 'acceptCall':
-            this.handleAcceptCall(msg.action);
+        case 'userLoggedOut':
+            handleUserLoggedOut(msg.value);
             break;
-        case 'callAccepted':
-            this.handleCallAccepted(msg.action);
+        case 'gameRequested':
+            handleRequestGame(msg.value);
             break;
-        case 'newUser':
-            this.handleNewUser(msg.action);
+        case 'askForGameRet':
+            handleCallAskForGameRet(msg.value);
+            break;
+        case 'startGame':
+            handleStartGame(msg.value);
             break;
         default:
             console.warn("Could not handle this message: " + msg);
     }
 
-});
-function handleNewUser(data) {
+};
+function userHandleStatusRet(data) {
+    username = data.name;
+    token = data.token;
+    users = data.users;
+    if(data.users){
+        var usersData = [];
+        for (var i = 0; i < data.users.length; i++){
+            usersData.push(userBlock(data.users[i].name, data.users[i].token))
+        }
+        $('.allUsers').append(usersData.join(''));
+    }
+}
+function handleUserLoggedIn(data) {
     if(data.name && data.token){
         $('.allUsers').append(userBlock(data.name, data.token));
     }
 }
-function handleCall(data) {
-    var user = users.find(x => x.token == data);
-    if(user){
-        $('.callRequestTitle').html("call to start a game with " + user.name);
-        $('#incomingCallModal').modal({backdrop: 'static', keyboard: false});
-        $('#otherUserModal').val(user.token);
+function handleUserLoggedOut(data) {
+    if(data.name && data.token){
+        $('#'+data.token).remove();
     }
 }
-function handleDenyCall(data) {
-    alert("call denied")
+function handleRequestGame(data) {
+    if(data.name && data.token){
+        $('.callRequestTitle').html("call to start a game with " + data.name);
+        $('#incomingCallModal').modal({backdrop: 'static', keyboard: false});
+        $('#otherUserModal').val(data.token);
+    }
 }
-function handleAcceptCall(data) {
-    socket.send({
-        msgType:'callAccepted',
-        action : data
-    });
-    window.location.href = 'http://' + window.location.host + '/tictactoe';
+function handleCallAskForGameRet(data) {
+    console.log(data)
+    if(data.accept !== undefined && data.accept == false){
+        $('#waitingModal').modal('hide');
+        toastr.info('Game request denied');
+    }
 }
-function handleCallAccepted(data) {
+function handleStartGame(data) {
     window.location.href = 'http://' + window.location.host + '/tictactoe';
 }
 
 $(document).on('click','#callButton', function (){
     var otherUser = $(this).parent().children(':last-child').val();
-    socket.send({
-        msgType:'call',
-        action : otherUser
-    })
+    var user = users.find(x => x.token == otherUser);
+    if(user){
+        console.log("ask for game to: ")
+        console.log(user)
+        socket.send(JSON.stringify({
+            msgType:'askForGame',
+            value : user
+        }));
+        toastr.success('call has been sent');
+        $('#waitingModal').modal({backdrop: 'static', keyboard: false});
+    }
 });
 $(document).on('click','.callDeny', function (){
-    $('#incomingCallModal').modal('hide');
-    var otherUser = $('#otherUserModal').val();
-    socket.send({
-        msgType:'denyCall',
-        action : otherUser
-    })
+    hideRequestGameModalAndSendResp(false)
 });
 $(document).on('click','.callAccept', function (){
+    hideRequestGameModalAndSendResp(true)
+});
+function hideRequestGameModalAndSendResp(accept) {
     $('#incomingCallModal').modal('hide');
     var otherUser = $('#otherUserModal').val();
-    socket.send({
-        msgType:'acceptCall',
-        action : otherUser
-    })
-});
-
+    var user = users.find(x => x.token == otherUser);
+    user.accept = accept;
+    console.log('gameRequestedRet: ');
+    console.log(user);
+    socket.send(JSON.stringify({
+        msgType:'gameRequestedRet',
+        value : user
+    }));
+}
+function getRandomColor() {
+    var letters = '0123456789ABCDEF';
+    var color = '';
+    for (var i = 0; i < 6; i++ ) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+}
+function userBlock(user,token) {
+    var data = [];
+    var randomColor = getRandomColor();
+    data.push('<div class="thumbnail users" id="'+token+'">');
+    data.push('<div class="userPic">');
+    data.push('<img src="http://placehold.it/50/'+ randomColor +'/fff&text='+user.charAt(0).toUpperCase()+'" alt="User Avatar" class="img-circle" >');
+    data.push('</div>');
+    data.push('<div class="caption" style="display: flex;padding-right: 0px;">');
+    data.push('<p style="margin: auto;margin-left: 0;"><b>'+user+'</b></p>');
+    data.push('<button id="callButton" style="float: right;font-size: 24px;"><i class="fa fa-4 fa-gamepad" aria-hidden="true"></i></button>');
+    data.push('<input type="hidden" id="imgColor" value="'+randomColor+'">');
+    data.push('<input type="hidden" id="otherUser" value="'+token+'">');
+    data.push('</div>');
+    data.push('</div>');
+    return data.join('');
+}

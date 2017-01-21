@@ -1,12 +1,12 @@
 @main("Welcome to TicTacToe 3D") {
    <div class="row mainRow">
-      <div class="col-xs-10 col-xs-offset-1">
-         <p id="status">status</p></div>
+      <!--div class="col-xs-10 col-xs-offset-1">
+         <p id="status">status</p></div>-->
       <div class="col-xs-10 col-xs-offset-1 mainPart">
          <div class="col-xs-8 allUsers panel panel-primary " id="game">
 
          </div>
-         <div class="col-xs-3 groupChatBar">
+         <div class="col-xs-4 groupChatBar">
             <div class="panel panel-primary" style=" height: 100%;
                border-radius: 0 4px 4px 0;
             ">
@@ -15,67 +15,8 @@
                </div>
                <div class="panel-collapse" style="height: calc(100% - 103px);">
                   <div class="panel-body">
-                     <ul class="chat">
-                        <li class="left clearfix"><span class="chat-img pull-left">
-                           <img src="http://placehold.it/50/55C1E7/fff&text=U" alt="User Avatar" class="img-circle" />
-                        </span>
-                           <div class="chat-body clearfix">
-                              <div class="header">
-                                 <strong class="primary-font">
-                                    Jack Sparrow</strong> <small class="pull-right text-muted">
-                                 <span class="glyphicon glyphicon-time"></span>12 mins ago</small>
-                              </div>
-                              <p>
-                                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare
-                                 dolor, quis ullamcorper ligula sodales.
-                              </p>
-                           </div>
-                        </li>
-                        <li class="right clearfix"><span class="chat-img pull-right">
-                           <img src="http://placehold.it/50/FA6F57/fff&text=ME" alt="User Avatar" class="img-circle" />
-                        </span>
-                           <div class="chat-body clearfix">
-                              <div class="header">
-                                 <small class=" text-muted"><span class="glyphicon glyphicon-time"></span>
-                                    13 mins ago</small>
-                                 <strong class="pull-right primary-font">Bhaumik Patel</strong>
-                              </div>
-                              <p>
-                                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare
-                                 dolor, quis ullamcorper ligula sodales.
-                              </p>
-                           </div>
-                        </li>
-                        <li class="left clearfix"><span class="chat-img pull-left">
-                           <img src="http://placehold.it/50/55C1E7/fff&text=U" alt="User Avatar" class="img-circle" />
-                        </span>
-                           <div class="chat-body clearfix">
-                              <div class="header">
-                                 <strong class="primary-font">
-                                    Jack Sparrow</strong> <small class="pull-right text-muted">
-                                 <span class="glyphicon glyphicon-time"></span>14 mins ago</small>
-                              </div>
-                              <p>
-                                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare
-                                 dolor, quis ullamcorper ligula sodales.
-                              </p>
-                           </div>
-                        </li>
-                        <li class="right clearfix"><span class="chat-img pull-right">
-                           <img src="http://placehold.it/50/FA6F57/fff&text=ME" alt="User Avatar" class="img-circle" />
-                        </span>
-                           <div class="chat-body clearfix">
-                              <div class="header">
-                                 <small class=" text-muted"><span class="glyphicon glyphicon-time"></span>
-                                    15 mins ago</small>
-                                 <strong class="pull-right primary-font">Bhaumik Patel</strong>
-                              </div>
-                              <p>
-                                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare
-                                 dolor, quis ullamcorper ligula sodales.
-                              </p>
-                           </div>
-                        </li>
+                     <ul class="chat" id="chatContainer">
+
                      </ul>
                   </div>
                   <div class="panel-footer">
@@ -109,11 +50,94 @@
    </div> <!-- /.modal -->
    <script>
       var framework = 0;
+      var user;
+      var otherUser;
+      var myAvatarColor = getRandomColor();
+      // Let the library know where WebSocketMain.swf is:
+      WEB_SOCKET_SWF_LOCATION = "/javascript/WebSocketMain.swf";
+
+      // Write your code in the same way as for native WebSocket:
+      //FIXME fix email
+      var ticSocket = new WebSocket("ws://" + window.location.host + "/socket/");
+
       $(document).ready(function () {
          $('.redirectButton').on('click', function () {
             $('#gameFinishModal').modal('hide');
-         })
+         });
+         $('#btn-chat').on('click', function () {
+         if($('#btn-input').val().length !== 0){
+            var timeNow = new Date();
+            var data = {
+               avatarColor:myAvatarColor,
+               timestamp: timeNow.getHours()+":"+timeNow.getMinutes(),
+               body: $('#btn-input').val()
+            }
+            ticSocket.send(JSON.stringify({
+               msgType:'message',
+               value:data
+            }));
+            data.user = user;
+            $('#chatContainer').append(addMessage(data));
+            $('#btn-input').val('');
+         }
+         });
       });
+      ticSocket.onopen = function () {
+          console.log('socket connected')
+         ticSocket.send(JSON.stringify({
+            msgType:'gamePlayers',
+            value: {}
+         }));
+      }
+      ticSocket.onmessage = function (event) {
+         var msg = JSON.parse(event.data);
+         switch (msg.msgType) {
+            case "acceptMessage":
+               handleAcceptMessage(msg.value);
+               break;
+            case "gamePlayersRet":
+               handleGamePlayersRet(msg.value);
+               break;
+         }
+      };
+
+      function handleAcceptMessage(message){
+         //message = message.user = this.otherUser;
+         //console.log(message)
+         if(message){
+             //$('#chatContainer').append(addMessage(message));
+         }
+      }
+      function handleGamePlayersRet(data) {
+         user = data.me;
+         otherUser = data.other;
+      }
+      function getRandomColor() {
+         var letters = '0123456789ABCDEF';
+         var color = '';
+         for (var i = 0; i < 6; i++ ) {
+            color += letters[Math.floor(Math.random() * 16)];
+         }
+         return color;
+      }
+      function addMessage(message){
+            var data = [];
+         data.push('<li class="left clearfix"><span class="chat-img pull-left">');
+         data.push('<img src="http://placehold.it/50/'+message.avatarColor+'/fff&text='+message.user.name.charAt(0).toUpperCase()+'" alt="User Avatar" class="img-circle" />');
+         data.push('</span>');
+         data.push('<div class="chat-body clearfix">');
+         data.push('<div class="header">');
+         data.push('<strong class="primary-font">');
+         data.push(message.user.name+'</strong> <small class="pull-right text-muted">');
+         data.push('<span class="glyphicon glyphicon-time"></span>'+message.timestamp+'</small>');
+         data.push('</div>');
+         data.push('<p>');
+         data.push(message.body);
+         data.push('</p>');
+         data.push('</div>');
+         data.push('</li>');
+         return data.join('');
+      }
    </script>
    <!--
    <script src="routes.Assets.at("javascripts/main.js")"></script>-->

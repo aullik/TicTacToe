@@ -1,62 +1,10 @@
 @main("Welcome to TicTacToe 3D") {
 
    <div class="row mainRow">
-      <div class="col-xs-10 col-xs-offset-1 mainPart">
-         <div class="col-xs-8 allUsers panel panel-primary">
+      <div class="col-xs-8 col-xs-offset-2 mainPart">
+         <div class="col-xs-12 allUsers panel panel-primary">
             <h3>Users</h3>
 
-         </div>
-         <div class="col-xs-3 groupChatBar">
-            <div class="panel panel-primary" style=" height: 100%;
-               border-radius: 0 4px 4px 0;
-            ">
-               <div class="panel-heading" id="accordion">
-                  <i class="fa fa-commenting-o" aria-hidden="true"></i> Chat
-               </div>
-               <div class="panel-collapse" style="height: calc(100% - 103px);">
-                  <div class="panel-body">
-                     <ul class="chat">
-                        <li class="left clearfix"><span class="chat-img pull-left">
-                           <img src="http://placehold.it/50/55C1E7/fff&text=U" alt="User Avatar" class="img-circle" />
-                        </span>
-                           <div class="chat-body clearfix">
-                              <div class="header">
-                                 <strong class="primary-font">
-                                    User</strong> <small class="pull-right text-muted">
-                                 <span class="glyphicon glyphicon-time"></span>date</small>
-                              </div>
-                              <p>
-                                 text
-                              </p>
-                           </div>
-                        </li>
-                        <li class="right clearfix"><span class="chat-img pull-right">
-                           <img src="http://placehold.it/50/FA6F57/fff&text=ME" alt="User Avatar" class="img-circle" />
-                        </span>
-                           <div class="chat-body clearfix">
-                              <div class="header">
-                                 <small class=" text-muted"><span class="glyphicon glyphicon-time"></span>
-                                    date</small>
-                                 <strong class="pull-right primary-font">USER</strong>
-                              </div>
-                              <p>
-                                 text
-                              </p>
-                           </div>
-                        </li>
-                     </ul>
-                  </div>
-                  <div class="panel-footer">
-                     <div class="input-group">
-                        <input id="btn-input" type="text" class="form-control input-sm" placeholder="Type your message here..." />
-                        <span class="input-group-btn">
-                           <button class="btn btn-warning btn-sm" id="btn-chat">
-                              Send</button>
-                        </span>
-                     </div>
-                  </div>
-               </div>
-            </div>
          </div>
       </div>
    </div>
@@ -74,65 +22,16 @@
       </div><!-- /.modal-dialog -->
       <input type="hidden" id="otherUserModal" value="">
    </div> <!-- /.modal -->
-   <script>
-           var username;
-           var token;
-           var users;
-           /*$(document).ready(function () {
-              $.ajax({
-                 method: "POST",
-                 url: "routes.Application.getUsers()",
-                 success: function (output) {
-                    //output = $.parseJSON(output)
-                    console.log(output);
-                    output = {
-                       name: "alice",
-                       token: "alicetoken",
-                       users: [{
-                          name: "spieler1",
-                          token: "asdf"
-                       },{
-                          name: "spieler2",
-                          token: "fjosid"
-                       }]
-                    }
-                    username = output.name;
-                    token = output.token;
-                    users = output.users;
-                    if(output.users){
-                       var usersData = [];
-                       for (var i = 0; i < output.users.length; i++){
-                          usersData.push(userBlock(output.users[i].name, output.users[i].token))
-                       }
-                       $('.allUsers').append(usersData.join(''));
-                    }
-                 }
-              });
-           })*/
-           function getRandomColor() {
-              var letters = '0123456789ABCDEF';
-              var color = '';
-              for (var i = 0; i < 6; i++ ) {
-                 color += letters[Math.floor(Math.random() * 16)];
-              }
-              return color;
-           }
-           function userBlock(user,token) {
-              var data = [];
-              var randomColor = getRandomColor();
-              data.push('<div class="thumbnail users">');
-              data.push('<div class="userPic">');
-              data.push('<img src="http://placehold.it/50/'+ randomColor +'/fff&text='+user.charAt(0)+'" alt="User Avatar" class="img-circle" >');
-              data.push('</div>');
-              data.push('<div class="caption" style="display: flex;padding-right: 0px;">');
-              data.push('<p style="margin: auto;margin-left: 0;"><b>'+user+'</b></p>');
-              data.push('<button id="callButton" style="float: right;font-size: 24px;"><i class="fa fa-4 fa-gamepad" aria-hidden="true"></i></button>');
-              data.push('<input type="hidden" id="imgColor" value="'+randomColor+'">');
-              data.push('<input type="hidden" id="otherUser" value="'+token+'">');
-              data.push('</div>');
-              data.push('</div>');
-              return data.join('');
-           }
-   </script>
+   <div class="modal fade" tabindex="-1" role="dialog" id="waitingModal">
+      <div class="modal-dialog" role="document" style="width: 120px;margin-top: calc(25% - 60px);">
+         <div class="modal-content">
+            <div class="modal-header" style="text-align: center;">
+               <h4 class="modal-title">Calling...</h4>
+               <i class="fa fa-circle-o-notch fa-spin" style="font-size:24px"></i>
+            </div>
+         </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+      <input type="hidden" id="otherUserModal" value="">
+   </div> <!-- /.modal -->
    <script src="@routes.Assets.at("javascripts/main.js")"></script>
 }

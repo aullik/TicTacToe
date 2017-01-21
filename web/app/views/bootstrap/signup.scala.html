@@ -1,8 +1,4 @@
 @main("Welcome to TicTacToe") {
-
-    <div class="col-xs-4 col-xs-offset-4 title">
-        <h1 class="titleHeader">Welcome to TicTacToe 3D</h1>
-    </div>
     <div class="row indexWrapper">
         <div class="col-xs-6 col-xs-offset-1 cardList loginForm">
             <div class="loginmodal-container game_description">
@@ -76,6 +72,23 @@
     </div>
     <script>
             $(document).ready(function () {
+                toastr.options = {
+                    "closeButton": false,
+                    "debug": false,
+                    "newestOnTop": false,
+                    "progressBar": false,
+                    "positionClass": "toast-bottom-center",
+                    "preventDuplicates": false,
+                    "onclick": null,
+                    "showDuration": "300",
+                    "hideDuration": "1000",
+                    "timeOut": "5000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                }
                 $('.loginmodal-submit').click(function () {
                     var data = $(this).parent().parent().serializeObject();
                     data.rememberMe = data.rememberMe == undefined ? false : true;
@@ -86,11 +99,13 @@
                         type: 'POST', // set sending HTTP Request type
                         contentType: 'application/json',
                         success: function (data) {
-                            if(data.length == 0){
-                                window.location.href = "http://" + window.location.host + "/index";
+                            if(data === "Registered" || data === ""){
+                                toastr.success('Successfuly registered, we"ve send you a confirmation email');
                             }
                         },
                         error: function (data) { // if error occured
+                            data = $.parseJSON(data.responseText)
+                            toastr.error(data.error, '')
                             console.log('cannot sign up now ')
                         }
                     });

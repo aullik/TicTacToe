@@ -538,7 +538,30 @@ var socket = new WebSocket("ws://" + window.location.host + "/socket/");
             return s.id === id;
         });
         return m;
-    }
+    }/*
+    socket.send(JSON.stringify({
+        msgType:'gameStatus',
+        value: {}
+    }));
+    // ---- click sphere ----
+    socket.onmessage(function(event){
+        var msg = JSON.parse(event.data);
+        switch (msg.msgType) {
+            case "playerMoved":
+                this.handlePlayerMoved(msg.value);
+                break;
+            case 'gameStatusRet':
+                this.handleGameStatusRet(msg.value);
+                break;
+            case 'gameFinish':
+                this.handleGameFinish(msg.value);
+                break;
+            default:
+                console.warn("Could not handle this message: " + msg);
+        }
+
+    });*/
+
     socket.onopen = function () {
         console.log('socket opened');
         socket.send(JSON.stringify({
@@ -565,6 +588,8 @@ var socket = new WebSocket("ws://" + window.location.host + "/socket/");
         }
 
     };
+
+
     function handlePlayerMoved(data) {
         if(data.pMove.split('-')[0] == "O"){
             var sphere = fSphere(data.pMove.slice( 2 ))
@@ -573,6 +598,19 @@ var socket = new WebSocket("ws://" + window.location.host + "/socket/");
             showTempMessage("jetzt du bist dran");
         }
     }
+    /*
+    function handleGameStatusRet(data) {
+        if(data){
+            for (var i = 0; i < data.moves; i++){
+                var me = data.moves[i].pMove.split('-')[0] == "M" ? human: machine;
+                console.log(me+" "+data.pMove.moves[i].slice( 2 ));
+                var sphere = fSphere(data.pMove.moves[i].slice( 2 ));
+                sphere.s = me
+
+            }
+        }
+    }
+    */
     function handleGameStatusRet(data) {
         if(data){
             for (var i = 0; i < data.moves.length; i++){
@@ -590,6 +628,7 @@ var socket = new WebSocket("ws://" + window.location.host + "/socket/");
             }
         }
     }
+
     function handleGameFinish(data) {
         if (data) {
             handleMoveAck(data.pMove);
@@ -639,9 +678,9 @@ var socket = new WebSocket("ws://" + window.location.host + "/socket/");
             if (over) {
                 played = true;
                 socket.send(JSON.stringify({
-                    msgType:'move',
-                    value : {'move' : over.id}
-                }));
+                 msgType:'move',
+                 value : {'move' : over.id}
+                 }))
             }
             if (over && over.s === 0) {
                 over.s = human;
