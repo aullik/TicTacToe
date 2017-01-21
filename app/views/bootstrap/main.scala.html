@@ -17,7 +17,7 @@
       <script src="@routes.Assets.at("/javascripts/jquery.min.js")"></script>
       <script src="@routes.Assets.at("/javascripts/bootstrap.min.js")"></script>
       <script src="@routes.Assets.at("/javascripts/socket.io.js")"></script>
-      <link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"  rel="stylesheet">
+      <link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
       <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
    </head>
    <body>
@@ -29,10 +29,14 @@
 
 
       </div>-->
-      <nav class="navbar navbar-default" style="position: absolute;left: 0;right: 0;top: 0;">
+      <nav class="navbar navbar-default" style="position: absolute;
+         left: 0;
+         right: 0;
+         top: 0;">
          <div class="container-fluid">
             <div class="navbar-header" style="width: 100%;">
-               <a style="margin-left: calc(50% - 130px);" class="navbar-brand" href="@routes.ScalaRoutes.index()">Welcome to TicTacToe 3D</a>
+               <a style="margin-left: calc(50% - 130px);" class="navbar-brand" href="@routes.ScalaRoutes.index()">
+                  Welcome to TicTacToe 3D</a>
                <ul class="nav navbar-nav navbar-right" style=" padding: 8px;">
                   <li style="margin-left: 5px;"><button type="button" class="btn btn-success">Bootstrap</button></li>
                   <li style="margin-left: 5px;"><button type="button" class="btn btn-default">Polymer</button></li>
@@ -41,6 +45,6 @@
             </div>
          </div>
       </nav>
-   @content
+      @content
    </body>
 </html>

@@ -2,262 +2,263 @@
 <link rel="import" href="@routes.ScalaRoutes.polymer("pages.sharedStyles")">
 
 <dom-module id="my-tictactoe">
-    <template>
-        <style include="shared-styles">
-        :host {
-            display: block;
+   <template>
+      <style include="shared-styles">
+      :host {
+         display: block;
 
-            padding: 10px;
-        }
+         padding: 10px;
+      }
 
-        .content {
-            height: 90%;
-            float: left;
-        }
+      .content {
+         height: 90%;
+         float: left;
+      }
 
-        .paddingCenter {
+      .paddingCenter {
 
-            padding: 11px;
-            text-align: center;
-        }
+         padding: 11px;
+         text-align: center;
+      }
 
-        paper-button.green {
-            background-color: var(--paper-green-500);
-            color: white;
-        }
+      paper-button.green {
+         background-color: var(--paper-green-500);
+         color: white;
+      }
 
-        .heading {
-            height: 100%;
-            width: calc(100% - 70px);
-            text-align: center;
-            float: left;
-            display: flex;
-        }
+      .heading {
+         height: 100%;
+         width: calc(100% - 70px);
+         text-align: center;
+         float: left;
+         display: flex;
+      }
 
-        .imageDiv img {
-            width: 60px;
-            height: 100%;
-            float: left;
-        }
+      .imageDiv img {
+         width: 60px;
+         height: 100%;
+         float: left;
+      }
 
-        .imageDiv {
-            width: calc(100% - 40px);
-            height: 60px;
-            float: left;
-        }
+      .imageDiv {
+         width: calc(100% - 40px);
+         height: 60px;
+         float: left;
+      }
 
-        .heading span {
-            margin: auto;
-        }
+      .heading span {
+         margin: auto;
+      }
 
-        #usersCard {
-            width: 240px;
-            margin-left: 3px;
-        }
+      #usersCard {
+         width: 240px;
+         margin-left: 3px;
+      }
 
-        .actions {
-            float: left;
-            width: 40px;
-            height: 60px;
-            display: flex;
-        }
+      .actions {
+         float: left;
+         width: 40px;
+         height: 60px;
+         display: flex;
+      }
 
-        .usersContainerDiv {
-            height: 100%;
-            margin: auto;
-            overflow-y: auto;
-            width: 100%;
-        }
+      .usersContainerDiv {
+         height: 100%;
+         margin: auto;
+         overflow-y: auto;
+         width: 100%;
+      }
 
-        #game {
-            width: 100%;
-            height: 100%;
-            margin: 0;
-        }
+      #game {
+         width: 100%;
+         height: 100%;
+         margin: 0;
+      }
 
-        canvas {
-            width: 100%;
-            height: 100%;
-            margin: auto;
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: #111;
-        }
-        </style>
+      canvas {
+         width: 100%;
+         height: 100%;
+         margin: auto;
+         position: absolute;
+         top: 0;
+         bottom: 0;
+         left: 0;
+         right: 0;
+         background: #111;
+      }
+      </style>
 
-            <!--my-socket id="socketIO" server="http://localhost:3000/"></my-socket>-->
+         <!--my-socket id="socketIO" server="http://localhost:3000/"></my-socket>-->
 
-        <paper-card class="content" style="width: 55%;
-            margin-left: 5%;
-            display: flex">
-            <div class="usersContainerDiv" id="gameContainer">
-                <div class="col-xs-8 allUsers panel panel-primary " id="game">
+      <paper-card class="content" style="width: 55%;
+         margin-left: 5%;
+         display: flex">
+         <div class="usersContainerDiv" id="gameContainer">
+            <div class="col-xs-8 allUsers panel panel-primary " id="game">
 
           </div>
+         </div>
+      </paper-card>
+      <div class="content" style="width: 25%">
+         <div class="panel panel-primary" style=" height: 100%;
+            border-radius: 0 4px 4px 0;
+         ">
+            <div class="panel-heading" id="accordion">
+               <i class="fa fa-commenting-o" aria-hidden="true"></i> Chat
             </div>
-        </paper-card>
-        <div class="content" style="width: 25%">
-            <div class="panel panel-primary" style=" height: 100%;
-                border-radius: 0 4px 4px 0;
-            ">
-                <div class="panel-heading" id="accordion">
-                    <i class="fa fa-commenting-o" aria-hidden="true"></i> Chat
-                </div>
-                <div class="panel-collapse" style="height: calc(100% - 103px);">
-                    <div class="panel-body">
-                        <ul class="chat">
+            <div class="panel-collapse" style="height: calc(100% - 103px);">
+               <div class="panel-body">
+                  <ul class="chat">
 
-                            <template is="dom-repeat" items="{{messages}}" as="message">
-                            <li class$="{{ getIfMe2(message) }} clearfix"><span class$="chat-img {{ getIfMe(message) }}">
-                                <img src="http://placehold.it/50/{{ message.avatarColor }}/fff&text={{getFirstChart(message.user)}}" alt="User Avatar" class="img-circle" />
-                            </span>
-                                <div class="chat-body clearfix">
-                                    <div class="header">
-                                        <strong class="primary-font">
-                  {{ message.user.name }}</strong> <small class$="text-muted {{ getIfMe1(message) }}">
-                                        <span class="glyphicon glyphicon-time"></span>{{ message.timestamp }}</small>
-                                    </div>
-                                    <p>
+                     <template is="dom-repeat" items="{{messages}}" as="message">
+                        <li class$="{{ getIfMe2(message) }} clearfix"><span class$="chat-img {{ getIfMe(message) }}">
+                           <img src="http://placehold.it/50/{{ message.avatarColor }}/fff&text={{getFirstChart(message.user)}}" alt="User Avatar" class="img-circle" />
+                        </span>
+                           <div class="chat-body clearfix">
+                              <div class="header">
+                                 <strong class="primary-font">
+                  {{ message.user.name }}</strong>
+                                 <small class$="text-muted {{ getIfMe1(message) }}">
+                                    <span class="glyphicon glyphicon-time"></span>{{ message.timestamp }}</small>
+                              </div>
+                              <p>
                                   {{ message.body }}
-                                    </p>
-                                </div>
-                            </li>
-                            </template>
-                        </ul>
-                    </div>
-                    <div class="panel-footer">
-                        <div class="input-group">
-                            <input id="btnInput" type="text" class="form-control input-sm" placeholder="Type your message here..." />
-                            <span class="input-group-btn">
-                                <button class="btn btn-warning btn-sm" id="btnChat">
+                              </p>
+                           </div>
+                        </li>
+                     </template>
+                  </ul>
+               </div>
+               <div class="panel-footer">
+                  <div class="input-group">
+                     <input id="btnInput" type="text" class="form-control input-sm" placeholder="Type your message here..." />
+                     <span class="input-group-btn">
+                        <button class="btn btn-warning btn-sm" id="btnChat">
                 Send</button>
-                            </span>
-                        </div>
-                    </div>
-                </div>
+                     </span>
+                  </div>
+               </div>
             </div>
-        </div>
-    </template>
-    <script>
+         </div>
+      </div>
+   </template>
+   <script>
         // Let the library know where WebSocketMain.swf is:
         WEB_SOCKET_SWF_LOCATION = "/javascript/WebSocketMain.swf";
 
         Polymer({
-            is: 'my-tictactoe',
-            listeners: {
-                'btnChat.tap': '_sendMessage',
-            },
-            properties: {
-                user: {
-                    type: Object,
-                    value: {}
-                },
-                otherUser: {
-                    type: Object,
-                    value: {}
-                },
-                ticSocket: {
-                    type: Object,
-                    observer: 'webSocketChanged'
-                },
-                myAvatarColor :{
-                    type: String,
-                    value: ""
-                },
-                messages:{
-                    type: Array,
-                    value: []
-                }
-            },
-            getFirstChart: function(myUser){
-                return myUser.name.charAt(0).toUpperCase();
-            },
-            getIfMe: function(message){
-                return message.user.token == this.user.token ? 'pull-right' : 'pull-left';
-            },
-            getIfMe1: function (message) {
-                return message.user.token == this.user.token ? 'pull-left' : 'pull-right';
-            },
-            getIfMe2: function(message){
-                return message.user.token == this.user.token ? 'right' : 'left';
-            },
-            ready: function () {
-                this.ticSocket = new WebSocket("ws://" + window.location.host + "/socket/");
-                var s = document.createElement("script");
-                s.type = "text/javascript";
-                s.src = '@routes.Assets.at("javascripts/play.js")';
-                this.$.gameContainer.appendChild(s);
-                this.myAvatarColor = this.getRandomColor();
-            },
-            _sendMessage: function () {
-                var input = this.$.btnInput.value;
-                if(input){
-                    var timeNow = new Date();
-                    var data = {
-                        avatarColor: this.myAvatarColor,
-                        timestamp: timeNow.getHours()+":"+timeNow.getMinutes(),
-                        body: input
-                    }
-                    this.ticSocket.send(JSON.stringify({
-                        msgType:'message',
-                        value:data
-                    }));
-                    data.user = this.user
-                    this.push('messages', data);
-                    this.$.btnInput.value = "";
-                }
-            },
-            getRandomColor: function() {
-                var letters = '0123456789ABCDEF';
-                var color = '';
-                for (var i = 0; i < 6; i++ ) {
-                    color += letters[Math.floor(Math.random() * 16)];
-                }
-                return color;
-            },
-            webSocketChanged: function () {
-                this.ticSocket.onmessage = this.onMessage.bind(this);
-                this.ticSocket.onopen = this.onOpen.bind(this);
-                this.ticSocket.onerror = this.onError.bind(this);
-                this.ticSocket.onclose = this.onClose.bind(this);
-            },
-            onOpen: function (event) {
-                console.log('socket opened');
-                this.ticSocket.send(JSON.stringify({
-                    msgType:'gamePlayers',
-                    value: {}
-                }));
+           is: 'my-tictactoe',
+           listeners: {
+              'btnChat.tap': '_sendMessage',
+           },
+           properties: {
+              user: {
+                 type: Object,
+                 value: {}
+              },
+              otherUser: {
+                 type: Object,
+                 value: {}
+              },
+              ticSocket: {
+                 type: Object,
+                 observer: 'webSocketChanged'
+              },
+              myAvatarColor: {
+                 type: String,
+                 value: ""
+              },
+              messages: {
+                 type: Array,
+                 value: []
+              }
+           },
+           getFirstChart: function (myUser) {
+              return myUser.name.charAt(0).toUpperCase();
+           },
+           getIfMe: function (message) {
+              return message.user.token == this.user.token ? 'pull-right' : 'pull-left';
+           },
+           getIfMe1: function (message) {
+              return message.user.token == this.user.token ? 'pull-left' : 'pull-right';
+           },
+           getIfMe2: function (message) {
+              return message.user.token == this.user.token ? 'right' : 'left';
+           },
+           ready: function () {
+              this.ticSocket = new WebSocket("ws://" + window.location.host + "/socket/");
+              var s = document.createElement("script");
+              s.type = "text/javascript";
+              s.src = '@routes.Assets.at("javascripts/play.js")';
+              this.$.gameContainer.appendChild(s);
+              this.myAvatarColor = this.getRandomColor();
+           },
+           _sendMessage: function () {
+              var input = this.$.btnInput.value;
+              if (input) {
+                 var timeNow = new Date();
+                 var data = {
+                    avatarColor: this.myAvatarColor,
+                    timestamp: timeNow.getHours() + ":" + timeNow.getMinutes(),
+                    body: input
+                 }
+                 this.ticSocket.send(JSON.stringify({
+                    msgType: 'message',
+                    value: data
+                 }));
+                 data.user = this.user
+                 this.push('messages', data);
+                 this.$.btnInput.value = "";
+              }
+           },
+           getRandomColor: function () {
+              var letters = '0123456789ABCDEF';
+              var color = '';
+              for (var i = 0; i < 6; i++) {
+                 color += letters[Math.floor(Math.random() * 16)];
+              }
+              return color;
+           },
+           webSocketChanged: function () {
+              this.ticSocket.onmessage = this.onMessage.bind(this);
+              this.ticSocket.onopen = this.onOpen.bind(this);
+              this.ticSocket.onerror = this.onError.bind(this);
+              this.ticSocket.onclose = this.onClose.bind(this);
+           },
+           onOpen: function (event) {
+              console.log('socket opened');
+              this.ticSocket.send(JSON.stringify({
+                 msgType: 'gamePlayers',
+                 value: {}
+              }));
 
-            },
-            onError: function (event) {
-                console.error("Error: " + JSON.stringify(event.reason));
-            },
+           },
+           onError: function (event) {
+              console.error("Error: " + JSON.stringify(event.reason));
+           },
 
-            onClose: function (event) {
-                console.log("Web socket closed");
-            },
-            onMessage: function (event) {
-                var msg = JSON.parse(event.data);
-                switch (msg.msgType) {
-                    case "acceptMessage":
-                        this.handleAcceptMessage(msg.value);
-                        break;
-                    case "gamePlayersRet":
-                        this.handleGamePlayersRet(msg.value);
-                        break;
-                }
-            },
-            handleAcceptMessage: function(message){
-                message = message.user = this.otherUser;
-                this.messages.push(message);
-            },
-            handleGamePlayersRet: function (data) {
-                this.set('user', data.me)
-                this.set('otherUser', data.other)
-            }
+           onClose: function (event) {
+              console.log("Web socket closed");
+           },
+           onMessage: function (event) {
+              var msg = JSON.parse(event.data);
+              switch (msg.msgType) {
+                 case "acceptMessage":
+                    this.handleAcceptMessage(msg.value);
+                    break;
+                 case "gamePlayersRet":
+                    this.handleGamePlayersRet(msg.value);
+                    break;
+              }
+           },
+           handleAcceptMessage: function (message) {
+              message = message.user = this.otherUser;
+              this.messages.push(message);
+           },
+           handleGamePlayersRet: function (data) {
+              this.set('user', data.me)
+              this.set('otherUser', data.other)
+           }
         });
     </script>
 </dom-module>

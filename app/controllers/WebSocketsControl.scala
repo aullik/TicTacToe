@@ -2,18 +2,18 @@ package controllers
 
 import javax.inject.Inject
 
-import actor.WebSocketActor
+import tictactoe.actor.WebSocketActor
 import akka.actor.ActorSystem
 import akka.stream.Materializer
 import akka.stream.scaladsl.Flow
 import com.google.inject.Provider
 import com.mohiva.play.silhouette.api.actions.SecuredRequest
 import com.mohiva.play.silhouette.api.{HandlerResult, Silhouette}
-import controllers.webControllers.{WebController, WebControllerContainer}
+import tictactoe.controllers.webControllers.{WebController, WebControllerContainer}
 import grizzled.slf4j.Logging
 import play.api.libs.streams.ActorFlow
 import play.api.mvc._
-import silhouette.TicTacToeEnv
+import tictactoe.silhouette.TicTacToeEnv
 
 import scala.concurrent.ExecutionContext.Implicits.{global => executionContext}
 import scala.concurrent.Future
@@ -46,7 +46,7 @@ class WebSocketsControl @Inject()(implicit system: ActorSystem,
       case HandlerResult(r, None) =>
         r match {
           case WebSocketsControl.onFailure =>
-          case any => info(s"silhouette returned result: $any")
+          case any => info(s"tictactoe.silhouette returned result: $any")
         }
         Left(WebSocketsControl.onFailure)
     }(executionContext)

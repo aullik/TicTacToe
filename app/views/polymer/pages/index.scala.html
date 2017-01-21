@@ -3,259 +3,262 @@
 
 <dom-module id="my-index">
 
-    <template>
-        <style include="shared-styles">
-        :host {
-            display: block;
+   <template>
+      <style include="shared-styles">
+      :host {
+         display: block;
 
-            padding: 10px;
-        }
+         padding: 10px;
+      }
 
-        .content {
-            height: 80%;
-            float: left;
-        }
+      .content {
+         height: 80%;
+         float: left;
+      }
 
-        .paddingCenter {
+      .paddingCenter {
 
-            padding: 11px;
-            text-align: center;
-        }
+         padding: 11px;
+         text-align: center;
+      }
 
-        paper-button.green {
-            background-color: var(--paper-green-500);
-            color: white;
-        }
+      paper-button.green {
+         background-color: var(--paper-green-500);
+         color: white;
+      }
 
-        .heading {
-            height: 100%;
-            width: calc(100% - 70px);
-            text-align: center;
-            float: left;
-            display: flex;
-        }
+      .heading {
+         height: 100%;
+         width: calc(100% - 70px);
+         text-align: center;
+         float: left;
+         display: flex;
+      }
 
-        .imageDiv img {
-            width: 60px;
-            height: 100%;
-            float: left;
-        }
+      .imageDiv img {
+         width: 60px;
+         height: 100%;
+         float: left;
+      }
 
-        .imageDiv {
-            width: calc(100% - 40px);
-            height: 60px;
-            float: left;
-        }
+      .imageDiv {
+         width: calc(100% - 40px);
+         height: 60px;
+         float: left;
+      }
 
-        .heading span {
-            margin: auto;
-        }
+      .heading span {
+         margin: auto;
+      }
 
-        #usersCard {
-            width: 240px;
-            margin-left: 3px;
-        }
+      #usersCard {
+         width: 240px;
+         margin-left: 3px;
+      }
 
-        .actions {
-            float: left;
-            width: 40px;
-            height: 60px;
-            display: flex;
-        }
+      .actions {
+         float: left;
+         width: 40px;
+         height: 60px;
+         display: flex;
+      }
 
-        .usersContainerDiv {
-            height: 100%;
-            margin: auto;
-            overflow-y: auto;
-            width: 95%;
-        }
-        .disableClick{
-            pointer-events:none;
-        }
-        </style>
+      .usersContainerDiv {
+         height: 100%;
+         margin: auto;
+         overflow-y: auto;
+         width: 95%;
+      }
 
-            <!--my-socket id="socketIO" server="http://localhost:3000/"></my-socket>-->
-        <paper-card class="content" style="width: 80%;
-            margin-left: 10%;
-            display: flex">
-            <div class="usersContainerDiv" id="usersContDiv">
-                <h3>Users</h3>
-                <template is="dom-repeat" items="{{users}}" as="user">
-                    <paper-card id="usersCard">
-                        <div class="imageDiv">
-                            <img src="http://placehold.it/50/{{ getRandomColor() }}/fff&text={{getFirstChart(user.name)}}" alt="User Avatar">
-                            <div class="heading"><span>{{ user.name }}</span></div>
-                        </div>
-                        <div class="actions">
-                            <paper-icon-button id="{{ user.token }}" title="Start Game" on-click="_startGameOnClick" style="margin: auto" icon="hardware:videogame-asset"></paper-icon-button>
-                        </div>
-                    </paper-card>
-                </template>
-                <paper-toast id="callToast" text=""></paper-toast>
-                <paper-dialog id="activatePaperSpinner" no-cancel-on-esc-key no-cancel-on-outside-click>
-                    <h5>Calling...</h5>
-                    <p style="text-align: center;"><paper-spinner active id="spinner"></paper-spinner></p>
-                </paper-dialog>
-            </div>
-        </paper-card>
-        <paper-dialog id="paperDialogAnimated" no-cancel-on-esc-key no-cancel-on-outside-click>
-            <h2 id="callRequestTitle">{{ modalTitle }}</h2>
-            <div class="buttons">
-                <paper-button raised raised  id="denyCall">deny</paper-button>
-                <paper-button raised  id="acceptCall">accept</paper-button>
-            </div>
-        </paper-dialog>
-        <a style="display: none" id="redirect" href='@routes.ScalaRoutes.game()'></a>
-    </template>
+      .disableClick {
+         pointer-events: none;
+      }
+      </style>
 
-    <script>
+         <!--my-socket id="socketIO" server="http://localhost:3000/"></my-socket>-->
+      <paper-card class="content" style="width: 80%;
+         margin-left: 10%;
+         display: flex">
+         <div class="usersContainerDiv" id="usersContDiv">
+            <h3>Users</h3>
+            <template is="dom-repeat" items="{{users}}" as="user">
+               <paper-card id="usersCard">
+                  <div class="imageDiv">
+                     <img src="http://placehold.it/50/{{ getRandomColor() }}/fff&text={{getFirstChart(user.name)}}" alt="User Avatar">
+                     <div class="heading"><span>{{ user.name }}</span></div>
+                  </div>
+                  <div class="actions">
+                     <paper-icon-button id="{{ user.token }}" title="Start Game" on-click="_startGameOnClick" style="margin: auto" icon="hardware:videogame-asset"></paper-icon-button>
+                  </div>
+               </paper-card>
+            </template>
+            <paper-toast id="callToast" text=""></paper-toast>
+            <paper-dialog id="activatePaperSpinner" no-cancel-on-esc-key no-cancel-on-outside-click>
+               <h5>Calling...</h5>
+               <p style="text-align: center;"><paper-spinner active id="spinner"></paper-spinner></p>
+            </paper-dialog>
+         </div>
+      </paper-card>
+      <paper-dialog id="paperDialogAnimated" no-cancel-on-esc-key no-cancel-on-outside-click>
+         <h2 id="callRequestTitle">{{ modalTitle }}</h2>
+         <div class="buttons">
+            <paper-button raised raised id="denyCall">deny</paper-button>
+            <paper-button raised id="acceptCall">accept</paper-button>
+         </div>
+      </paper-dialog>
+      <a style="display: none" id="redirect" href='@routes.ScalaRoutes.game()'></a>
+   </template>
+
+   <script>
         // Let the library know where WebSocketMain.swf is:
         WEB_SOCKET_SWF_LOCATION = "/javascript/WebSocketMain.swf";
 
         Polymer({
-        is: 'my-index',
-        listeners: {
-            'denyCall.tap': '_denyCall',
-            'acceptCall.tap': '_acceptCall',
-        },
-        properties: {
-            users: {
-                type: Array,
-                value: []
-            },
-            username: {
-                type: String,
-                value: ""
-            },
-            token: {
-                type: String,
-                value: ""
-            },
-            socket: {
-                type: Object,
-                observer: 'webSocketChanged'
-            },
-            modalTitle: String,
-            otherToken: String
-        },
-        ready: function () {
-            this.socket = new WebSocket("ws://" + window.location.host + "/socket/");
-        },
-        webSocketChanged: function () {
-            this.socket.onmessage = this.onMessage.bind(this);
-            this.socket.onopen = this.onOpen.bind(this);
-            this.socket.onerror = this.onError.bind(this);
-            this.socket.onclose = this.onClose.bind(this);
-        },
-        onMessage: function (event) {
-            var msg = JSON.parse(event.data);
-            switch (msg.msgType) {
-                case "userStatusRet":
+           is: 'my-index',
+           listeners: {
+              'denyCall.tap': '_denyCall',
+              'acceptCall.tap': '_acceptCall',
+           },
+           properties: {
+              users: {
+                 type: Array,
+                 value: []
+              },
+              username: {
+                 type: String,
+                 value: ""
+              },
+              token: {
+                 type: String,
+                 value: ""
+              },
+              socket: {
+                 type: Object,
+                 observer: 'webSocketChanged'
+              },
+              modalTitle: String,
+              otherToken: String
+           },
+           ready: function () {
+              this.socket = new WebSocket("ws://" + window.location.host + "/socket/");
+           },
+           webSocketChanged: function () {
+              this.socket.onmessage = this.onMessage.bind(this);
+              this.socket.onopen = this.onOpen.bind(this);
+              this.socket.onerror = this.onError.bind(this);
+              this.socket.onclose = this.onClose.bind(this);
+           },
+           onMessage: function (event) {
+              var msg = JSON.parse(event.data);
+              switch (msg.msgType) {
+                 case "userStatusRet":
                     this.userHandleStatusRet(msg.value);
                     break;
-                case "userLoggedIn":
+                 case "userLoggedIn":
                     this.handleUserLoggedIn(msg.value);
                     break;
-                case 'userLoggedOut':
+                 case 'userLoggedOut':
                     this.handleUserLoggedOut(msg.value);
                     break;
-                case 'gameRequested':
+                 case 'gameRequested':
                     this.handleRequestGame(msg.value);
                     break;
-                case 'askForGameRet':
+                 case 'askForGameRet':
                     this.handleCallAskForGameRet(msg.value);
                     break;
-                case 'startGame':
+                 case 'startGame':
                     this.handleStartGame(msg.value);
                     break;
-                default:
+                 default:
                     console.warn("Could not handle this message: " + msg);
-            }
-        },
-         userHandleStatusRet: function(data) {
-            this.users = data.users;
-            this.username = data.name;
-            this.token = data.token;
-        },
-        handleUserLoggedIn: function(data) {
-            this.push('users', data);
-        },
-        handleUserLoggedOut: function(data) {
-            var index = this.users.findIndex(x => x.token == data.token);
-            this.splice('users', index, 1);
-        },
-        handleRequestGame: function(data) {
-            if(data){
-                this.modalTitle = "Call to start a game with " + data.name;
-                this.otherToken = data;
-                this.$.paperDialogAnimated.open()
-            }
-        },
-        handleCallAskForGameRet: function (data) {
-            if(data.accept !== undefined && data.accept == false){
-                this.$.callToast.text = "call denied";
-                this.$.callToast.open();
-                this.$.usersContDiv.classList.remove('disableClick')
-                this.$.activatePaperSpinner.close();
-            }
-        },
-        handleStartGame: function(data) {
-            this.$.redirect.click();
-        },
-        onOpen: function (event) {
-            console.log('Socket opened');;
-            this.socket.send(JSON.stringify({msgType:'userStatus', value: {}}));
-        },
+              }
+           },
+           userHandleStatusRet: function (data) {
+              this.users = data.users;
+              this.username = data.name;
+              this.token = data.token;
+           },
+           handleUserLoggedIn: function (data) {
+              this.push('users', data);
+           },
+           handleUserLoggedOut: function (data) {
+              var index = this.users.findIndex(x = > x.token == data.token
+              );
+              this.splice('users', index, 1);
+           },
+           handleRequestGame: function (data) {
+              if (data) {
+                 this.modalTitle = "Call to start a game with " + data.name;
+                 this.otherToken = data;
+                 this.$.paperDialogAnimated.open()
+              }
+           },
+           handleCallAskForGameRet: function (data) {
+              if (data.accept !== undefined && data.accept == false) {
+                 this.$.callToast.text = "call denied";
+                 this.$.callToast.open();
+                 this.$.usersContDiv.classList.remove('disableClick')
+                 this.$.activatePaperSpinner.close();
+              }
+           },
+           handleStartGame: function (data) {
+              this.$.redirect.click();
+           },
+           onOpen: function (event) {
+              console.log('Socket opened');;
+              this.socket.send(JSON.stringify({msgType: 'userStatus', value: {}}));
+           },
 
-        onError: function (event) {
-            console.error("Error: " + JSON.stringify(event.reason));
-        },
+           onError: function (event) {
+              console.error("Error: " + JSON.stringify(event.reason));
+           },
 
-        onClose: function (event) {
-            console.log("Web socket closed");
-        },
-        _startGameOnClick: function (event) {
-            var id = event.srcElement.id;
-            if (id === 'icon') id = event.srcElement.parentElement.id;
-            var user = this.users.find(x => x.token == id);
-            this.socket.send(JSON.stringify({
-                msgType:'askForGame',
-                value : user
-            }));
-            this.$.callToast.text = "call has been sent";
-            this.$.callToast.open();
-            this.$.usersContDiv.classList.add('disableClick')
-            this.$.activatePaperSpinner.open();
-        },
-        _denyCall: function (event) {
-            this.$.paperDialogAnimated.close()
-            var user = this.otherToken;
-            user.accept = false;
-            this.socket.send(JSON.stringify({
-                msgType:'gameRequestedRet',
-                value : user
-            }))
-        },
-        _acceptCall: function () {
-            this.$.paperDialogAnimated.close()
-            var user = this.otherToken;
-            user.accept = true;
-            this.socket.send(JSON.stringify({
-                msgType:'gameRequestedRet',
-                value : user
-            }));
-        },
-        getRandomColor: function() {
-            var letters = '0123456789ABCDEF';
-            var color = '';
-            for (var i = 0; i < 6; i++ ) {
-                color += letters[Math.floor(Math.random() * 16)];
-            }
-            return color;
-        },
-        getFirstChart: function(user){
-            return user.charAt(0);
-        }
-    });
+           onClose: function (event) {
+              console.log("Web socket closed");
+           },
+           _startGameOnClick: function (event) {
+              var id = event.srcElement.id;
+              if (id === 'icon') id = event.srcElement.parentElement.id;
+              var user = this.users.find(x = > x.token == id
+              );
+              this.socket.send(JSON.stringify({
+                 msgType: 'askForGame',
+                 value: user
+              }));
+              this.$.callToast.text = "call has been sent";
+              this.$.callToast.open();
+              this.$.usersContDiv.classList.add('disableClick')
+              this.$.activatePaperSpinner.open();
+           },
+           _denyCall: function (event) {
+              this.$.paperDialogAnimated.close()
+              var user = this.otherToken;
+              user.accept = false;
+              this.socket.send(JSON.stringify({
+                 msgType: 'gameRequestedRet',
+                 value: user
+              }))
+           },
+           _acceptCall: function () {
+              this.$.paperDialogAnimated.close()
+              var user = this.otherToken;
+              user.accept = true;
+              this.socket.send(JSON.stringify({
+                 msgType: 'gameRequestedRet',
+                 value: user
+              }));
+           },
+           getRandomColor: function () {
+              var letters = '0123456789ABCDEF';
+              var color = '';
+              for (var i = 0; i < 6; i++) {
+                 color += letters[Math.floor(Math.random() * 16)];
+              }
+              return color;
+           },
+           getFirstChart: function (user) {
+              return user.charAt(0);
+           }
+        });
   </script>
 </dom-module>

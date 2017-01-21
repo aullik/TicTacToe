@@ -1,131 +1,133 @@
 @main("Welcome to TicTacToe") {
-    <div class="row indexWrapper">
-        <div class="col-xs-6 col-xs-offset-1 cardList loginForm">
-            <div class="loginmodal-container game_description">
-                3D tic-tac-toe, also known by the trade name <strong> Qubic </strong>, is a board game.
-                It is similar in concept to traditional
-                <a href="https://en.wikipedia.org/wiki/Tic-tac-toe">tic-tac-toe </a>
-                but is played in a cubical array of cells.
-                Players take turns placing their markers in blank cells in the array.
-                The first player to achieve three of their own markers in a row wins.
-                The winning row can be horizontal, vertical, or diagonal on a single board as in regular tic-tac-toe,
-                or vertically in a column, or a diagonal line through four boards.
-                <br >
-                <img src="/assets/images/tictactoe.jpg" alt="TicTacToe 3D">
+   <div class="row indexWrapper">
+      <div class="col-xs-6 col-xs-offset-1 cardList loginForm">
+         <div class="loginmodal-container game_description">
+            3D tic-tac-toe, also known by the trade name <strong> Qubic </strong>, is a board game.
+            It is similar in concept to traditional
+            <a href="https://en.wikipedia.org/wiki/Tic-tac-toe">tic-tac-toe </a>
+            but is played in a cubical array of cells.
+            Players take turns placing their markers in blank cells in the array.
+            The first player to achieve three of their own markers in a row wins.
+            The winning row can be horizontal, vertical, or diagonal on a single board as in regular tic-tac-toe,
+            or vertically in a column, or a diagonal line through four boards.
+            <br >
+            <img src="/assets/images/tictactoe.jpg" alt="TicTacToe 3D">
+         </div>
+      </div>
+      <div class="col-xs-3 cardList loginForm">
+         <ul class="nav nav-tabs">
+            <li role="presentation" class="active"><a href="#login" data-toggle="tab">Log in</a></li>
+            <li role="presentation"><a href="#signUp" data-toggle="tab">Sign Up</a></li>
+         </ul>
+         <div class="tab-content">
+            <div class="tab-pane loginmodal-container active" id="login">
+               <form method="POST" action='@routes.ScalaRoutes.login()' Content-type="application/json" id="loginForm">
+                  <div class="form-group">
+                     <label for="email">Email address</label>
+                     <input type="email" class="form-control" name="email" id="email" placeholder="Enter email" value="">
+                  </div>
+                  <div class="form-group">
+                     <label for="password">Password</label>
+                     <input type="password" class="form-control" name="password" id="password" placeholder="Password">
+                  </div>
+                  <div class="form-group">
+                     <label for="rememberMe">Remember me</label>
+                     <input style="float: left;
+                        margin: 9px;" type="checkBox" name="rememberMe" id="rememberMe">
+                  </div>
+                  <div class="btn-group">
+                     <input type="button" class="login loginmodal-submit" value="Submit" />
+                  </div>
+               </form>
             </div>
-        </div>
-        <div class="col-xs-3 cardList loginForm">
-            <ul class="nav nav-tabs">
-                <li role="presentation" class="active"><a href="#login" data-toggle="tab">Log in</a></li>
-                <li role="presentation"><a href="#signUp" data-toggle="tab">Sign Up</a></li>
-            </ul>
-            <div class="tab-content">
-                <div class="tab-pane loginmodal-container active" id="login">
-                    <form method="POST" action='@routes.ScalaRoutes.login()' Content-type="application/json" id="loginForm">
-                        <div class="form-group">
-                            <label for="email">Email address</label>
-                            <input type="email" class="form-control" name="email" id="email" placeholder="Enter email" value="">
-                        </div>
-                        <div class="form-group">
-                            <label for="password">Password</label>
-                            <input type="password" class="form-control" name="password" id="password" placeholder="Password">
-                        </div>
-                        <div class="form-group">
-                            <label for="rememberMe">Remember me</label>
-                            <input style="float: left;margin: 9px;" type="checkBox" name="rememberMe" id="rememberMe">
-                        </div>
-                        <div class="btn-group">
-                            <input type="button" class="login loginmodal-submit" value="Submit" />
-                        </div>
-                    </form>
-                </div>
-                <div class="tab-pane loginmodal-container" id="signUp">
-                    <form method="POST" action='@routes.ScalaRoutes.signUp()' Content-type="application/json" id="signupForm">
-                        <div class="form-group">
-                            <label for="username">Username</label>
-                            <input type="text" class="form-control" name="name" id="username" placeholder="Enter username" value="">
-                        </div>
-                        <div class="form-group">
-                            <label for="email">Email address</label>
-                            <input type="email" class="form-control" name="email" id="email" placeholder="Enter email" value="">
-                        </div>
-                        <div class="form-group">
-                            <label for="password">Password</label>
-                            <input type="password" class="form-control" name="password" id="password" placeholder="Password">
-                        </div>
-                        <div class="form-group">
-                            <label for="passwordRepetition">Repeat Password</label>
-                            <input type="password" class="form-control" name="passwordRepetition" id="repeatPassword" placeholder="Repeat Password">
-                        </div>
-                        <div class="form-group">
-                            <label for="rememberMe">Remember me</label>
-                            <input style="float: left;margin: 9px;" type="checkBox" name="rememberMe" id="rememberMe">
-                        </div>
-                        <div class="btn-group">
-                            <input type="button" class="login loginmodal-submit" value="Submit" />
-                        </div>
-                    </form>
-                </div>
+            <div class="tab-pane loginmodal-container" id="signUp">
+               <form method="POST" action='@routes.ScalaRoutes.signUp()' Content-type="application/json" id="signupForm">
+                  <div class="form-group">
+                     <label for="username">Username</label>
+                     <input type="text" class="form-control" name="name" id="username" placeholder="Enter username" value="">
+                  </div>
+                  <div class="form-group">
+                     <label for="email">Email address</label>
+                     <input type="email" class="form-control" name="email" id="email" placeholder="Enter email" value="">
+                  </div>
+                  <div class="form-group">
+                     <label for="password">Password</label>
+                     <input type="password" class="form-control" name="password" id="password" placeholder="Password">
+                  </div>
+                  <div class="form-group">
+                     <label for="passwordRepetition">Repeat Password</label>
+                     <input type="password" class="form-control" name="passwordRepetition" id="repeatPassword" placeholder="Repeat Password">
+                  </div>
+                  <div class="form-group">
+                     <label for="rememberMe">Remember me</label>
+                     <input style="float: left;
+                        margin: 9px;" type="checkBox" name="rememberMe" id="rememberMe">
+                  </div>
+                  <div class="btn-group">
+                     <input type="button" class="login loginmodal-submit" value="Submit" />
+                  </div>
+               </form>
             </div>
+         </div>
 
-        </div>
-    </div>
-    <script>
-            $(document).ready(function () {
-                toastr.options = {
-                    "closeButton": false,
-                    "debug": false,
-                    "newestOnTop": false,
-                    "progressBar": false,
-                    "positionClass": "toast-bottom-center",
-                    "preventDuplicates": false,
-                    "onclick": null,
-                    "showDuration": "300",
-                    "hideDuration": "1000",
-                    "timeOut": "5000",
-                    "extendedTimeOut": "1000",
-                    "showEasing": "swing",
-                    "hideEasing": "linear",
-                    "showMethod": "fadeIn",
-                    "hideMethod": "fadeOut"
-                }
-                $('.loginmodal-submit').click(function () {
-                    var data = $(this).parent().parent().serializeObject();
-                    data.rememberMe = data.rememberMe == undefined ? false : true;
-                    $.ajax({
-                        url: $(this).parent().parent().attr('action'), // php script to retern json encoded string
-                        data: JSON.stringify(data),  // serialized data to send on server
-                        // dataType: 'json', // set recieving type - JSON in case of a question
-                        type: 'POST', // set sending HTTP Request type
-                        contentType: 'application/json',
-                        success: function (data) {
-                            if(data === "Registered" || data === ""){
-                                toastr.success('Successfuly registered, we"ve send you a confirmation email');
-                            }
-                        },
-                        error: function (data) { // if error occured
-                            data = $.parseJSON(data.responseText)
-                            toastr.error(data.error, '')
-                            console.log('cannot sign up now ')
-                        }
-                    });
-                });
+      </div>
+   </div>
+   <script>
+         $(document).ready(function () {
+            toastr.options = {
+               "closeButton": false,
+               "debug": false,
+               "newestOnTop": false,
+               "progressBar": false,
+               "positionClass": "toast-bottom-center",
+               "preventDuplicates": false,
+               "onclick": null,
+               "showDuration": "300",
+               "hideDuration": "1000",
+               "timeOut": "5000",
+               "extendedTimeOut": "1000",
+               "showEasing": "swing",
+               "hideEasing": "linear",
+               "showMethod": "fadeIn",
+               "hideMethod": "fadeOut"
+            }
+            $('.loginmodal-submit').click(function () {
+               var data = $(this).parent().parent().serializeObject();
+               data.rememberMe = data.rememberMe == undefined ? false : true;
+               $.ajax({
+                  url: $(this).parent().parent().attr('action'), // php script to retern json encoded string
+                  data: JSON.stringify(data),  // serialized data to send on server
+                  // dataType: 'json', // set recieving type - JSON in case of a question
+                  type: 'POST', // set sending HTTP Request type
+                  contentType: 'application/json',
+                  success: function (data) {
+                     if (data === "Registered" || data === "") {
+                        toastr.success('Successfuly registered, we"ve send you a confirmation email');
+                     }
+                  },
+                  error: function (data) { // if error occured
+                     data = $.parseJSON(data.responseText)
+                     toastr.error(data.error, '')
+                     console.log('cannot sign up now ')
+                  }
+               });
             });
+         });
 
-            $.fn.serializeObject = function () {
-                var o = {};
-                var a = this.serializeArray();
-                $.each(a, function () {
-                    if (o[this.name] !== undefined) {
-                        if (!o[this.name].push) {
-                            o[this.name] = [o[this.name]];
-                        }
-                        o[this.name].push(this.value || '');
-                    } else {
-                        o[this.name] = this.value || '';
-                    }
-                });
-                return o;
-            };
-    </script>
+         $.fn.serializeObject = function () {
+            var o = {};
+            var a = this.serializeArray();
+            $.each(a, function () {
+               if (o[this.name] !== undefined) {
+                  if (!o[this.name].push) {
+                     o[this.name] = [o[this.name]];
+                  }
+                  o[this.name].push(this.value || '');
+               } else {
+                  o[this.name] = this.value || '';
+               }
+            });
+            return o;
+         };
+   </script>
 }

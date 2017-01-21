@@ -2,125 +2,127 @@
 <link rel="import" href="@routes.ScalaRoutes.polymer("pages.sharedStyles")">
 
 <dom-module id="my-signup">
-    <template>
-        <style include="shared-styles">
-        :host {
-            display: block;
-            padding: 10px;
-        }
+   <template>
+      <style include="shared-styles">
+      :host {
+         display: block;
+         padding: 10px;
+      }
 
-        paper-tabs, paper-toolbar {
-            background-color: #4285f4; /*var(--paper-blue-900);*/
-            color: #fff;
-        }
+      paper-tabs, paper-toolbar {
+         background-color: #4285f4; /*var(--paper-blue-900);*/
+         color: #fff;
+      }
 
-        .content {
-            display: inline-block;
-            width: 49%;
-            margin-right: 1%;
-        }
+      .content {
+         display: inline-block;
+         width: 49%;
+         margin-right: 1%;
+      }
 
-        .paddingCenter {
+      .paddingCenter {
 
-            padding: 11px;
-            text-align: center;
-        }
+         padding: 11px;
+         text-align: center;
+      }
 
-        .mainContent {
-            display: flex;
-        }
+      .mainContent {
+         display: flex;
+      }
 
-        .formContainer {
-            padding: 50px;
-        }
-        .welcomeErrors{
-            --paper-toast-background-color: red;
-            --paper-toast-color: white;
-        }
-        .welcomeSuccess{
-            --paper-toast-background-color: green;
-            --paper-toast-color: white;
-        }
-        </style>
-        <div class="mainContent">
-            <paper-card class="content paddingCenter" heading="TicTacToe 3D">
+      .formContainer {
+         padding: 50px;
+      }
+
+      .welcomeErrors {
+         --paper-toast-background-color: red;
+         --paper-toast-color: white;
+      }
+
+      .welcomeSuccess {
+         --paper-toast-background-color: green;
+         --paper-toast-color: white;
+      }
+      </style>
+      <div class="mainContent">
+         <paper-card class="content paddingCenter" heading="TicTacToe 3D">
         3D tic-tac-toe, also known by the trade name <strong> Qubic </strong>, is a board game.
-                It is similar in concept to traditional
-                <a href="https://en.wikipedia.org/wiki/Tic-tac-toe">tic-tac-toe </a>
-                but is played in a cubical array of cells.
-                Players take turns placing their markers in blank cells in the array.
-                The first player to achieve three of their own markers in a row wins.
-                The winning row can be horizontal, vertical, or diagonal on a single board as in regular tic-tac-toe,
-                or vertically in a column, or a diagonal line through four boards.
-                <br >
-                <img src="@routes.Assets.at("/images/tictactoe.jpg")" alt="TicTacToe 3D">
+            It is similar in concept to traditional
+            <a href="https://en.wikipedia.org/wiki/Tic-tac-toe">tic-tac-toe </a>
+            but is played in a cubical array of cells.
+            Players take turns placing their markers in blank cells in the array.
+            The first player to achieve three of their own markers in a row wins.
+            The winning row can be horizontal, vertical, or diagonal on a single board as in regular tic-tac-toe,
+            or vertically in a column, or a diagonal line through four boards.
+            <br >
+            <img src="@routes.Assets.at("/images/tictactoe.jpg")" alt="TicTacToe 3D">
       </paper-card>
-            <paper-card class="content">
+         <paper-card class="content">
 
-                <paper-tabs selected="{{selected}}">
-                    <paper-tab>Log in</paper-tab>
-                    <paper-tab>Sign up</paper-tab>
-                </paper-tabs>
-                <iron-pages selected="{{selected}}">
-                    <div class="formContainer">
-                        <form is="iron-form" method="post" id="signInForm" action="@routes.ScalaRoutes.login()" content-type="application/json">
-                            <gold-email-input name="email" label="Email" auto-validate required></gold-email-input>
-                            <paper-input name="password" label="Password" type="password" minlength="4" required></paper-input>
-                            <paper-input hidden name="rememberMe" value="[[rememberMe]]"></paper-input>
-                            <paper-toggle-button style="height: 62px;" checked="{{rememberMe}}">Remember Me</paper-toggle-button>
-                            <paper-button raised onclick="_submit(event)">Submit</paper-button>
-                        </form>
-                    </div>
-                    <div class="formContainer">
-                        <form is="iron-form" method="post" id="signUpForm" action="@routes.ScalaRoutes.signUp()" content-type="application/json">
-                            <paper-input name="name" label="Username" type="text" required></paper-input>
-                            <gold-email-input name="email" label="Email" auto-validate required></gold-email-input>
-                            <paper-input name="password" label="Password" type="password" minlength="4" required></paper-input>
-                            <paper-input id="passwordRepetition" name="passwordRepetition" label="Repeat Password" type="password" minlength="4"></paper-input>
-                            <paper-input hidden name="rememberMe" value="[[rememberMe]]"></paper-input>
-                            <paper-toggle-button style="height: 62px;" checked="{{rememberMe}}">Remember Me</paper-toggle-button>
-                            <paper-button raised onclick="_submit(event)">Submit</paper-button>
-                        </form>
-                    </div>
-                    <script>
+            <paper-tabs selected="{{selected}}">
+               <paper-tab>Log in</paper-tab>
+               <paper-tab>Sign up</paper-tab>
+            </paper-tabs>
+            <iron-pages selected="{{selected}}">
+               <div class="formContainer">
+                  <form is="iron-form" method="post" id="signInForm" action="@routes.ScalaRoutes.login()" content-type="application/json">
+                     <gold-email-input name="email" label="Email" auto-validate required></gold-email-input>
+                     <paper-input name="password" label="Password" type="password" minlength="4" required></paper-input>
+                     <paper-input hidden name="rememberMe" value="[[rememberMe]]"></paper-input>
+                     <paper-toggle-button style="height: 62px;" checked="{{rememberMe}}">Remember Me</paper-toggle-button>
+                     <paper-button raised onclick="_submit(event)">Submit</paper-button>
+                  </form>
+               </div>
+               <div class="formContainer">
+                  <form is="iron-form" method="post" id="signUpForm" action="@routes.ScalaRoutes.signUp()" content-type="application/json">
+                     <paper-input name="name" label="Username" type="text" required></paper-input>
+                     <gold-email-input name="email" label="Email" auto-validate required></gold-email-input>
+                     <paper-input name="password" label="Password" type="password" minlength="4" required></paper-input>
+                     <paper-input id="passwordRepetition" name="passwordRepetition" label="Repeat Password" type="password" minlength="4"></paper-input>
+                     <paper-input hidden name="rememberMe" value="[[rememberMe]]"></paper-input>
+                     <paper-toggle-button style="height: 62px;" checked="{{rememberMe}}">Remember Me</paper-toggle-button>
+                     <paper-button raised onclick="_submit(event)">Submit</paper-button>
+                  </form>
+               </div>
+               <script>
                         function _submit(event) {
-                            Polymer.dom(event).localTarget.parentElement.submit();
+                           Polymer.dom(event).localTarget.parentElement.submit();
                         }
                       </script>
-                </iron-pages>
-            </paper-card>
-        </div>
-        <paper-toast id="signUpToastError" class="welcomeErrors" text=""></paper-toast>
-        <paper-toast id="signUpToastSuccess" class="welcomeSuccess" text=""></paper-toast>
-        <a style="display: none" id="redirect" href='@routes.ScalaRoutes.index()'></a>
-    </template>
+            </iron-pages>
+         </paper-card>
+      </div>
+      <paper-toast id="signUpToastError" class="welcomeErrors" text=""></paper-toast>
+      <paper-toast id="signUpToastSuccess" class="welcomeSuccess" text=""></paper-toast>
+      <a style="display: none" id="redirect" href='@routes.ScalaRoutes.index()'></a>
+   </template>
 
-    <script>
+   <script>
         Polymer({
-            is: 'my-signup',
-            listeners: {
-                'signUpForm.iron-form-error': 'handleError',
-                'signInForm.iron-form-error': 'handleError',
-                'signUpForm.iron-form-response': 'handleSuccess',
-                'signInForm.iron-form-response': 'handleSuccessIn',
-            },
-            properties: {
-                selected: {
-                    type: Number,
-                    value: 0
-                },
-            },
-            handleError: function (e) {
-                this.$.signUpToastError.text = e.detail.error.message;
-                this.$.signUpToastError.open();
-            },
-            handleSuccess: function (data) {
-                this.$.signUpToastSuccess.text = 'Successfuly registered, we"ve send you a confirmation email';
-                this.$.signUpToastSuccess.open();
-            },
-            handleSuccessIn: function () {
-                this.$.redirect.click();
-            }
+           is: 'my-signup',
+           listeners: {
+              'signUpForm.iron-form-error': 'handleError',
+              'signInForm.iron-form-error': 'handleError',
+              'signUpForm.iron-form-response': 'handleSuccess',
+              'signInForm.iron-form-response': 'handleSuccessIn',
+           },
+           properties: {
+              selected: {
+                 type: Number,
+                 value: 0
+              },
+           },
+           handleError: function (e) {
+              this.$.signUpToastError.text = e.detail.error.message;
+              this.$.signUpToastError.open();
+           },
+           handleSuccess: function (data) {
+              this.$.signUpToastSuccess.text = 'Successfuly registered, we"ve send you a confirmation email';
+              this.$.signUpToastSuccess.open();
+           },
+           handleSuccessIn: function () {
+              this.$.redirect.click();
+           }
         });
 </script>
 </dom-module>
