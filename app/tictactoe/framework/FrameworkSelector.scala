@@ -42,7 +42,7 @@ object FrameworkSelector {
 
   private final val default = PlaySelector
 
-  def getFramework(request: Request[AnyContent]) = {
+  def getFramework(request: Request[AnyContent]): FrameworkSelector = {
     default
   }
 
