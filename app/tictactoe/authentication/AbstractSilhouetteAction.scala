@@ -2,7 +2,7 @@ package tictactoe.authentication
 
 import com.mohiva.play.silhouette.api.{HandlerResult, Silhouette}
 import play.api.i18n.MessagesApi
-import play.api.mvc.{Results => HTMLResults, _}
+import play.api.mvc._
 import tictactoe.silhouette.TicTacToeEnv
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -10,7 +10,7 @@ import scala.concurrent.{ExecutionContext, Future}
 /**
   */
 private[authentication] abstract class AbstractSilhouetteAction[REQ <: Request[AnyContent]](messagesApi: MessagesApi, silhouette: Silhouette[TicTacToeEnv]
-                                                                                        ) extends AbstractAction[REQ](messagesApi, silhouette) {
+                                                                                           ) extends AbstractAction[REQ](messagesApi, silhouette) {
 
 
   protected[authentication] def executeCheckedHandlerResult(block: () => Future[Result],
