@@ -7,13 +7,14 @@ lazy val commonSettings = Seq(
   version := "0.1",
   scalaVersion := "2.11.7",
   classpathTypes += "maven-plugin",
+  resolvers += Resolver.jcenterRepo,
   libraryDependencies ++= Seq(
     // "com.google.guava" % "guava" % "19.0",
-    // "javax.inject" % "javax.inject" % "1",
     "junit" % "junit" % "4.12",
     "log4j" % "log4j" % "1.2.17",
+    "org.mongodb" % "mongo-java-driver" % "3.3.0",
+    "org.mongodb" % "bson" % "3.3.0",
     "org.json4s" %% "json4s-jackson" % "3.4.2",
-    //    "com.google.inject" % "guice" % "3.0",
     "net.codingwell" %% "scala-guice" % "4.0.1",
     "com.fasterxml.jackson.core" % "jackson-databind" % "2.6.3",
     "org.clapper" %% "grizzled-slf4j" % "1.0.2",
@@ -33,8 +34,18 @@ lazy val commonSettings = Seq(
     "org.webjars.npm" % "zone.js" % "0.6.26",
     "org.webjars.npm" % "core-js" % "2.4.1",
     "org.webjars.npm" % "symbol-observable" % "1.0.1",
-
     "org.webjars.npm" % "typescript" % "2.1.4",
+
+    "com.mohiva" %% "play-silhouette" % "4.0.0",
+    "com.mohiva" %% "play-silhouette-password-bcrypt" % "4.0.0",
+    "com.mohiva" %% "play-silhouette-crypto-jca" % "4.0.0",
+    "com.mohiva" %% "play-silhouette-persistence" % "4.0.0",
+    "com.mohiva" %% "play-silhouette-testkit" % "4.0.0" % "test",
+    "com.mohiva" %% "play-silhouette-cas" % "4.0.0",
+    "com.mohiva" %% "play-silhouette-persistence-reactivemongo" % "4.0.1",
+    "com.typesafe.play" %% "play-mailer" % "5.0.0",
+    "com.iheart" %% "ficus" % "1.4.0",
+
 
     //tslint dependency
     "org.webjars.npm" % "tslint-eslint-rules" % "3.1.0",
@@ -60,6 +71,8 @@ lazy val `web` = (project in file("web"))
 lazy val `backend` = (project in file("backend"))
   .settings(commonSettings)
   .settings(name := "TicTacToe-backend")
+
+
 dependencyOverrides += "org.webjars.npm" % "minimatch" % "3.0.0"
 
 // use the webjars npm directory (target/web/node_modules ) for resolution of module imports of angular2/core etc

@@ -181,7 +181,6 @@ body {
     height: 90%;
 }
 
-
 .mainPart .allUsers, .mainPart .groupChatBar {
     float: left;
     height: 100%;
@@ -204,18 +203,23 @@ body {
     width: calc(98% / 3);
     background-color: #ecf4f5;
 }
-.chat li.right .chat-body p{
+
+.chat li.right .chat-body p {
     text-align: right;
 }
-.chat li.right .chat-body .header{
+
+.chat li.right .chat-body .header {
     text-align: right;
 }
-.chat li.left .chat-body p{
+
+.chat li.left .chat-body p {
     text-align: left;
 }
-.chat li.left .chat-body .header{
+
+.chat li.left .chat-body .header {
     text-align: left;
 }
+
 .caption button {
     border: none;
     background: none;
@@ -255,6 +259,7 @@ body {
     padding-bottom: 5px;
     border-bottom: 1px dotted #B3A9A9;
 }
+
 /*
 .chat li.left .chat-body {
     margin-left: 60px;
