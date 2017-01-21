@@ -3,6 +3,7 @@ resolvers += "scalaz-bintray" at "https://dl.bintray.com/scalaz/releases"
 resolvers += "Typesafe repository" at "http://repo.typesafe.com/typesafe/releases/"
 
 
+
 lazy val commonSettings = Seq(
   version := "0.1",
   scalaVersion := "2.11.7",

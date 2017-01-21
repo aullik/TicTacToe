@@ -21,7 +21,7 @@
             </ul>
             <div class="tab-content">
                 <div class="tab-pane loginmodal-container active" id="login">
-                    <form method="POST" action='@routes.Application.login()' Content-type="application/json" id="loginForm">
+                    <form method="POST" action='@routes.ScalaRoutes.login()' Content-type="application/json" id="loginForm">
                         <div class="form-group">
                             <label for="email">Email address</label>
                             <input type="email" class="form-control" name="email" id="email" placeholder="Enter email" value="">
@@ -40,7 +40,7 @@
                     </form>
                 </div>
                 <div class="tab-pane loginmodal-container" id="signUp">
-                    <form method="POST" action='@routes.Application.signUp()' Content-type="application/json" id="signupForm">
+                    <form method="POST" action='@routes.ScalaRoutes.signUp()' Content-type="application/json" id="signupForm">
                         <div class="form-group">
                             <label for="username">Username</label>
                             <input type="text" class="form-control" name="name" id="username" placeholder="Enter username" value="">

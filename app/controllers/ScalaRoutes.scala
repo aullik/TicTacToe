@@ -11,7 +11,7 @@ import play.api.mvc._
 import silhouette.TicTacToeEnv
 
 
-class Application @Inject()(val messagesApi: MessagesApi,
+class ScalaRoutes @Inject()(val messagesApi: MessagesApi,
                             val silhouette: Silhouette[TicTacToeEnv],
                             val webProvider: Provider[WebControllerContainer]
                            ) extends AuthController with WebController {

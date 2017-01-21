@@ -1,5 +1,5 @@
 <link rel="import" href="@routes.Assets.at("bower_components/polymer/polymer.html")">
-<link rel="import" href="@routes.Application.polymer("pages.sharedStyles")">
+<link rel="import" href="@routes.ScalaRoutes.polymer("pages.sharedStyles")">
 
 <dom-module id="my-signup">
     <template>
@@ -63,7 +63,7 @@
                 </paper-tabs>
                 <iron-pages selected="{{selected}}">
                     <div class="formContainer">
-                        <form is="iron-form" method="post" id="signInForm" action="@routes.Application.login()" content-type="application/json">
+                        <form is="iron-form" method="post" id="signInForm" action="@routes.ScalaRoutes.login()" content-type="application/json">
                             <gold-email-input name="email" label="Email" auto-validate required></gold-email-input>
                             <paper-input name="password" label="Password" type="password" minlength="4" required></paper-input>
                             <paper-input hidden name="rememberMe" value="[[rememberMe]]"></paper-input>
@@ -72,7 +72,7 @@
                         </form>
                     </div>
                     <div class="formContainer">
-                        <form is="iron-form" method="post" id="signUpForm" action="@routes.Application.signUp()" content-type="application/json">
+                        <form is="iron-form" method="post" id="signUpForm" action="@routes.ScalaRoutes.signUp()" content-type="application/json">
                             <paper-input name="name" label="Username" type="text" required></paper-input>
                             <gold-email-input name="email" label="Email" auto-validate required></gold-email-input>
                             <paper-input name="password" label="Password" type="password" minlength="4" required></paper-input>
@@ -92,7 +92,7 @@
         </div>
         <paper-toast id="signUpToastError" class="welcomeErrors" text=""></paper-toast>
         <paper-toast id="signUpToastSuccess" class="welcomeSuccess" text=""></paper-toast>
-        <a style="display: none" id="redirect" href='@routes.Application.index()'></a>
+        <a style="display: none" id="redirect" href='@routes.ScalaRoutes.index()'></a>
     </template>
 
     <script>

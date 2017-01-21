@@ -24,6 +24,6 @@ class TicTacToeUnsecuredErrorHandler @Inject()(
 
 
   override def onNotAuthorized(implicit request: RequestHeader): Future[Result] = Future.successful {
-    Redirect(routes.Application.index())
+    Redirect(routes.ScalaRoutes.index())
   }
 }

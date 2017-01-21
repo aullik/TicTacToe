@@ -23,7 +23,7 @@ class TicTacToeSecuredErrorHandler @Inject()(
                                             ) extends DefaultHttpErrorHandler(env, config, sourceMapper, router) with SecuredErrorHandler with I18nSupport {
 
   override def onNotAuthenticated(implicit request: RequestHeader): Future[Result] = Future.successful {
-    Redirect(routes.Application.signUpPage())
+    Redirect(routes.ScalaRoutes.signUpPage())
   }
 
   override def onNotAuthorized(implicit request: RequestHeader): Future[Result] = Future.successful {

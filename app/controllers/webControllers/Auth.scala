@@ -83,7 +83,7 @@ class Auth @Inject private(val silhouette: Silhouette[TicTacToeEnv],
           _ <- authInfoRepository.add(loginInfo, passwordHasherRegistry.current.hash(signUpData.password))
           _ <- tokenService.create(token)
         } yield {
-          Mailer.welcome(savedUser, link = routes.Application.signUpEmail(token.id).absoluteURL()(request))(ms, messages)
+          Mailer.welcome(savedUser, link = routes.ScalaRoutes.signUpEmail(token.id).absoluteURL()(request))(ms, messages)
           Ok("Registered")
         }
     }
@@ -109,7 +109,7 @@ class Auth @Inject private(val silhouette: Silhouette[TicTacToeEnv],
               }
               for {
                 cookie <- env.authenticatorService.init(authenticator)(request)
-                result <- env.authenticatorService.embed(cookie, Redirect(routes.Application.index()))(request)
+                result <- env.authenticatorService.embed(cookie, Redirect(routes.ScalaRoutes.index()))(request)
               } yield {
                 tokenService.consume(tokenId)
                 result
@@ -141,7 +141,7 @@ class Auth @Inject private(val silhouette: Silhouette[TicTacToeEnv],
             case Some(user) => for {
               authenticator <- env.authenticatorService.create(loginInfo)(request).map(authenticatorWithRememberMe(_, rememberMe))
               cookie <- env.authenticatorService.init(authenticator)(request)
-              result <- env.authenticatorService.embed(cookie, Redirect(routes.Application.index()))(request)
+              result <- env.authenticatorService.embed(cookie, Redirect(routes.ScalaRoutes.index()))(request)
             } yield {
               env.eventBus.publish(LoginEvent(user, request))
               result
@@ -194,7 +194,7 @@ class Auth @Inject private(val silhouette: Silhouette[TicTacToeEnv],
   def signOut(request: SecuredRequest[TicTacToeEnv, AnyContent]): Future[Result] = {
     info("signOut")
     env.eventBus.publish(LogoutEvent(request.identity, request))
-    env.authenticatorService.discard(request.authenticator, Redirect(routes.Application.signUpPage()))(request)
+    env.authenticatorService.discard(request.authenticator, Redirect(routes.ScalaRoutes.signUpPage()))(request)
   }
 
   //  /** Starts the reset password procedure

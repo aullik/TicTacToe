@@ -3,26 +3,26 @@
 # ~~~~
 
 # Home page
-GET         /                                  controllers.Application.signUpPage
-GET         /index                             controllers.Application.index
+GET         /                                  controllers.ScalaRoutes.signUpPage
+GET         /index                             controllers.ScalaRoutes.index
 #GET        /tictactoe                controllers.Application.tictactoe
 
-POST        /signup                            controllers.Application.signUp
-GET         /signup/:token                     controllers.Application.signUpEmail(token: String)
-POST        /login                             controllers.Application.login
+POST        /signup                            controllers.ScalaRoutes.signUp
+GET         /signup/:token                     controllers.ScalaRoutes.signUpEmail(token: String)
+POST        /login                             controllers.ScalaRoutes.login
 
-POST        /selectFramework/:framework        controllers.Application.selectFramework(framework)
+POST        /selectFramework/:framework        controllers.ScalaRoutes.selectFramework(framework)
 
-GET         /logout                            controllers.Application.logout
+GET         /logout                            controllers.ScalaRoutes.logout
 
-GET         /tictactoe                         controllers.Application.game
+GET         /tictactoe                         controllers.ScalaRoutes.game
 
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file                      controllers.Assets.at(path="/public", file)
 #GET         /polymer/*file                 controllers.Assets.at(path="/app/polymer/views/src", file)
 # Get Polymer recources
-GET         /polymer/*element                  controllers.Application.polymer(element)
+GET         /polymer/*element                  controllers.ScalaRoutes.polymer(element)
 
 # Socket
 GET         /socket/                           controllers.WebSocketsControl.socket
