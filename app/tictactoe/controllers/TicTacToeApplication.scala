@@ -1,6 +1,6 @@
 package tictactoe.controllers
 
-import play.api.mvc.Results._
+import framework.FrameworkSelector
 import play.api.mvc._
 
 
@@ -9,13 +9,13 @@ import play.api.mvc._
 object TicTacToeApplication {
 
 
-  def index(request: Request[AnyContent]): Result = {
-    Ok(views.html.bootstrap.index())
+  def index(request: Request[AnyContent], fws: FrameworkSelector): Result = {
+    fws.index
   }
 
 
-  def signUpPage(request: Request[AnyContent]): Result = {
-    Ok(views.html.bootstrap.signup())
+  def signUpPage(request: Request[AnyContent], fws: FrameworkSelector): Result = {
+    fws.signUpPage
   }
 
 }

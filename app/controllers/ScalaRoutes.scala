@@ -31,14 +31,7 @@ class ScalaRoutes @Inject()(val messagesApi: MessagesApi,
 
   def logout = AuthenticatedGet(Auth.signOut _)
 
-  def selectFramework(framework: String) = {
-    //TODO:  Framworks can be :
-    /*polymerjs
-      angular2js
-      bootstrap*/
-    TODO
-  }
-
+  def selectFramework(framework: String) = BasicPost(FrameworkSelector.selectFramework(framework) _)
 
   def polymer(element: String) = Action(getPolymer(element) _)
 
@@ -66,8 +59,7 @@ class ScalaRoutes @Inject()(val messagesApi: MessagesApi,
 
   private object BasicGet extends BasicAction(messagesApi, silhouette)
 
-  //maybe needed in the future
-  // private object BasicPost extends BasicAction(messagesApi, silhouette)
+  private object BasicPost extends BasicAction(messagesApi, silhouette)
 
 }
 

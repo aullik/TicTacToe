@@ -3,6 +3,7 @@ package tictactoe.controllers.webControllers
 import com.mohiva.play.silhouette.api.actions.SecuredRequest
 import de.htwg.tictactoe.TicTacToe
 import de.htwg.tictactoe.controller.IController
+import framework.FrameworkSelector
 import play.api.libs.json.Json
 import play.api.mvc.Results._
 import play.api.mvc.{AnyContent, Request, Result}
@@ -42,11 +43,11 @@ object GameController {
     * @param request
     * @return
     */
-  def game(request: SecuredRequest[TicTacToeEnv, AnyContent]): Result = {
+  def game(request: SecuredRequest[TicTacToeEnv, AnyContent], fws: FrameworkSelector): Result = {
     val gameopt = cacheUserName2Game.get(request.identity.name)
 
     gameopt.map(game => {
-      Ok(views.html.bootstrap.tictactoe())
+      fws.game
     }).getOrElse(BadRequest("No game for user"))
   }
 
