@@ -210,8 +210,3 @@ private[authentication] abstract class AbstractAction[REQ <: Request[AnyContent]
 }
 
 
-trait FunctionApply {
-
-
-}
-
