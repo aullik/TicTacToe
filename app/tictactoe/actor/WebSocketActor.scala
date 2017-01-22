@@ -24,6 +24,8 @@ class WebSocketActor(out: ActorRef, user: User) extends Actor with Logging {
   object ExtendedFunction extends PartialFunction[Any, Unit] {
     private val pf: PartialFunction[Any, Unit] = {
       case msg: String => handleMsg(msg)
+      case UserManagerActor.LoggedInAnnouncement(username, usertoken) =>
+      case UserManagerActor.LoggedOutAnnouncement(username, usertoken) =>
       case any => warn(s"illegal message + $any")
         throw new IllegalArgumentException("Invalid message")
     }
@@ -104,7 +106,6 @@ class WebSocketActor(out: ActorRef, user: User) extends Actor with Logging {
 
 object WebSocketActor {
 
-
   val CHANNEL = "userChannel"
 
   val NOVALUE: JObject = JObject(Nil)
@@ -112,7 +113,7 @@ object WebSocketActor {
   val MSG_TYPE = "msgType"
   val VALUE = "value"
 
-  def apply(out: ActorRef, usr: User) = {
+  def apply(out: ActorRef, usr: User): Props = {
     Props(new WebSocketActor(out, usr))
   }
 }

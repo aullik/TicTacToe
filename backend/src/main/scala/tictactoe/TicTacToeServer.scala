@@ -3,19 +3,19 @@ package tictactoe
 import java.util.Locale
 import javax.inject.Singleton
 
-import akka.actor.ActorSystem
+import akka.actor.{ActorRef, ActorSystem}
 import com.google.inject.Inject
 import tictactoe.actor.user.UserManagerActor
-import tictactoe.persistence.PersistenceEnvironment
+import tictactoe.persistence.{Persistence, PersistenceEnvironment}
 
 @Singleton
 class TicTacToeServer @Inject() private(system: ActorSystem, environment: PersistenceEnvironment) {
 
   Locale.setDefault(Locale.GERMAN)
 
-  val userControllerActor = system.actorOf(UserManagerActor())
+  private val userControllerActor: ActorRef = system.actorOf(UserManagerActor())
 
-  val persistence = environment.persistence
+  val persistence: Persistence = environment.persistence
 
 }
 
