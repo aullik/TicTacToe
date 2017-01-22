@@ -1,14 +1,11 @@
 package tictactoe.actor
 
-import tictactoe.actor.WebSocketActor._
 import akka.actor._
-
 import grizzled.slf4j.Logging
 import org.json4s.JsonAST.JObject
 import org.json4s._
-import org.json4s.jackson.JsonMethods._
 import org.json4s.jackson.Serialization
-import play.api.libs.json.{JsValue, Json, OFormat}
+import play.api.libs.json.Json
 import tictactoe.actor.user.UserManagerActor
 import tictactoe.model.User
 
@@ -45,49 +42,41 @@ class WebSocketActor(out: ActorRef, user: User) extends Actor with Logging {
   def receive = ExtendedFunction
 
   def handleMsg(msg: String): Unit = {
-    try {
-      val jsonValue = Json.parse(msg)
-      val msgType = (jsonValue \ MSG_TYPE).get.validate[String].get
-      val values: JsValue = (jsonValue \ VALUE).get
-      InMessage.getMessage(msgType) match {
-        case UserStatus => handleUserStatus()
-        case AskForGame => handleAskForGame(AskForGame.getValue(values))
-        case GameRequested => handleGameRequested(GameRequested.getValue(values))
-        case GameStatus => handleGameStatus()
-        case GamePlayers => handleGamePlayers()
-        case Move => handleMove(Move.getValue(values))
-        case Message => handleMessage(Message.getValue(values))
-        case _ => throw new IllegalArgumentException("Invalid message")
-      }
+    try Json.parse(msg) match {
+      case UserStatus(_) => handleUserStatus()
+      case AskForGame(value) => handleAskForGame(value)
+      case GameRequested(value) => handleGameRequested(value)
+      case GameStatus(_) => handleGameStatus()
+      case GamePlayers(_) => handleGamePlayers()
+      case Move(value) => handleMove(value)
+      case DirectMessage(value) => handleMessage(value)
+      case any => throw new IllegalArgumentException(s"Invalid message: + $any")
     } catch {
       case e: Exception =>
         warn(s"couldn't handle message: $msg. Exception: $e")
     }
   }
 
-  private def sendMessage[OM <: OutMessage](msg: OM, value: OM#outValue, sendTo: ActorRef = out)(implicit writer: OFormat[OM#outValue]): Unit = {
-    sendTo ! compact(JObject(MSG_TYPE -> JString(msg.outMsg), VALUE -> Extraction.decompose(value)))
-  }
 
   def handleUserStatus(): Unit = {
-    sendMessage[UserStatus.type](UserStatus, UserStatus("alice", "aliceToken", inGame = false, List(UserElement("bob", "bobToken"))))
+    out ! UserStatus.toJson(UserStatus("alice", "aliceToken", inGame = false, List(UserElement("bob", "bobToken"))))
   }
 
   def handleGameRequested(value: AcceptGame): Unit = {
     //send this to the other player
-    sendMessage[AskForGame.type](AskForGame, AcceptGame("bob", "token", accept = true))
+    out ! AskForGame.toJson(AcceptGame("bob", "token", accept = true))
   }
 
   def handleAskForGame(value: UserElement): Unit = {
-    handleGameRequested(AcceptGame(value.name, value.token, accept = true))
+    out ! AcceptGame(value.name, value.token, accept = true)
   }
 
   def handleGameStatus(): Unit = {
-    sendMessage[GameStatus.type](GameStatus, GameStatus(PlayerMove.list("M-1-2-2", "O-2-2-2")))
+    out ! GameStatus.toJson(GameStatus(PlayerMove.list("M-1-2-3", "O-2-2-2")))
   }
 
   def handleGamePlayers(): Unit = {
-    sendMessage[GamePlayers.type](GamePlayers, GamePlayers(UserElement("alice", "aliceToken"), UserElement("bob", "bobToken")))
+    out ! GamePlayers.toJson(GamePlayers(UserElement("alice", "aliceToken"), UserElement("bob", "bobToken")))
   }
 
   //FIXME only for testing
@@ -95,16 +84,16 @@ class WebSocketActor(out: ActorRef, user: User) extends Actor with Logging {
 
   def handleMove(value: Move): Unit = {
     if (finishNextTurn)
-      sendMessage[GameFinish.type](GameFinish, GameFinish("M-" + value.move, tie = true))
+      out ! GameFinish.toJson(GameFinish("M-" + value.move, tie = true))
     else {
       finishNextTurn = true
-      sendMessage[PlayerMove.type](PlayerMove, PlayerMove("M-" + value.move))
+      out ! PlayerMove.toJson(PlayerMove("M-" + value.move))
     }
 
   }
 
-  def handleMessage(value: Message): Unit = {
-    sendMessage[Message.type](Message, value)
+  def handleMessage(value: DirectMessage): Unit = {
+    out ! DirectMessage.toJson(value)
   }
 
 
@@ -123,7 +112,7 @@ object WebSocketActor {
   val MSG_TYPE = "msgType"
   val VALUE = "value"
 
-  def apply(out: ActorRef, usr: User): Props = {
+  def apply(out: ActorRef, usr: User) = {
     Props(new WebSocketActor(out, usr))
   }
 }
