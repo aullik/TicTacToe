@@ -1,9 +1,10 @@
 package tictactoe.actor.user
 
 import akka.actor.{Actor, ActorRef, Props}
-import tictactoe.actor.user.UserManagerActor.{LoggedInAnnouncement, LoggedOutAnnouncement, SubscribeToUserAnnouncement, UnSubscribeFromUserAnnouncement}
+import tictactoe.actor.user.UserManagerActor._
 import tictactoe.model.User
-import util.{FunctionalHelper, TokenGenerator}
+import util.FunctionalHelper.ofTuple
+import util.TokenGenerator
 
 import scala.collection.mutable
 
@@ -20,6 +21,15 @@ class UserManagerActor private() extends Actor {
   override def receive: Receive = {
     case SubscribeToUserAnnouncement(usr) => addSubscriberToCache(usr)
     case UnSubscribeFromUserAnnouncement(usr) => removeSubscriberFromCache(usr)
+    case AllLoggedInRequest(email: String) => handleAllLoggedInRequest(email: String)
+  }
+
+
+  def handleAllLoggedInRequest(email: String): Unit = {
+    val userTokenList = loggedInUserCache.filterNot(_._1 == email).map(ofTuple((_, cont) => (cont.usr.name, cont.token))).toList
+    tokenCache.get(email).foreach(cont =>
+      sender() ! AllLoggedInReturn(cont.token, userTokenList)
+    )
   }
 
   def addSubscriberToCache(user: User): Unit = {
@@ -28,7 +38,6 @@ class UserManagerActor private() extends Actor {
   }
 
   private def createContainer(user: User): Container = {
-
     val cont =
       Container(user, tokenGen.generateToken(user.name))
 
@@ -56,7 +65,7 @@ class UserManagerActor private() extends Actor {
   }
 
   def messageSubscribers(message: Any): Unit = {
-    loggedInUserCache.foreach(FunctionalHelper.ofTuple((_, cont) => cont.subscribers.foreach(_ ! message)))
+    loggedInUserCache.foreach(ofTuple((_, cont) => cont.subscribers.foreach(_ ! message)))
   }
 
 }
@@ -78,11 +87,15 @@ private case class Container(usr: User, token: String, subscribers: Set[ActorRef
 
 object UserManagerActor {
 
+  case class AllLoggedInRequest(email: String)
+
+  case class AllLoggedInReturn(usrToken: String, userTokenList: List[(String, String)])
+
   case class LoggedInAnnouncement(user: String, token: String)
 
   case class LoggedOutAnnouncement(user: String, token: String)
 
-  val NAME = "UserManager"
+  final val NAME = "UserManager"
 
   case class SubscribeToUserAnnouncement(user: User)
 

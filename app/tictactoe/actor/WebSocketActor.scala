@@ -1,13 +1,20 @@
 package tictactoe.actor
 
 import akka.actor._
+import akka.pattern.ask
 import grizzled.slf4j.Logging
 import org.json4s.JsonAST.JObject
 import org.json4s._
 import org.json4s.jackson.Serialization
 import play.api.libs.json.Json
+import tictactoe.actor.game.GameManagerActor
+import tictactoe.actor.game.GameManagerActor.AskIfUserIngameReturn
 import tictactoe.actor.user.UserManagerActor
+import tictactoe.actor.user.UserManagerActor.AllLoggedInReturn
 import tictactoe.model.User
+import util.FunctionalHelper.ofTuple
+
+import scala.concurrent.Future
 
 
 /**
@@ -18,14 +25,18 @@ class WebSocketActor(out: ActorRef, user: User) extends Actor with Logging {
   private implicit val formats = Serialization.formats(NoTypeHints)
 
   private val userManager = context.actorSelection(context.system / UserManagerActor.NAME)
+  private val gameManager = context.actorSelection(context.system / GameManagerActor.NAME)
 
   userManager ! UserManagerActor.SubscribeToUserAnnouncement(user)
 
   object ExtendedFunction extends PartialFunction[Any, Unit] {
+
+
     private val pf: PartialFunction[Any, Unit] = {
       case msg: String => handleMsg(msg)
-      case UserManagerActor.LoggedInAnnouncement(username, usertoken) =>
-      case UserManagerActor.LoggedOutAnnouncement(username, usertoken) =>
+      case UserManagerActor.LoggedInAnnouncement(username, usertoken) => handleLoggedInAnnouncement(username, usertoken)
+      case UserManagerActor.LoggedOutAnnouncement(username, usertoken) => handleLoggedOutAnnouncement(username, usertoken)
+      case us: UserStatus => out ! UserStatus.toJson(us)
       case any => warn(s"illegal message + $any")
         throw new IllegalArgumentException("Invalid message")
     }
@@ -60,9 +71,28 @@ class WebSocketActor(out: ActorRef, user: User) extends Actor with Logging {
   }
 
 
+  def handleLoggedInAnnouncement(user: String, token: String): Unit = {
+    out ! UserLoggedIn.toJson(UserElement(user, token))
+  }
+
+  def handleLoggedOutAnnouncement(user: String, token: String): Unit = {
+    out ! UserLoggedOut.toJson(UserElement(user, token))
+  }
+
   def handleUserStatus(): Unit = {
+    userManager ! UserManagerActor.AllLoggedInRequest(user.email)
+    gameManager ! GameManagerActor.AskIfUserIngame(user)
+
+    val allLoggedIn: Future[AllLoggedInReturn] = (userManager ? UserManagerActor.AllLoggedInRequest(user.email)).mapTo[UserManagerActor.AllLoggedInReturn]
+    val inGame: Future[AskIfUserIngameReturn] = (gameManager ? GameManagerActor.AskIfUserIngame(user)).mapTo[GameManagerActor.AskIfUserIngameReturn]
+
+    allLoggedIn.flatMap(loggedin => inGame.map(game => {
+      self ! UserStatus(user.name, loggedin.usrToken, game.inGame, loggedin.userTokenList.map(ofTuple((usr, token) => UserElement(usr, token))))
+    }))
+
     out ! UserStatus.toJson(UserStatus("alice", "aliceToken", inGame = false, List(UserElement("bob", "bobToken"))))
   }
+
 
   def handleGameRequested(value: AcceptGame): Unit = {
     //send this to the other player
