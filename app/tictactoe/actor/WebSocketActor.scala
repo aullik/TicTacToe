@@ -34,7 +34,7 @@ class WebSocketActor(out: ActorRef, user: User) extends Actor with Logging {
       case UserManagerActor.LoggedOutAnnouncement(username, usertoken) => handleLoggedOutAnnouncement(username, usertoken)
       case AskUserForGameForward(senderName: String, senderToken: String) => handleAskUserForGameForward(senderName: String, senderToken: String)
       case AllLoggedInReturn(usrToken, userTokenList, gameManager) => handleAllLoggedInReturn(usrToken, userTokenList, gameManager)
-      case AcceptAndStartGameForward(senderName: String, senderToken: String,, accept: Boolean) => handleAcceptAndStartGameForward(senderName: String, senderToken: String,, accept: Boolean)
+      case AcceptAndStartGameForward(senderName: String, senderToken: String, accept: Boolean) => handleAcceptAndStartGameForward(senderName: String, senderToken: String, accept: Boolean)
 
 
       case any => warn(s"illegal message + $any")
