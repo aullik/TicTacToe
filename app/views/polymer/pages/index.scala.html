@@ -140,7 +140,7 @@
               otherToken: String
            },
            ready: function () {
-              this.socket = new WebSocket("ws://" + window.location.host + "/socket/");
+              this.socket = new WebSocket("wss://" + window.location.host + "/socket/");
            },
            webSocketChanged: function () {
               this.socket.onmessage = this.onMessage.bind(this);

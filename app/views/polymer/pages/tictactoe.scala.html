@@ -186,7 +186,7 @@
               return message.user.token == this.user.token ? 'right' : 'left';
            },
            ready: function () {
-              this.ticSocket = new WebSocket("ws://" + window.location.host + "/socket/");
+              this.ticSocket = new WebSocket("wss://" + window.location.host + "/socket/");
               var s = document.createElement("script");
               s.type = "text/javascript";
               s.src = '@routes.Assets.at("javascripts/play.js")';

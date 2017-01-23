@@ -58,7 +58,7 @@
 
       // Write your code in the same way as for native WebSocket:
       //FIXME fix email
-      var ticSocket = new WebSocket("ws://" + window.location.host + "/socket/");
+      var ticSocket = new WebSocket("wss://" + window.location.host + "/socket/");
 
       $(document).ready(function () {
          $('.redirectButton').on('click', function () {

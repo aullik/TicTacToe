@@ -16,7 +16,7 @@ export class ChatComponent {
     private ticSocket: any = null;
     private myAvatarColor: string;
     constructor() {
-        this.ticSocket = new WebSocket('ws://' + window.location.host + '/socket/');
+        this.ticSocket = new WebSocket('wss://' + window.location.host + '/socket/');
         this.ticSocket.onmessage = this.ticSocketMessage.bind(this);
         this.ticSocket.onopen = this.ticSocketOpen.bind(this);
         this.ticSocket.onerror = this.ticSocketError.bind(this);

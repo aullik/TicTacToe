@@ -19,7 +19,7 @@ export class UsersComponent {
     private token: any;
     private dialogRef: any;
     constructor(public snackBar: MdSnackBar, public dialog: MdDialog) {
-        this.socket = new WebSocket('ws://' + window.location.host + '/socket/');
+        this.socket = new WebSocket('wss://' + window.location.host + '/socket/');
         this.socket.onmessage = this.socketMessage.bind(this);
         this.socket.onopen = this.socketOpen.bind(this);
         this.socket.onerror = this.socketError.bind(this);

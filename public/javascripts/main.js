@@ -21,7 +21,7 @@ WEB_SOCKET_SWF_LOCATION = "/javascript/WebSocketMain.swf";
 
 // Write your code in the same way as for native WebSocket:
 //FIXME fix email
-var socket = new WebSocket("ws://" + window.location.host + "/socket/");
+var socket = new WebSocket("wss://" + window.location.host + "/socket/");
 
 var username;
 var users;/*
