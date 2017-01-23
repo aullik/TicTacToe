@@ -22,13 +22,15 @@ class UserManagerActor private() extends Actor {
     case SubscribeToUserAnnouncement(usr) => addSubscriberToCache(usr)
     case UnSubscribeFromUserAnnouncement(usr) => removeSubscriberFromCache(usr)
     case AllLoggedInRequest(email: String) => handleAllLoggedInRequest(email: String)
+    case AskUserForGame(token: String, sender: User) => handleAskUserForGame(token: String, sender: User)
+    case AcceptAndStartGame(p1: User, p2Token: String, accept: Boolean) => handleAcceptAndStartGame(p1: User, p2Token: String, accept: Boolean)
   }
 
 
   def handleAllLoggedInRequest(email: String): Unit = {
     val userTokenList = loggedInUserCache.filterNot(_._1 == email).map(ofTuple((_, cont) => (cont.usr.name, cont.token))).toList
     tokenCache.get(email).foreach(cont =>
-      sender() ! AllLoggedInReturn(cont.token, userTokenList)
+      sender() ! AllLoggedInReturn(cont.token, userTokenList, None)
     )
   }
 
@@ -68,9 +70,30 @@ class UserManagerActor private() extends Actor {
     loggedInUserCache.foreach(ofTuple((_, cont) => cont.subscribers.foreach(_ ! message)))
   }
 
+
+  def handleAskUserForGame(token: String, sender: User): Unit = {
+    tokenCache.get(token).zip(loggedInUserCache.get(sender.email)).foreach(ofTuple((rec, send) => {
+      val ret = AskUserForGameForward(sender.name, send.token)
+      rec.subscribers.foreach(sub => sub ! ret)
+    }))
+  }
+
+  def handleAcceptAndStartGame(p1: User, p2Token: String, accept: Boolean): Unit = {
+    //FIXME start game
+
+    tokenCache.get(p2Token).zip(loggedInUserCache.get(p1.email)).foreach(ofTuple((rec, send) => {
+      val ret = AcceptAndStartGameForward(p1.name, send.token, accept)
+      rec.subscribers.foreach(sub => sub ! ret)
+    }))
+  }
+
 }
 
-private case class Container(usr: User, token: String, subscribers: Set[ActorRef] = Set.empty) {
+private case class Container(usr: User,
+                             token: String,
+                             gameManagerOpt: Option[ActorRef] = None,
+                             subscribers: Set[ActorRef] = Set.empty
+                            ) {
 
   def +(ref: ActorRef): Container = {
     copy(subscribers = subscribers + ref)
@@ -82,14 +105,23 @@ private case class Container(usr: User, token: String, subscribers: Set[ActorRef
   }
 
   def isEmpty: Boolean = subscribers.isEmpty
+
 }
 
 
 object UserManagerActor {
 
+  case class AskUserForGame(token: String, sender: User)
+
+  case class AskUserForGameForward(senderName: String, senderToken: String)
+
+  case class AcceptAndStartGame(p1: User, p2Token: String, accept: Boolean)
+
+  case class AcceptAndStartGameForward(senderName: String, senderToken: String, accept: Boolean)
+
   case class AllLoggedInRequest(email: String)
 
-  case class AllLoggedInReturn(usrToken: String, userTokenList: List[(String, String)])
+  case class AllLoggedInReturn(usrToken: String, userTokenList: List[(String, String)], gameManager: Option[ActorRef])
 
   case class LoggedInAnnouncement(user: String, token: String)
 

@@ -1,20 +1,15 @@
 package tictactoe.actor
 
 import akka.actor._
-import akka.pattern.ask
 import grizzled.slf4j.Logging
 import org.json4s.JsonAST.JObject
 import org.json4s._
 import org.json4s.jackson.Serialization
 import play.api.libs.json.Json
-import tictactoe.actor.game.GameManagerActor
-import tictactoe.actor.game.GameManagerActor.AskIfUserIngameReturn
 import tictactoe.actor.user.UserManagerActor
-import tictactoe.actor.user.UserManagerActor.AllLoggedInReturn
+import tictactoe.actor.user.UserManagerActor.{AcceptAndStartGameForward, AllLoggedInReturn, AskUserForGameForward}
 import tictactoe.model.User
 import util.FunctionalHelper.ofTuple
-
-import scala.concurrent.Future
 
 
 /**
@@ -25,9 +20,10 @@ class WebSocketActor(out: ActorRef, user: User) extends Actor with Logging {
   private implicit val formats = Serialization.formats(NoTypeHints)
 
   private val userManager = context.actorSelection(context.system / UserManagerActor.NAME)
-  private val gameManager = context.actorSelection(context.system / GameManagerActor.NAME)
 
   userManager ! UserManagerActor.SubscribeToUserAnnouncement(user)
+
+  var gameManagerOpt: Option[ActorRef] = None
 
   object ExtendedFunction extends PartialFunction[Any, Unit] {
 
@@ -36,7 +32,11 @@ class WebSocketActor(out: ActorRef, user: User) extends Actor with Logging {
       case msg: String => handleMsg(msg)
       case UserManagerActor.LoggedInAnnouncement(username, usertoken) => handleLoggedInAnnouncement(username, usertoken)
       case UserManagerActor.LoggedOutAnnouncement(username, usertoken) => handleLoggedOutAnnouncement(username, usertoken)
-      case us: UserStatus => out ! UserStatus.toJson(us)
+      case AskUserForGameForward(senderName: String, senderToken: String) => handleAskUserForGameForward(senderName: String, senderToken: String)
+      case AllLoggedInReturn(usrToken, userTokenList, gameManager) => handleAllLoggedInReturn(usrToken, userTokenList, gameManager)
+      case AcceptAndStartGameForward(senderName: String, senderToken: String,, accept: Boolean) => handleAcceptAndStartGameForward(senderName: String, senderToken: String,, accept: Boolean)
+
+
       case any => warn(s"illegal message + $any")
         throw new IllegalArgumentException("Invalid message")
     }
@@ -81,27 +81,29 @@ class WebSocketActor(out: ActorRef, user: User) extends Actor with Logging {
 
   def handleUserStatus(): Unit = {
     userManager ! UserManagerActor.AllLoggedInRequest(user.email)
-    gameManager ! GameManagerActor.AskIfUserIngame(user)
-
-    val allLoggedIn: Future[AllLoggedInReturn] = (userManager ? UserManagerActor.AllLoggedInRequest(user.email)).mapTo[UserManagerActor.AllLoggedInReturn]
-    val inGame: Future[AskIfUserIngameReturn] = (gameManager ? GameManagerActor.AskIfUserIngame(user)).mapTo[GameManagerActor.AskIfUserIngameReturn]
-
-    allLoggedIn.flatMap(loggedin => inGame.map(game => {
-      self ! UserStatus(user.name, loggedin.usrToken, game.inGame, loggedin.userTokenList.map(ofTuple((usr, token) => UserElement(usr, token))))
-    }))
-
-    out ! UserStatus.toJson(UserStatus("alice", "aliceToken", inGame = false, List(UserElement("bob", "bobToken"))))
   }
 
-
-  def handleGameRequested(value: AcceptGame): Unit = {
-    //send this to the other player
-    out ! AskForGame.toJson(AcceptGame("bob", "token", accept = true))
+  def handleAllLoggedInReturn(usrToken: String, userTokenList: List[(String, String)], gameManager: Option[ActorRef]): Unit = {
+    gameManagerOpt = gameManager
+    UserStatus(user.name, usrToken, gameManager.isDefined, userTokenList.map(ofTuple((usr, token) => UserElement(usr, token))))
   }
 
   def handleAskForGame(value: UserElement): Unit = {
-    out ! AcceptGame(value.name, value.token, accept = true)
+    userManager ! UserManagerActor.AskUserForGame(value.token, user)
   }
+
+  def handleAskUserForGameForward(senderName: String, senderToken: String): Unit = {
+    out ! GameRequested.toJson(UserElement(senderName, senderToken))
+  }
+
+  def handleGameRequested(value: AcceptGame): Unit = {
+    userManager ! UserManagerActor.AcceptAndStartGame(user, value.token, value.accept)
+  }
+
+  def handleAcceptAndStartGameForward(senderName: String, senderToken: String, accept: Boolean) {
+    out ! AskForGame.toJson(AcceptGame(senderName, senderToken, accept))
+  }
+
 
   def handleGameStatus(): Unit = {
     out ! GameStatus.toJson(GameStatus(PlayerMove.list("M-1-2-3", "O-2-2-2")))
