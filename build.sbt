@@ -26,6 +26,7 @@ lazy val commonSettings = Seq(
     "org.webjars.npm" % "angular__core" % "2.2.0",
     "org.webjars.npm" % "angular__http" % "2.2.0",
     "org.webjars.npm" % "angular__forms" % "2.2.0",
+    "org.webjars.npm" % "angular__material" % "2.0.0-beta.1",
     "org.webjars.npm" % "angular__router" % "3.2.0",
     "org.webjars.npm" % "angular__platform-browser-dynamic" % "2.2.0",
     "org.webjars.npm" % "angular__platform-browser" % "2.2.0",
