@@ -27,7 +27,7 @@ public class TicTacToe {
 
    void startUI() {
       TextUI tui = injector.getInstance(TextUI.class);
-      injector.getInstance(TicTacToeGUI.class);
+      //injector.getInstance(TicTacToeGUI.class);
 
       tui.printTUI();
       //continue until the user decides to quit
