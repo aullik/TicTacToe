@@ -9,7 +9,7 @@ import com.mohiva.play.silhouette.impl.providers._
 import controllers.WebJarAssets
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.libs.concurrent.Execution.Implicits._
-import play.api.mvc.{Action, Controller}
+import play.api.mvc.{AnyContent, Controller, Request, Result}
 import tictactoe.silhouette.{TicTacToeEnv, UserService}
 
 import scala.concurrent.Future
@@ -39,7 +39,7 @@ class SocialAuthController @Inject()(
     * @param provider The ID of the provider to authenticate against.
     * @return The result to display.
     */
-  def authenticate(provider: String) = Action.async { implicit request =>
+  def authenticate(provider: String)(request: Request[AnyContent]): Future[Result] = {
     (socialProviderRegistry.get[SocialProvider](provider) match {
       case Some(p: SocialProvider with CommonSocialProfileBuilder) =>
         p.authenticate().flatMap {
