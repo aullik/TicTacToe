@@ -71,6 +71,7 @@ class Auth @Inject private(val silhouette: Silhouette[TicTacToeEnv],
   def startSignUp(request: Request[AnyContent], messages: Messages): Future[Result] = {
     info("handleStartSignUp")
     val json = request.body.asJson.get
+    println(json)
     val signUpData = json.validate[SignUpData].get
 
     val loginInfo: LoginInfo = key2loginInfo(signUpData.email)

@@ -39,9 +39,29 @@
                   Welcome to TicTacToe 3D</a>
                <ul class="nav navbar-nav navbar-right" style=" padding: 8px;">
                   <li style="margin-left: 5px;"><button type="button" class="btn btn-success">Bootstrap</button></li>
-                  <li style="margin-left: 5px;"><button type="button" class="btn btn-default">Polymer</button></li>
-                  <li style="margin-left: 5px;"><button type="button" class="btn btn-default">Angular2js</button></li>
+                  <li style="margin-left: 5px;"><button type="button" id="p" class="btn btn-default framework">Polymer</button></li>
+                  <li style="margin-left: 5px;"><button type="button" id="a" class="btn btn-default framework">Angular2js</button></li>
                </ul>
+               <script>
+                  $(document).ready(function () {
+                      $(".framework").on('click', function () {
+                          var url = "http://" + window.location.host + "/selectFramework/" + this.id;
+                          console.log(url)
+                         $.ajax({
+                            url: url, // php script to retern json encoded string
+                            // dataType: 'json', // set recieving type - JSON in case of a question
+                            type: 'POST', // set sending HTTP Request type
+                            //contentType: 'application/json',
+                            success: function (data) {
+                               window.location.href = window.location.href;
+                            },
+                            error: function (data) { // if error occured
+                               console.log(data)
+                            }
+                         });
+                      })
+                  });
+               </script>
             </div>
          </div>
       </nav>

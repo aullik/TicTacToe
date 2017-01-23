@@ -252,7 +252,7 @@
               }
            },
            handleAcceptMessage: function (message) {
-              message = message.user = this.otherUser;
+              message.user = this.otherUser;
               this.messages.push(message);
            },
            handleGamePlayersRet: function (data) {

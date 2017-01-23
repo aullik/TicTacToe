@@ -24,5 +24,8 @@ GET         /assets/*file                      controllers.Assets.at(path="/publ
 # Get Polymer recources
 GET         /polymer/*element                  controllers.ScalaRoutes.polymer(element)
 
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
+
 # Socket
 GET         /socket/                           controllers.WebSocketsControl.socket

@@ -13,12 +13,12 @@ sealed trait FrameworkSelector extends Controller {
 }
 
 
-object PlaySelector extends FrameworkSelector {
-  override def index: Result = ???
+object PolymerSelector extends FrameworkSelector {
+  override def index: Result = Ok(views.html.polymer.index())
 
-  override def game: Result = ???
+  override def game: Result = Ok(views.html.polymer.index())
 
-  override def signUpPage: Result = ???
+  override def signUpPage: Result = Ok(views.html.polymer.index())
 }
 
 object BootstrapSelector extends FrameworkSelector {
@@ -31,11 +31,11 @@ object BootstrapSelector extends FrameworkSelector {
 }
 
 object AngularSelector extends FrameworkSelector {
-  override def index: Result = ???
+  override def index: Result = Ok(views.html.angular2js.index())
 
-  override def game: Result = ???
+  override def game: Result = Ok(views.html.angular2js.index())
 
-  override def signUpPage: Result = ???
+  override def signUpPage: Result = Ok(views.html.angular2js.index())
 }
 
 
@@ -43,12 +43,12 @@ object FrameworkSelector extends Controller {
 
   private final val IDENT = "framework"
 
-  private final val default = BootstrapSelector
+  private final val default = AngularSelector
 
   def getFramework(request: Request[AnyContent]): FrameworkSelector = {
     request.session.get(IDENT).flatMap {
       case "a" => Some(AngularSelector)
-      case "p" => Some(PlaySelector)
+      case "p" => Some(PolymerSelector)
       case "b" => Some(BootstrapSelector)
       case _ => None
     }.getOrElse(default)

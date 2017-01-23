@@ -1,0 +1,37 @@
+<div class="panel panel-primary" style=" height: 100%;
+                border-radius: 0 4px 4px 0;
+            ">
+    <div class="panel-heading" id="accordion">
+        <i class="fa fa-commenting-o" aria-hidden="true"></i> Chat
+    </div>
+    <div class="panel-collapse" style="height: calc(100% - 92px);">
+        <div class="panel-body">
+            <ul class="chat">
+                <li *ngFor="let message of messages" [ngClass]="{'clearfix right': message.me,'clearfix left': !message.me}"><!-- { right:message.user.token === user.token, clearfix left:message.user.token === user.token} -->
+                    <span [ngClass]="{'chat-img pull-right': message.me,'chat-img pull-left': !message.me}"><!-- {chat-img pull-right:message.user.token === user.token, chat-img pull-left:message.user.token === user.token} -->
+                       <img src="{{ message.url }}" alt="User Avatar" class="img-circle" />
+                    </span>
+                    <div class="chat-body clearfix">
+                        <div class="header">
+                            <strong class="primary-font">
+                                {{ message.user.name }}</strong>
+                            <small [ngClass]="{'text-muted pull-left': message.me,'text-muted pull-right': !message.me}"><!-- {text-muted pull-left: message.user.token === user.token, text-muted pull-right:message.user.token === user.token} -->
+                                <span class="glyphicon glyphicon-time"></span>{{ message.timestamp }}</small>
+                        </div>
+                        <p>
+                            {{ message.body }}
+                        </p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="panel-footer">
+            <div class="input-group">
+                <input [(ngModel)]="data.textToSend" id="btn-input" type="text" class="form-control input-sm" placeholder="Type your message here..." />
+                <span class="input-group-btn">
+                                <button (click)="sendMessage()" class="btn btn-warning btn-sm" id="btn-chat">
+                Send</button>
+                            </span>
+            </div>
+        </div>
+    </div>

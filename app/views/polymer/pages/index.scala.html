@@ -182,7 +182,7 @@
               this.push('users', data);
            },
            handleUserLoggedOut: function (data) {
-              var index = this.users.findIndex(x = > x.token == data.token
+              var index = this.users.findIndex(x => x.token == data.token
               );
               this.splice('users', index, 1);
            },
@@ -219,13 +219,12 @@
            _startGameOnClick: function (event) {
               var id = event.srcElement.id;
               if (id === 'icon') id = event.srcElement.parentElement.id;
-              var user = this.users.find(x = > x.token == id
-              );
+              var user = this.users.find(x => x.token == id);
               this.socket.send(JSON.stringify({
                  msgType: 'askForGame',
                  value: user
               }));
-              this.$.callToast.text = "call has been sent";
+              this.$.callToast.text = "Anruf wurde geschickt";
               this.$.callToast.open();
               this.$.usersContDiv.classList.add('disableClick')
               this.$.activatePaperSpinner.open();

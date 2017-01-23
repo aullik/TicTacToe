@@ -1,0 +1,96 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Tictactoe 3D</title>
+    <base href="/">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/hammerjs/2.0.8/hammer.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+    <!-- Latest compiled and minified JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+  <link href="@routes.Assets.at("stylesheets/theming.css")" rel="stylesheet">
+    <link href="@routes.Assets.at("stylesheets/angularCss.css")" rel="stylesheet">
+
+  <script type='text/javascript' src='@routes.Assets.versioned("lib/systemjs/dist/system-polyfills.js")'></script>
+  <script type='text/javascript' src='@routes.Assets.versioned("lib/core-js/client/shim.min.js")'></script>
+  <script type='text/javascript' src='@routes.Assets.versioned("lib/zone.js/dist/zone.js")'></script>
+  <script type='text/javascript' src='@routes.Assets.versioned("lib/reflect-metadata/Reflect.js")'></script>
+  <script type='text/javascript' src='@routes.Assets.versioned("lib/systemjs/dist/system.src.js")'></script>
+  <script>    @* our app is downloaded as individual javascript files by SystemJs
+                     after compilation by sbt-typescript*@
+  var map = {
+    'app': 'assets/app',
+    '@@angular':'assets/lib/@@angular',
+    'rxjs':'assets/lib/rxjs',
+    'symbol-observable': 'assets/lib/symbol-observable'
+
+  };
+
+
+  var packages = {
+    'app': {main: 'main.js', defaultExtension: 'js'},
+    'rxjs': {defaultExtension: 'js'},
+    'assets/lib': {defaultExtension: 'js'},
+    'symbol-observable': {defaultExtension: 'js', main: 'index.js'}
+  };
+  var ngPackageNames = [
+    'common',
+    'compiler',
+    'core',
+    'forms',
+    'router',
+    'http',
+    'platform-browser',
+    'platform-browser-dynamic',
+    'router',
+    'material'
+  ];
+
+  function packIndex(pkgName) {
+    packages['@@angular/'+pkgName] = { main: 'index.js', defaultExtension: 'js' };
+  }
+  function packUmd(pkgName) {
+    packages['@@angular/'+pkgName] = { main: '/bundles/' + pkgName + '.umd.js', defaultExtension: 'js' };
+  }
+  // Most environments should use UMD; some (Karma) need the individual index files
+  function addAngularModulesToMap(pkgName) {
+    map['@@angular/'+pkgName] = 'assets/lib/angular__' + pkgName;
+  }
+
+  // Add package entries for angular packages
+  var setPackageConfig = System.packageWithIndex ? packIndex : packUmd;
+  ngPackageNames.forEach(setPackageConfig);
+
+  // Add map entries for angular packages
+  ngPackageNames.forEach(function(pkgName){
+    addAngularModulesToMap(pkgName)
+  });
+
+  System.config({
+    map : map,
+    packages: packages
+  });
+  @* SystemJs works out which other modules our app module depends on and will download and load them*@
+  System.import('app')
+    .catch(console.error.bind(console));
+
+		</script>
+</head>
+
+<body>
+    <my-app>Loading...</my-app>
+</body>
+
+</html>
