@@ -50,13 +50,13 @@ object OutMessage {
 case class AcceptGame(name: String, token: String, accept: Boolean)
 
 object AcceptGame extends SocketObject {
-  implicit val form = Json.format[AcceptGame]
+  implicit val form: OFormat[AcceptGame] = Json.format[AcceptGame]
 }
 
 case class UserElement(name: String, token: String)
 
 object UserElement extends SocketObject {
-  implicit val form = Json.format[UserElement]
+  implicit val form: OFormat[UserElement] = Json.format[UserElement]
 }
 
 //created so you don't have to work with EmptyMessage.typ
@@ -72,19 +72,18 @@ object EmptyMessage extends EmptyMessage {
           JsError("")
 
       case _ => JsError("")
-    }, (emptyMessage: EmptyMessage) => {
+    }, (_: EmptyMessage) => {
       JsObject(Seq.empty)
     })
 }
 
 case class UserStatus(name: String,
                       token: String,
-                      inGame: Boolean,
                       users: List[UserElement]
                      )
 
 object UserStatus extends InMessage with OutMessage {
-  implicit val form = Json.format[UserStatus]
+  implicit val form: OFormat[UserStatus] = Json.format[UserStatus]
 
   override type inValue = EmptyMessage
   override type outValue = UserStatus
@@ -129,7 +128,7 @@ object StartGame extends OutMessage {
 case class PlayerMove(pMove: String)
 
 object PlayerMove extends OutMessage {
-  implicit val form = Json.format[PlayerMove]
+  implicit val form: OFormat[PlayerMove] = Json.format[PlayerMove]
   override val outMsg: String = "playerMoved"
   override type outValue = PlayerMove
 
@@ -141,7 +140,7 @@ object PlayerMove extends OutMessage {
 case class GameStatus(moves: List[PlayerMove])
 
 object GameStatus extends InMessage with OutMessage {
-  implicit val form = Json.format[GameStatus]
+  implicit val form: OFormat[GameStatus] = Json.format[GameStatus]
 
   override val inMsg: String = "gameStatus"
   override type inValue = EmptyMessage
@@ -154,7 +153,7 @@ case class GamePlayers(me: UserElement, other: UserElement)
 
 object GamePlayers extends InMessage with OutMessage {
 
-  implicit val form = Json.format[GamePlayers]
+  implicit val form: OFormat[GamePlayers] = Json.format[GamePlayers]
   override val inMsg: String = "gamePlayers"
   override type inValue = EmptyMessage
   override val outMsg: String = "gamePlayersRet"
@@ -165,7 +164,7 @@ object GamePlayers extends InMessage with OutMessage {
 case class Move(move: String)
 
 object Move extends InMessage {
-  implicit val form = Json.format[Move]
+  implicit val form: OFormat[Move] = Json.format[Move]
 
   override val inMsg: String = "move"
   override type inValue = Move
@@ -176,7 +175,7 @@ object Move extends InMessage {
 case class GameFinish(pMove: String, tie: Boolean)
 
 object GameFinish extends OutMessage {
-  implicit val form = Json.format[GameFinish]
+  implicit val form: OFormat[GameFinish] = Json.format[GameFinish]
 
   override val outMsg: String = "gameFinish"
   override type outValue = GameFinish
@@ -185,7 +184,7 @@ object GameFinish extends OutMessage {
 case class DirectMessage(avatarColor: String, timestamp: String, body: String)
 
 object DirectMessage extends InMessage with OutMessage {
-  implicit val form = Json.format[DirectMessage]
+  implicit val form: OFormat[DirectMessage] = Json.format[DirectMessage]
   override val inMsg: String = "message"
   override type inValue = DirectMessage
   override val outMsg: String = "acceptMessage"
