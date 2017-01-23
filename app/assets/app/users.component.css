@@ -11,12 +11,12 @@
     float: left;
     margin-bottom: 8px;
     display: flex;
-    height: 65px;
+    height: 75px;
 }
 
 .userCard .header {
     float: left;
-    width: 110px;
+    width: 180px;
     margin: auto;
 }
 

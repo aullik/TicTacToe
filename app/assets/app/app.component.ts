@@ -11,6 +11,7 @@ export class AppComponent {
     public title = 'app works!';
     constructor(private HTTPService: HTTPService) {}
     public redirect(data: string) {
+        console.warn(data);
         this.HTTPService.post('/selectFramework/' + data, {})
             .subscribe(
                 error =>  console.warn(error),
