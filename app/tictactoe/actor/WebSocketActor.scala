@@ -6,6 +6,7 @@ import org.json4s.JsonAST.JObject
 import org.json4s._
 import org.json4s.jackson.Serialization
 import play.api.libs.json.Json
+import tictactoe.actor.messages._
 import tictactoe.actor.user.UserManagerActor
 import tictactoe.actor.user.UserManagerActor.{AcceptAndStartGameForward, AllLoggedInReturn, AskUserForGameForward}
 import tictactoe.model.User

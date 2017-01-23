@@ -1,4 +1,4 @@
-package tictactoe.actor
+package tictactoe.actor.messages
 
 import play.api.libs.json._
 
