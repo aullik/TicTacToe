@@ -5,7 +5,7 @@ import com.google.inject.Injector;
 import com.google.inject.Module;
 import de.htwg.tictactoe.controller.IController;
 import de.htwg.tictactoe.view.TextUI;
-import de.htwg.tictactoe.view.gui.TicTacToeGUI;
+//import de.htwg.tictactoe.view.gui.TicTacToeGUI;
 import org.apache.log4j.PropertyConfigurator;
 
 import java.util.Scanner;
@@ -27,7 +27,7 @@ public class TicTacToe {
 
    void startUI() {
       TextUI tui = injector.getInstance(TextUI.class);
-      injector.getInstance(TicTacToeGUI.class);
+      //injector.getInstance(TicTacToeGUI.class);
 
       tui.printTUI();
       //continue until the user decides to quit
