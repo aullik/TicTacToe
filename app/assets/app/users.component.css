@@ -11,6 +11,7 @@
     float: left;
     margin-bottom: 8px;
     display: flex;
+    height: 65px;
 }
 
 .userCard .header {
