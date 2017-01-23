@@ -2,7 +2,7 @@ package tictactoe
 
 import com.google.inject.AbstractModule
 import net.codingwell.scalaguice.ScalaModule
-import tictactoe.persistence.{DevelopmentPersistenceEnvironment, PersistenceEnvironment}
+import tictactoe.persistence.{PersistenceEnvironment, TestPersistenceEnvironment}
 
 /** Configuration for dependency injection with Guice
   *
@@ -10,7 +10,7 @@ import tictactoe.persistence.{DevelopmentPersistenceEnvironment, PersistenceEnvi
 class TicTacToeServerModule extends AbstractModule with ScalaModule {
 
   def configure(): Unit = {
-    bind[PersistenceEnvironment].toInstance(DevelopmentPersistenceEnvironment)
+    bind[PersistenceEnvironment].toInstance(TestPersistenceEnvironment)
   }
 
 }
