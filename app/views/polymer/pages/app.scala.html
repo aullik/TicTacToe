@@ -150,7 +150,7 @@
         this.page = page || 'signup';
      },
      _sendFramework: function (e) {
-        this.$.frameworkAjax.url = "http://" + window.location.host + "/selectFramework/" + e.target.id;
+        this.$.frameworkAjax.url = "https://" + window.location.host + "/selectFramework/" + e.target.id;
         this.$.frameworkAjax.generateRequest();
      },
      handleError: function (data) {
