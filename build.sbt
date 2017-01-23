@@ -13,6 +13,7 @@ lazy val commonSettings = Seq(
     // "com.google.guava" % "guava" % "19.0",
     "junit" % "junit" % "4.12",
     "log4j" % "log4j" % "1.2.17",
+    "javax.inject" % "javax.inject" % "1",
     "org.mongodb" % "mongo-java-driver" % "3.3.0",
     "org.mongodb" % "bson" % "3.3.0",
     "org.json4s" %% "json4s-jackson" % "3.4.2",
