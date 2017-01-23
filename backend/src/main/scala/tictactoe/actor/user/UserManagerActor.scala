@@ -35,29 +35,19 @@ class UserManagerActor private() extends Actor {
   }
 
   def addSubscriberToCache(user: User): Unit = {
-    val old = loggedInUserCache.getOrElse(user.email, createContainer(user))
-    loggedInUserCache.update(user.email, old + sender())
+    loggedInUserCache.getOrElse(user.email, createContainer(user)) + sender()
   }
 
   private def createContainer(user: User): Container = {
-    val cont =
-      Container(user, tokenGen.generateToken(user.name))
+    val cont = new Container(user, tokenGen.generateToken(user.name))
 
     tokenCache.put(cont.token, cont)
     messageSubscribers(LoggedInAnnouncement(user.name, cont.token))
-
     cont
   }
 
   def removeSubscriberFromCache(user: User): Unit = {
-    val key = user.email
-    loggedInUserCache.get(key).foreach(old => {
-      val changed = old - sender()
-      if (old.isEmpty)
-        removeContainer(old)
-      else
-        loggedInUserCache.update(key, changed)
-    })
+    loggedInUserCache.get(user.email).map(_ - sender()).filter(_.isEmpty).foreach(removeContainer)
   }
 
   def removeContainer(container: Container): Unit = {
@@ -79,6 +69,7 @@ class UserManagerActor private() extends Actor {
   }
 
   def handleAcceptAndStartGame(p1: User, p2Token: String, accept: Boolean): Unit = {
+
     //FIXME start game
 
     tokenCache.get(p2Token).zip(loggedInUserCache.get(p1.email)).foreach(ofTuple((rec, send) => {
@@ -89,19 +80,21 @@ class UserManagerActor private() extends Actor {
 
 }
 
-private case class Container(usr: User,
-                             token: String,
-                             gameManagerOpt: Option[ActorRef] = None,
-                             subscribers: Set[ActorRef] = Set.empty
-                            ) {
+private class Container(val usr: User,
+                        val token: String,
+                        var gameManagerOpt: Option[ActorRef] = None,
+                        var subscribers: Set[ActorRef] = Set.empty
+                       ) {
 
   def +(ref: ActorRef): Container = {
-    copy(subscribers = subscribers + ref)
+    subscribers = subscribers + ref
+    this
   }
 
 
   def -(ref: ActorRef): Container = {
-    copy(subscribers = subscribers - ref)
+    subscribers = subscribers - ref
+    this
   }
 
   def isEmpty: Boolean = subscribers.isEmpty
