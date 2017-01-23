@@ -49,7 +49,6 @@ class ScalaRoutes @Inject()(val messagesApi: MessagesApi,
     }
   }
 
-
   private object AuthenticatedGet extends AuthenticatedAction(messagesApi, silhouette)
 
   private object UnAuthenticatedGet extends UnAuthenticatedAction(messagesApi, silhouette)
