@@ -3,6 +3,7 @@ package tictactoe.actor
 import akka.actor.{Actor, ActorRef, Props}
 import grizzled.slf4j.Logging
 import play.api.libs.json.Json
+import tictactoe.actor.messages.WebSocketActorMessages.JsType
 import tictactoe.actor.messages._
 import tictactoe.actor.user.UserHandlerActor.BroadcastMessage
 import tictactoe.actor.user.{UserHandlerActor, UserHandlerContainer, UserTokenManagerActor}
@@ -75,15 +76,18 @@ class WebSocketActor(out: ActorRef, user: User) extends Actor with Logging {
 
 
   def handleMsg(msg: String): Unit = {
-    try Json.parse(msg) match {
-      case UserStatus(_) => WithUserHandler(handleUserStatus())
-      case AskForGame(value) => WithUserHandler(handleAskForGame(value))
-      case GameRequested(value) => WithUserHandler(handleGameRequested(value))
-      case GameStatus(_) => WithUserHandler(handleGameStatus())
-      case GamePlayers(_) => WithUserHandler(handleGamePlayers())
-      case Move(value) => WithUserHandler(handleMove(value))
-      case DirectMessage(value) => WithUserHandler(handleMessage(value))
-      case any => throw new IllegalArgumentException(s"Invalid message: + $any")
+    try {
+      val json: JsType = Json.parse(msg)
+      json match {
+        case UserStatusMSG(_) => WithUserHandler(handleUserStatus())
+        case AskForGame(value: JsType) => WithUserHandler(handleAskForGame(value))
+        case GameRequested(value: JsType) => WithUserHandler(handleGameRequested(value))
+        case GameStatus(_) => WithUserHandler(handleGameStatus())
+        case GamePlayers(_) => WithUserHandler(handleGamePlayers())
+        case Move(value: JsType) => WithUserHandler(handleMove(value))
+        case DirectMessage(value: JsType) => WithUserHandler(handleMessage(value))
+        case any => throw new IllegalArgumentException(s"Invalid message: + $any")
+      }
     } catch {
       case e: Exception =>
         warn(s"couldn't handle message: $msg. Exception: ", e)
@@ -100,7 +104,7 @@ class WebSocketActor(out: ActorRef, user: User) extends Actor with Logging {
   }
 
   def handleGameRequested(value: AcceptGame)(cont: UserHandlerContainer): Unit = {
-    cont.handler ! UserHandlerActor.AcceptOrDenyGame(UserElement(value.name, value.token), accept = value.accept)
+    cont.handler ! UserHandlerActor.AcceptOrDenyGame(tictactoe.actor.messages.UserElement(value.name, value.token), accept = value.accept)
   }
 
   def handleGameStatus()(cont: UserHandlerContainer): Unit = {

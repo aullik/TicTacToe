@@ -1,6 +1,7 @@
-package tictactoe.actor.messages
+package tictactoe.actor
 
 import play.api.libs.json._
+import tictactoe.actor.messages.{DirectMessage, Move, UserElement}
 import tictactoe.actor.messages.WebSocketActorMessages.JsType
 
 /**
@@ -55,11 +56,10 @@ object AcceptGame extends SocketObject {
   implicit val form: OFormat[AcceptGame] = Json.format[AcceptGame]
 }
 
-case class UserElement(name: String, token: String)
 
-object UserElement extends SocketObject {
-  implicit val form: OFormat[UserElement] = Json.format[UserElement]
-}
+//object UserElement extends SocketObject {
+//  implicit val form: OFormat[UserElement] = Json.format[UserElement]
+//}
 
 //created so you don't have to work with EmptyMessage.typ
 sealed trait EmptyMessage
@@ -168,7 +168,6 @@ object GamePlayers extends InMessage with OutMessage {
 
 }
 
-case class Move(move: String)
 
 object Move extends InMessage {
   implicit val form: OFormat[Move] = Json.format[Move]
@@ -194,7 +193,8 @@ object GameFinish extends OutMessage {
 }
 
 
-object DirectMessageMSG extends InMessage with OutMessage {
+object DirectMessage extends InMessage with OutMessage {
+  implicit val form: OFormat[DirectMessage] = Json.format[DirectMessage]
   override val inMsg: String = "message"
   override type inValue = DirectMessage
   override val outMsg: String = "acceptMessage"

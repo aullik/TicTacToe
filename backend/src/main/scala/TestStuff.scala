@@ -1,8 +1,0 @@
-
-
-/**
-  */
-object TestStuff extends App {
-
-
-}

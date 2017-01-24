@@ -55,7 +55,7 @@ class UserHandlerActor(user: User, token: TOKEN) extends Actor with Logging {
   }
 
   def handleRequestStatus(): Unit = {
-    sender() ! UserStatus.toJson(UserStatus(user.name, token, lobbyCache.values.toList))
+    sender() ! UserStatusMSG.toJson(UserStatus(user.name, token, lobbyCache.values.toList))
   }
 
 
