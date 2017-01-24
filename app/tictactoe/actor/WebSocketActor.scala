@@ -70,9 +70,7 @@ class WebSocketActor(out: ActorRef, user: User) extends Actor with Logging {
         case None => throw new IllegalStateException("no UserHandler")
         case Some(cont) => block(cont)
       }
-
     }
-
   }
 
 

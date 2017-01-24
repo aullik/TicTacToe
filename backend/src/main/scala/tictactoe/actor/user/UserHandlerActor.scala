@@ -60,7 +60,7 @@ class UserHandlerActor(user: User, token: TOKEN) extends Actor with Logging {
 
 
   def handleGetAllReturn(list: List[UserElement]): Unit = {
-    list.foreach(e => lobbyCache.put(e.token, e))
+    list.filterNot(_.token == this.token).foreach(e => lobbyCache.put(e.token, e))
   }
 
   def handleBroadcastRegisterUserToken(token: String, username: String): Unit = {
@@ -68,7 +68,7 @@ class UserHandlerActor(user: User, token: TOKEN) extends Actor with Logging {
       return
     val elem = UserElement(username, token)
     lobbyCache.put(token, elem)
-    if (gameOpt.isDefined)
+    if (gameOpt.isEmpty)
       broadcast(UserLoggedIn.toJson(elem))
   }
 
@@ -77,7 +77,7 @@ class UserHandlerActor(user: User, token: TOKEN) extends Actor with Logging {
       return
     val elem = UserElement(username, token)
     lobbyCache.remove(token)
-    if (gameOpt.isDefined)
+    if (gameOpt.isEmpty)
       broadcast(UserLoggedOut.toJson(elem))
   }
 
