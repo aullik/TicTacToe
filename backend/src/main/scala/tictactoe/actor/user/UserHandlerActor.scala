@@ -11,6 +11,7 @@ import tictactoe.actor.messages._
 import tictactoe.actor.user.UserHandlerActor._
 import tictactoe.actor.user.UserTokenManagerActor.{RequestUserHandlerForToken, TOKEN, UserHandlerIfPresent}
 import tictactoe.model.User
+import util.FunctionalHelper.ofTuple
 
 import scala.collection.mutable
 import scala.util.{Failure, Success}
@@ -30,7 +31,7 @@ class UserHandlerActor(user: User, token: TOKEN) extends Actor with Logging {
   private var moves: List[PlayerMove] = Nil
   private var startedThisGame = false
 
-  private val beingAskedBy = mutable.Map.empty[TOKEN, ActorRef]
+  private val beingAskedBy = mutable.Map.empty[TOKEN, (ActorRef, NAME)]
 
 
   override def preStart(): Unit = {
@@ -45,8 +46,9 @@ class UserHandlerActor(user: User, token: TOKEN) extends Actor with Logging {
   }
 
   def handleRegisterWebSocket(): Unit = {
-    socketCache.add(sender())
-    socketCache + sender()
+    val s = sender()
+    socketCache.add(s)
+    beingAskedBy.foreach(ofTuple((t, p) => s ! BroadcastMessage(GameRequested.toJson(UserElement(p._2, t)))))
   }
 
   def handleUnRegisterWebSocket(): Unit = {
@@ -96,7 +98,7 @@ class UserHandlerActor(user: User, token: TOKEN) extends Actor with Logging {
 
   def handleAskOtherPlayerForGame(user: UserElement, userActor: ActorRef): Unit = {
     val deny = AcceptOrDenyGameWithRef(UserElement(user.name, token), accept = None, self)
-    beingAskedBy.values.foreach(_ ! deny)
+    beingAskedBy.values.foreach(_._1 ! deny)
     beingAskedBy.clear()
 
     opponentOpt match {
@@ -115,7 +117,7 @@ class UserHandlerActor(user: User, token: TOKEN) extends Actor with Logging {
     if (opponentOpt.isDefined)
       otherRef ! AcceptOrDenyGameWithRef(UserElement(user.name, token), accept = None, self)
     else {
-      beingAskedBy.put(otherPlayer.token, otherRef)
+      beingAskedBy.put(otherPlayer.token, (otherRef, otherPlayer.name))
       broadcast(GameRequested.toJson(otherPlayer))
     }
   }
@@ -129,16 +131,16 @@ class UserHandlerActor(user: User, token: TOKEN) extends Actor with Logging {
       case Some(other) =>
         val deny = AcceptOrDenyGameWithRef(UserElement(user.name, token), None, self)
         if (accept) {
-          val gameRef: ActorRef = context.actorOf(GameManagerActor.props((otherPlayer.token, other), (token, self)))
+          val gameRef: ActorRef = context.actorOf(GameManagerActor.props((otherPlayer.token, other._1), (token, self)))
           startedThisGame = true
           gameOpt = Some(gameRef)
-          opponentOpt = Some((otherPlayer, other))
-          other ! deny.copy(accept = gameOpt)
-          beingAskedBy.values.foreach(_ ! deny)
+          opponentOpt = Some((otherPlayer, other._1))
+          other._1 ! deny.copy(accept = gameOpt)
+          beingAskedBy.values.foreach(_._1 ! deny)
           beingAskedBy.clear()
           messageInGame()
         } else {
-          other ! deny
+          other._1 ! deny
         }
     }
   }
@@ -294,6 +296,8 @@ class UserHandlerActor(user: User, token: TOKEN) extends Actor with Logging {
 
 
 object UserHandlerActor {
+  private final type NAME = String
+
 
   case class RequestGameStatus()
 
