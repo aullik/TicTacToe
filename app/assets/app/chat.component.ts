@@ -1,4 +1,6 @@
 import {Component} from '@angular/core';
+import {BackToIndexModal}     from './backToIndexModal.component';
+import {MdDialog} from '@angular/material';
 
 @Component({
     selector: 'my-chat',
@@ -15,7 +17,7 @@ export class ChatComponent {
     private WEB_SOCKET_SWF_LOCATION = '/javascript/WebSocketMain.swf';
     private ticSocket: any = null;
     private myAvatarColor: string;
-    constructor() {
+    constructor(public dialog: MdDialog) {
         this.ticSocket = new WebSocket('wss://' + window.location.host + '/socket/');
         this.ticSocket.onmessage = this.ticSocketMessage.bind(this);
         this.ticSocket.onopen = this.ticSocketOpen.bind(this);
@@ -61,7 +63,7 @@ export class ChatComponent {
         }
     }
     public handleReturn(data: any) {
-
+        let dialogRefCall = this.dialog.open(BackToIndexModal, {disableClose: true});
     }
     public handleAcceptMessage(message: any) {
         message.user = this.otherUser;
