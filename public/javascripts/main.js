@@ -36,6 +36,7 @@ this.socket.onerror = function onError(event) {
 }
 
 this.socket.onclose = function onClose(event) {
+    console.log("socket close and opened")
     socket = new WebSocket("wss://" + window.location.host + "/socket/");
 }
 this.socket.onmessage = function socketOnMessage(event){
