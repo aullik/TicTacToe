@@ -1,1 +1,0 @@
-web: target/universal/stage/bin/tictactoe -Dhttp.port=${PORT} -Dconfig.resource=production.conf
