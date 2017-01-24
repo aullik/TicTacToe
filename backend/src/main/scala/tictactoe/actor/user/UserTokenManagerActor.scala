@@ -32,7 +32,7 @@ class UserTokenManagerActor extends Actor with Logging {
   }
 
   def handleRequestUserHandlerForToken(token: TOKEN): Unit = {
-    sender ! UserHandlerIfPresent(userCache.get(token))
+    sender ! UserHandlerIfPresent(tokenCache.get(token))
   }
 
   def handleRegisterForUser(user: User): Unit = {
