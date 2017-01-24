@@ -69,7 +69,7 @@
 
       .github {
          background: black;
-         background: url("https://assets-cdn.github.com/images/modules/open_graph/github-mark.png");
+         background: url("http://image.flaticon.com/icons/png/512/25/25231.png");
          background-size: 100% 100%;
       }
       .tictactoeImage{
@@ -109,7 +109,7 @@
                      <!--routes.SocialAuthController.authenticate("github") -->
                   <a href="@routes.ScalaRoutes.oAuth("github")" class="provider github" title="github"></a>
                   <a href="@routes.ScalaRoutes.oAuth("facebook")" class="provider facebook" title="facebook"></a>
-                  <a href="@routes.ScalaRoutes.oAuth("google")" class="provider google" title="google"></a>
+                  <!--<a href="routes.ScalaRoutes.oAuth("google")" class="provider google" title="google"></a>-->
                </div>
                <div class="formContainer">
                   <form is="iron-form" method="post" id="signUpForm" action="@routes.ScalaRoutes.signUp()" content-type="application/json">
