@@ -184,6 +184,10 @@
                   type: Boolean,
                   value: true
               },
+              socketError: {
+                 type: Boolean,
+                 value: false
+              },
            },
            _redirect: function () {
               this.$.redirect.click();
@@ -252,11 +256,14 @@
 
            },
            onError: function (event) {
+               this.socketError = true;
               // console.error("Error: " + JSON.stringify(event.reason));
            },
 
            onClose: function (event) {
-              this.ticSocket = new WebSocket("wss://" + window.location.host + "/socket/");
+               if(!this.socketError){
+                 this.ticSocket = new WebSocket("wss://" + window.location.host + "/socket/");
+              }
            },
            onMessage: function (event) {
               var msg = JSON.parse(event.data);

@@ -149,6 +149,10 @@
                   type: Boolean,
                   value: true
               },
+              socketError: {
+                 type: Boolean,
+                 value: false
+              },
               modalTitle: String,
               otherToken: String
            },
@@ -231,11 +235,14 @@
            },
 
            onError: function (event) {
+               this.socketError = true;
               // console.error("Error: " + JSON.stringify(event.reason));
            },
 
            onClose: function (event) {
-              this.socket = new WebSocket("wss://" + window.location.host + "/socket/");
+              if(!this.socketError){
+                 this.socket = new WebSocket("wss://" + window.location.host + "/socket/");
+              }
            },
            _startGameOnClick: function (event) {
               var id = event.srcElement.id;

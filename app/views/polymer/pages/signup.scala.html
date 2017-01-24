@@ -160,7 +160,7 @@
               this.$.signUpToastSuccess.open();
            },
            handleSuccessIn: function () {
-              this.$.redirect.click();
+              window.location.href = 'https://' + window.location.host + '/index';
            }
         });
 </script>

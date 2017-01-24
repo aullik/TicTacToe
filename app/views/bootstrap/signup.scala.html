@@ -103,7 +103,8 @@
                   type: 'POST', // set sending HTTP Request type
                   contentType: 'application/json',
                   success: function (data) {
-                     data = $.parseJSON(data.responseText)
+                     console.log(data)
+                     console.log(data.responseText)
                      if (data === "Registered" || data === "") {
                         toastr.success('Wir haben Ihnen eine Email geschickt, ' +
                                 'bitte schauen Sie Ihre Mailbox');
