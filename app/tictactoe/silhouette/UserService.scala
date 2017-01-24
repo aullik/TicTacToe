@@ -5,7 +5,6 @@ import com.mohiva.play.silhouette.api.LoginInfo
 import com.mohiva.play.silhouette.api.services.IdentityService
 import tictactoe.controllers.webControllers.UserController
 import grizzled.slf4j.Logging
-import models.User
 import tictactoe.exceptions.PersistenceException.EntityNotFoundException
 import tictactoe.model.User
 
@@ -31,8 +30,4 @@ class UserService @Inject()(userController: UserController) extends IdentityServ
     }
   }
 
-  def save(user: User): Future[User] = {
-    userController
-    .
-  }
 }

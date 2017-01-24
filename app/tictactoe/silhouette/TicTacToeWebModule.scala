@@ -46,7 +46,7 @@ class TicTacToeWebModule extends AbstractModule with ScalaModule {
     bind[Clock].toInstance(Clock())
 
     //FIXME Update PasswordInfoDAO
-    bind[DelegableAuthInfoDAO[PasswordInfo]].to[PasswordInfoDAO].in[Singleton]
+    bind[DelegableAuthInfoDAO[PasswordInfo]].to[PasswordInfoDAO]//.in[Singleton]
     //    bind[DelegableAuthInfoDAO[PasswordInfo]].toInstance(new InMemoryAuthInfoDAO[PasswordInfo])
     bind[DelegableAuthInfoDAO[OAuth1Info]].toInstance(new InMemoryAuthInfoDAO[OAuth1Info])
     bind[DelegableAuthInfoDAO[OAuth2Info]].toInstance(new InMemoryAuthInfoDAO[OAuth2Info])
@@ -198,4 +198,47 @@ class TicTacToeWebModule extends AbstractModule with ScalaModule {
                                 ): CredentialsProvider = {
     new CredentialsProvider(authInfoRepository, passwordHasherRegistry)
   }
+
+  /**
+    * Provides the Facebook provider.
+    *
+    * @param httpLayer The HTTP layer implementation.
+    * @param stateProvider The OAuth2 state provider implementation.
+    * @param configuration The Play configuration.
+    * @return The Facebook provider.
+    */
+  @Provides
+  def provideFacebookProvider(
+                               httpLayer: HTTPLayer,
+                               stateProvider: OAuth2StateProvider,
+                               configuration: Configuration): FacebookProvider = {
+
+    new FacebookProvider(httpLayer, stateProvider, configuration.underlying.as[OAuth2Settings]("silhouette.facebook"))
+  }
+
+  /**
+    * Provides the Google provider.
+    *
+    * @param httpLayer The HTTP layer implementation.
+    * @param stateProvider The OAuth2 state provider implementation.
+    * @param configuration The Play configuration.
+    * @return The Google provider.
+    */
+  @Provides
+  def provideGoogleProvider(
+                             httpLayer: HTTPLayer,
+                             stateProvider: OAuth2StateProvider,
+                             configuration: Configuration): GoogleProvider = {
+
+    new GoogleProvider(httpLayer, stateProvider, configuration.underlying.as[OAuth2Settings]("silhouette.google"))
+  }
+
+  @Provides
+  def provideGithubProvider(httpLayer: HTTPLayer,
+                            stateProvider: OAuth2StateProvider,
+                            configuration: Configuration): GitHubProvider = {
+
+    new GitHubProvider(httpLayer, stateProvider, configuration.underlying.as[OAuth2Settings]("silhouette.github"))
+  }
+
 }

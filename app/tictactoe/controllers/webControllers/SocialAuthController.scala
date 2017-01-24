@@ -30,7 +30,8 @@ class SocialAuthController @Inject()(
                                       userService: UserService,
                                       authInfoRepository: AuthInfoRepository,
                                       socialProviderRegistry: SocialProviderRegistry,
-                                      implicit val webJarAssets: WebJarAssets)
+                                      implicit val webJarAssets: WebJarAssets,
+                                      userController: UserController)
   extends Controller with I18nSupport with Logger {
 
   /**
@@ -42,16 +43,16 @@ class SocialAuthController @Inject()(
   def authenticate(provider: String)(request: Request[AnyContent]): Future[Result] = {
     (socialProviderRegistry.get[SocialProvider](provider) match {
       case Some(p: SocialProvider with CommonSocialProfileBuilder) =>
-        p.authenticate().flatMap {
+        p.authenticate()(request).flatMap {
           case Left(result) => Future.successful(result)
           case Right(authInfo) => for {
             profile <- p.retrieveProfile(authInfo)
             //            user <- userService.save(profile)
-            user <- profile
+            user <- Future.successful(userController.saveOauth(profile))
             authInfo <- authInfoRepository.save(profile.loginInfo, authInfo)
-            authenticator <- silhouette.env.authenticatorService.create(profile.loginInfo)
-            value <- silhouette.env.authenticatorService.init(authenticator)
-            result <- silhouette.env.authenticatorService.embed(value, Ok("logged in"))
+            authenticator <- silhouette.env.authenticatorService.create(profile.loginInfo)(request)
+            value <- silhouette.env.authenticatorService.init(authenticator)(request)
+            result <- silhouette.env.authenticatorService.embed(value, Ok("logged in"))(request)
           } yield {
             silhouette.env.eventBus.publish(LoginEvent(user, request))
             result
