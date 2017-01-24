@@ -12,7 +12,6 @@ import {Component} from '@angular/core';
 })
 export class BackToIndexModal {
     public user: string;
-    constructor() {}
     public redirect() {
         window.location.href = 'https://' + window.location.host + '/index';
     }
