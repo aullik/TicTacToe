@@ -49,9 +49,10 @@ class UserTokenManagerActor extends Actor with Logging {
         case Some(cont) => cont
       }
 
-    sender() ! UserHandlerIfPresent(Some(ret))
+    val s = sender()
+    ret.handler.!(UserHandlerActor.RegisterWebSocket())(s)
+    s ! UserHandlerIfPresent(Some(ret))
   }
-
 
 }
 

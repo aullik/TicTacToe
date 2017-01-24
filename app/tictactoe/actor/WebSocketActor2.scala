@@ -62,16 +62,27 @@ class WebSocketActor2(out: ActorRef, user: User) extends Actor with Logging {
 
   override def receive: Receive = ExtendedFunction
 
+  object WithUserHandler {
+    def apply(block: (UserHandlerContainer) => Unit): Unit = {
+      userHandler match {
+        case None => throw new IllegalStateException("no UserHandler")
+        case Some(cont) => block(cont)
+      }
+
+    }
+
+  }
+
 
   def handleMsg(msg: String): Unit = {
     try Json.parse(msg) match {
-      case UserStatus(_) => handleUserStatus()
-      case AskForGame(value) => handleAskForGame(value)
-      case GameRequested(value) => handleGameRequested(value)
-      case GameStatus(_) => handleGameStatus()
-      case GamePlayers(_) => handleGamePlayers()
-      case Move(value) => handleMove(value)
-      case DirectMessage(value) => handleMessage(value)
+      case UserStatus(_) => WithUserHandler(handleUserStatus())
+      case AskForGame(value) => WithUserHandler(handleAskForGame(value))
+      case GameRequested(value) => WithUserHandler(handleGameRequested(value))
+      case GameStatus(_) => WithUserHandler(handleGameStatus())
+      case GamePlayers(_) => WithUserHandler(handleGamePlayers())
+      case Move(value) => WithUserHandler(handleMove(value))
+      case DirectMessage(value) => WithUserHandler(handleMessage(value))
       case any => throw new IllegalArgumentException(s"Invalid message: + $any")
     } catch {
       case e: Exception =>
@@ -80,20 +91,27 @@ class WebSocketActor2(out: ActorRef, user: User) extends Actor with Logging {
   }
 
 
-  def handleUserStatus() = ???
+  def handleUserStatus()(cont: UserHandlerContainer): Unit = {
+    cont.handler ! UserHandlerActor.RequestStatus()
+  }
 
-  def handleAskForGame(value: UserElement) = ???
+  def handleAskForGame(value: UserElement)(cont: UserHandlerContainer): Unit = {
+    cont.handler ! UserHandlerActor.AskOtherPlayerForGame(value)
+  }
 
-  def handleGameRequested(value: AcceptGame) = ???
+  def handleGameRequested(value: AcceptGame)(cont: UserHandlerContainer): Unit = {
+    cont.handler ! UserHandlerActor.AcceptOrDenyGame(UserElement(value.name, value.token), accept = value.accept)
+  }
 
-  def handleGameStatus() = ???
+  def handleGameStatus()(cont: UserHandlerContainer) {}
 
-  def handleGamePlayers() = ???
+  def handleGamePlayers()(cont: UserHandlerContainer) {}
 
-  def handleMove(value: Move) = ???
+  def handleMove(value: Move)(cont: UserHandlerContainer) {}
 
-  def handleMessage(value: DirectMessage) = ???
-
+  def handleMessage(value: DirectMessage)(cont: UserHandlerContainer): Unit = {
+    cont.handler ! UserHandlerActor.SendDirectMessage(value)
+  }
 
 }
 

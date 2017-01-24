@@ -2,6 +2,7 @@ package tictactoe.actor.user
 
 import akka.actor.{Actor, ActorRef, Props}
 import grizzled.slf4j.Logging
+import tictactoe.actor.messages.UserElement
 import tictactoe.actor.user.LobbyActor._
 import util.FunctionalHelper.ofTuple
 
@@ -28,10 +29,10 @@ class LobbyActor extends Actor with Logging {
   }
 
   def handleGetAll(): Unit = {
-    val list = cache.toStream.map(ofTuple((_, cont) => UserToken(cont.token, cont.username))).toList
+    val list = cache.toStream.map(ofTuple((_, cont) => UserElement(cont.username, cont.token))).toList
     sender() ! GetAllReturn(list)
   }
-  
+
   override def receive: Receive = {
     case RegisterUserToken(token: String, username: String) => handleRegisterUserToken(token: String, username: String)
     case UnRegisterUserToken(token: String, username: String) => handleUnRegisterUserToken(token: String, username: String)
@@ -47,6 +48,8 @@ private case class UserTokenContainer(token: String, username: String, ref: Acto
 
 object LobbyActor {
 
+  final val NAME = "LobbyActor"
+
   case class RegisterUserToken(token: String, username: String)
 
   case class BroadcastRegisterUserToken(token: String, username: String)
@@ -57,9 +60,7 @@ object LobbyActor {
 
   case class GetAll()
 
-  case class UserToken(token: String, username: String)
-
-  case class GetAllReturn(list: List[UserToken])
+  case class GetAllReturn(list: List[UserElement])
 
 
   def props: Props = Props(new LobbyActor())
