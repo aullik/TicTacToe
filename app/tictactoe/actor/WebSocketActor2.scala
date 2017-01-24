@@ -103,11 +103,17 @@ class WebSocketActor2(out: ActorRef, user: User) extends Actor with Logging {
     cont.handler ! UserHandlerActor.AcceptOrDenyGame(UserElement(value.name, value.token), accept = value.accept)
   }
 
-  def handleGameStatus()(cont: UserHandlerContainer) {}
+  def handleGameStatus()(cont: UserHandlerContainer): Unit = {
+    cont.handler ! UserHandlerActor.AskGameStatus()
+  }
 
-  def handleGamePlayers()(cont: UserHandlerContainer) {}
+  def handleGamePlayers()(cont: UserHandlerContainer): Unit = {
+    cont.handler ! UserHandlerActor.AskGamePlayers()
+  }
 
-  def handleMove(value: Move)(cont: UserHandlerContainer) {}
+  def handleMove(value: Move)(cont: UserHandlerContainer): Unit = {
+    cont.handler ! UserHandlerActor.GameMove(value)
+  }
 
   def handleMessage(value: DirectMessage)(cont: UserHandlerContainer): Unit = {
     cont.handler ! UserHandlerActor.SendDirectMessage(value)

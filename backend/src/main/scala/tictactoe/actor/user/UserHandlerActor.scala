@@ -6,6 +6,7 @@ import akka.actor.{Actor, ActorRef, Props}
 import akka.pattern.ask
 import akka.util.Timeout
 import grizzled.slf4j.Logging
+import tictactoe.actor.game.GameManagerActor
 import tictactoe.actor.messages._
 import tictactoe.actor.user.UserHandlerActor._
 import tictactoe.actor.user.UserTokenManagerActor.{RequestUserHandlerForToken, TOKEN, UserHandlerIfPresent}
@@ -25,7 +26,7 @@ class UserHandlerActor(user: User, token: TOKEN) extends Actor with Logging {
   private val lobby = context.actorSelection(context.system / LobbyActor.NAME)
 
   private var gameOpt: Option[ActorRef] = None
-  private var opponentOpt: Option[(TOKEN, ActorRef)] = None
+  private var opponentOpt: Option[(UserElement, ActorRef)] = None
   private var moves: List[PlayerMove] = Nil
 
   override def preStart(): Unit = {
@@ -104,7 +105,7 @@ class UserHandlerActor(user: User, token: TOKEN) extends Actor with Logging {
         info("already asking another player for a Game")
 
       case None =>
-        opponentOpt = Some((user.token, userActor))
+        opponentOpt = Some((user, userActor))
         userActor ! BeingAskedForGame(UserElement(user.name, token), self)
     }
   }
@@ -129,11 +130,10 @@ class UserHandlerActor(user: User, token: TOKEN) extends Actor with Logging {
       case Some(other) =>
         val deny = AcceptOrDenyGameWithRef(UserElement(user.name, token), None, self)
         if (accept) {
-          //TODO create GameActor and register
-          val gameRef: ActorRef = null
-
+          val gameRef: ActorRef = context.actorOf(GameManagerActor.props((otherPlayer.token, other), (token, self)))
+          //TODO Tell Lobby InGame
           gameOpt = Some(gameRef)
-          opponentOpt = Some((otherPlayer.token, other))
+          opponentOpt = Some((otherPlayer, other))
           other ! deny.copy(accept = gameOpt)
           beingAskedBy.values.foreach(_ ! deny)
           beingAskedBy.clear()
@@ -144,7 +144,6 @@ class UserHandlerActor(user: User, token: TOKEN) extends Actor with Logging {
   }
 
   def handleAcceptOrDenyGameWithRef(otherPlayer: UserElement, accept: Option[ActorRef], otherRef: ActorRef): Unit = {
-
     opponentOpt match {
       case None =>
         info("accept/deny without having been asked")
@@ -156,16 +155,30 @@ class UserHandlerActor(user: User, token: TOKEN) extends Actor with Logging {
             case Some(gameRef) =>
               if (otherRef != op)
                 throw new IllegalStateException(s"got a reply from ${otherPlayer.name} without asking him")
-
+              //TODO Tell Lobby InGame
               gameOpt = Some(gameRef)
-              //TODO register with gameRef
-
               true
             case None =>
               false
           }
         broadcast(AskForGame.toJson(AcceptGame(otherPlayer.name, otherPlayer.token, isAccept)))
     }
+  }
+
+
+  def handleAskGameStatus(): Unit = {
+    if (gameOpt.isDefined)
+      broadcast(GameStatus.toJson(GameStatus(moves)))
+  }
+
+  def handleAskGamePlayers(): Unit = {
+    if (gameOpt.isDefined)
+      broadcast(GamePlayers.toJson(GamePlayers(me = UserElement(user.name, token), other = opponentOpt.get._1)))
+  }
+
+  def handleGameMove(move: Move): Unit = {
+    if (gameOpt.isDefined) null
+    //TODO
   }
 
 
@@ -203,6 +216,10 @@ class UserHandlerActor(user: User, token: TOKEN) extends Actor with Logging {
       handleAcceptOrDenyGame(otherPlayer: UserElement, accept: Boolean)
     case AcceptOrDenyGameWithRef(otherPlayer: UserElement, accept: Option[ActorRef], otherRef: ActorRef) =>
       handleAcceptOrDenyGameWithRef(otherPlayer: UserElement, accept: Option[ActorRef], otherRef: ActorRef)
+
+    case AskGameStatus() => handleAskGameStatus()
+    case AskGamePlayers() => handleAskGamePlayers()
+    case GameMove(move: Move) => handleGameMove(move: Move)
 
     case SendDirectMessage(directMessage: DirectMessage) =>
       handleSendDirectMessage(directMessage: DirectMessage)
@@ -245,6 +262,13 @@ object UserHandlerActor {
   case class AcceptOrDenyGame(otherPlayer: UserElement, accept: Boolean)
 
   private case class AcceptOrDenyGameWithRef(otherPlayer: UserElement, accept: Option[ActorRef], otherRef: ActorRef)
+
+  case class AskGameStatus()
+
+  case class AskGamePlayers()
+
+  case class GameMove(move: Move)
+
 
   case class SendDirectMessage(directMessage: DirectMessage)
 
