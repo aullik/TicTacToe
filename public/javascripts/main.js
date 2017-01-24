@@ -91,8 +91,8 @@ function handleUserLoggedOut(data) {
 function handleRequestGame(data) {
     if(data.name && data.token){
         $('.callRequestTitle').html("call to start a game with " + data.name);
-        $('#incomingCallModal').modal({backdrop: 'static', keyboard: false});
         $('#otherUserModal').val(data.token);
+        $('#incomingCallModal').modal({backdrop: 'static', keyboard: false});
     }
 }
 function handleCallAskForGameRet(data) {
@@ -129,9 +129,9 @@ function hideRequestGameModalAndSendResp(accept) {
     $('#incomingCallModal').modal('hide');
     var otherUser = $('#otherUserModal').val();
     var user = users.find(x => x.token == otherUser);
-    user.accept = accept;
     console.log('gameRequestedRet: ');
     console.log(user);
+    user.accept = accept;
     socket.send(JSON.stringify({
         msgType:'gameRequestedRet',
         value : user
