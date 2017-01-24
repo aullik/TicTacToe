@@ -23,42 +23,14 @@ WEB_SOCKET_SWF_LOCATION = "/javascript/WebSocketMain.swf";
 //FIXME fix email
 var socket = new WebSocket("wss://" + window.location.host + "/socket/");
 
-var username;
-var users;/*
-$(document).ready(function () {
-    output = {
-        name: "alice",
-        token: "alicetoken",
-        users: [{
-            name: "spieler1",
-            token: "asdf"
-        },{
-            name: "spieler2",
-            token: "fjosid"
-        },
-            {
-                name: "spieler1",
-                token: "asdf"
-            },{
-                name: "spieler2",
-                token: "fjosid"
-            }]
-    }
-    username = output.name;
-    token = output.token;
-    users = output.users;
-    if(output.users){
-        var usersData = [];
-        for (var i = 0; i < output.users.length; i++){
-            usersData.push(userBlock(output.users[i].name, output.users[i].token))
-        }
-        $('.allUsers').append(usersData.join(''));
-    }
-});*/
+var username = undefined;
+var users;
 
 this.socket.onopen = function onOpen(event) {
     console.log('Socket opened');;
-    socket.send(JSON.stringify({msgType:'userStatus', value: {}}));
+    if(username == undefined){
+        socket.send(JSON.stringify({msgType:'userStatus', value: {}}));
+    }
 }
 
 this.socket.onerror = function onError(event) {
@@ -66,7 +38,7 @@ this.socket.onerror = function onError(event) {
 }
 
 this.socket.onclose = function onClose(event) {
-    console.log("Web socket closed");
+    socket = new WebSocket("wss://" + window.location.host + "/socket/");
 }
 this.socket.onmessage = function socketOnMessage(event){
     var msg = JSON.parse(event.data);
@@ -125,7 +97,6 @@ function handleRequestGame(data) {
     }
 }
 function handleCallAskForGameRet(data) {
-    console.log(data)
     if(data.accept !== undefined && data.accept == false){
         $('#waitingModal').modal('hide');
         toastr.info('Game request denied');
