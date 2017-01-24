@@ -1,5 +1,6 @@
 package tictactoe.silhouette
 
+import com.google.inject.name.Named
 import com.google.inject.{AbstractModule, Provides}
 import com.mohiva.play.silhouette.api.actions.{SecuredErrorHandler, UnsecuredErrorHandler}
 import com.mohiva.play.silhouette.api.crypto.{CookieSigner, Crypter, CrypterAuthenticatorEncoder}
@@ -10,6 +11,7 @@ import com.mohiva.play.silhouette.api.{Environment, EventBus, Silhouette, Silhou
 import com.mohiva.play.silhouette.crypto.{JcaCookieSigner, JcaCookieSignerSettings, JcaCrypter, JcaCrypterSettings}
 import com.mohiva.play.silhouette.impl.authenticators.{CookieAuthenticator, CookieAuthenticatorService, CookieAuthenticatorSettings}
 import com.mohiva.play.silhouette.impl.providers._
+import com.mohiva.play.silhouette.impl.providers.oauth2.state.{CookieStateProvider, CookieStateSettings}
 import com.mohiva.play.silhouette.impl.providers.oauth2.{FacebookProvider, GitHubProvider, GoogleProvider}
 import com.mohiva.play.silhouette.impl.util.{DefaultFingerprintGenerator, SecureRandomIDGenerator}
 import com.mohiva.play.silhouette.password.BCryptPasswordHasher
@@ -20,6 +22,7 @@ import net.ceedubs.ficus._
 import net.ceedubs.ficus.readers.ArbitraryTypeReader._
 import net.codingwell.scalaguice.ScalaModule
 import play.api.Configuration
+import play.api.libs.ws.WSClient
 import tictactoe.mailer.{MailService, MailServiceImpl, MailTokenUser}
 import tictactoe.model.User
 
@@ -46,7 +49,7 @@ class TicTacToeWebModule extends AbstractModule with ScalaModule {
     bind[Clock].toInstance(Clock())
 
     //FIXME Update PasswordInfoDAO
-    bind[DelegableAuthInfoDAO[PasswordInfo]].to[PasswordInfoDAO]//.in[Singleton]
+    bind[DelegableAuthInfoDAO[PasswordInfo]].to[PasswordInfoDAO] //.in[Singleton]
     //    bind[DelegableAuthInfoDAO[PasswordInfo]].toInstance(new InMemoryAuthInfoDAO[PasswordInfo])
     bind[DelegableAuthInfoDAO[OAuth1Info]].toInstance(new InMemoryAuthInfoDAO[OAuth1Info])
     bind[DelegableAuthInfoDAO[OAuth2Info]].toInstance(new InMemoryAuthInfoDAO[OAuth2Info])
@@ -202,7 +205,7 @@ class TicTacToeWebModule extends AbstractModule with ScalaModule {
   /**
     * Provides the Facebook provider.
     *
-    * @param httpLayer The HTTP layer implementation.
+    * @param httpLayer     The HTTP layer implementation.
     * @param stateProvider The OAuth2 state provider implementation.
     * @param configuration The Play configuration.
     * @return The Facebook provider.
@@ -219,7 +222,7 @@ class TicTacToeWebModule extends AbstractModule with ScalaModule {
   /**
     * Provides the Google provider.
     *
-    * @param httpLayer The HTTP layer implementation.
+    * @param httpLayer     The HTTP layer implementation.
     * @param stateProvider The OAuth2 state provider implementation.
     * @param configuration The Play configuration.
     * @return The Google provider.
@@ -241,4 +244,47 @@ class TicTacToeWebModule extends AbstractModule with ScalaModule {
     new GitHubProvider(httpLayer, stateProvider, configuration.underlying.as[OAuth2Settings]("silhouette.github"))
   }
 
+  /**
+    * Provides the HTTP layer implementation.
+    *
+    * @param client Play's WS client.
+    * @return The HTTP layer implementation.
+    */
+  @Provides
+  def provideHTTPLayer(client: WSClient): HTTPLayer = new PlayHTTPLayer(client)
+
+
+  /**
+    * Provides the OAuth2 state provider.
+    *
+    * @param idGenerator   The ID generator implementation.
+    * @param cookieSigner  The cookie signer implementation.
+    * @param configuration The Play configuration.
+    * @param clock         The clock instance.
+    * @return The OAuth2 state provider implementation.
+    */
+  @Provides
+  def provideOAuth2StateProvider(
+                                  idGenerator: IDGenerator,
+                                  @Named("oauth2-state-cookie-signer") cookieSigner: CookieSigner,
+                                  configuration: Configuration,
+                                  clock: Clock): OAuth2StateProvider = {
+
+    val settings = configuration.underlying.as[CookieStateSettings]("silhouette.oauth2StateProvider")
+    new CookieStateProvider(settings, idGenerator, cookieSigner, clock)
+  }
+
+  /**
+    * Provides the cookie signer for the OAuth2 state provider.
+    *
+    * @param configuration The Play configuration.
+    * @return The cookie signer for the OAuth2 state provider.
+    */
+  @Provides
+  @Named("oauth2-state-cookie-signer")
+  def provideOAuth2StageCookieSigner(configuration: Configuration): CookieSigner = {
+    val config = configuration.underlying.as[JcaCookieSignerSettings]("silhouette.oauth2StateProvider.cookie.signer")
+
+    new JcaCookieSigner(config)
+  }
 }
