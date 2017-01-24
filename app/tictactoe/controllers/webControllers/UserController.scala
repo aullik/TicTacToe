@@ -187,16 +187,23 @@ class UserController @Inject private(server: TicTacToeServer) extends Logging {
     info(s"getPassword(playerId=$userId")
     server.persistence.authenticationManager.readPasswordHash(userId).get
   }
-  def saveOauth(profile: CommonSocialProfile):User = {
+
+  def saveOauth(profile: CommonSocialProfile): User = {
     Try {
       getUserByEmail(profile.email.get)
     } match {
       case Success(user) => user.get
-      case Failure(_) => server.persistence.userManager.add(
-        User(
-          name = profile.fullName.get,
-          email = profile.email.get
-        )).get
+      case Failure(_) =>
+        warn(profile.fullName)
+        warn(profile.email)
+        warn(profile.firstName)
+        warn(profile.lastName)
+
+        server.persistence.userManager.add(
+          User(
+            name = profile.fullName.get,
+            email = profile.email.get
+          )).get
     }
   }
 
