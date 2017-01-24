@@ -10,7 +10,7 @@ GET         /index                             controllers.ScalaRoutes.index
 POST        /signup                            controllers.ScalaRoutes.signUp
 GET         /signup/:token                     controllers.ScalaRoutes.signUpEmail(token: String)
 POST        /login                             controllers.ScalaRoutes.login
-POST        /auth/:provider                    controllers.ScalaRoutes.oAuth(provider:String)
+GET        /auth/:provider                    controllers.ScalaRoutes.oAuth(provider:String)
 
 POST        /selectFramework/:framework        controllers.ScalaRoutes.selectFramework(framework)
 
