@@ -34,14 +34,14 @@ class UserHandlerActor(user: User, token: TOKEN) extends Actor with Logging {
 
 
   override def preStart(): Unit = {
-    lobby ! LobbyActor.RegisterUserToken(user.name, token)
+    lobby ! LobbyActor.RegisterUserToken(token, user.name)
     lobby ! LobbyActor.GetAll()
   }
 
 
   @scala.throws[Exception](classOf[Exception])
   override def postStop(): Unit = {
-    lobby ! LobbyActor.UnRegisterUserToken(user.name, token)
+    lobby ! LobbyActor.UnRegisterUserToken(token, user.name)
   }
 
   def handleRegisterWebSocket(): Unit = {
@@ -240,7 +240,7 @@ class UserHandlerActor(user: User, token: TOKEN) extends Actor with Logging {
   }
 
   def handleBroadCastDirectMessage(directMessage: DirectMessage): Unit = {
-    broadcast(directMessage)
+    broadcast(DirectMessageMSG.toJson(directMessage))
   }
 
   override def receive: Receive = {
@@ -285,8 +285,9 @@ class UserHandlerActor(user: User, token: TOKEN) extends Actor with Logging {
       throw new IllegalArgumentException("Invalid message")
   }
 
-  def broadcast(message: Any): Unit = {
-    socketCache.foreach(_ ! message)
+  def broadcast(message: String): Unit = {
+    val out = BroadcastMessage(message)
+    socketCache.foreach(_ ! out)
   }
 
 }
