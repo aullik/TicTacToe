@@ -40,7 +40,7 @@ trait OutMessage extends SocketObject {
   type outValue
 
   def toJson(value: outValue)(implicit oFormat: OFormat[outValue]): String = {
-    s"{\"$MSG_TYPE\":\"$outMsg\",\"$VALUE\":${Json.toJson(value)}"
+    s"""{\"${MSG_TYPE}\":\"$outMsg\",\"$VALUE\":${Json.toJson(value)}}"""
   }
 
 }
