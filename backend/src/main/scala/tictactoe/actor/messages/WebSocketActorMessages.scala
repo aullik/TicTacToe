@@ -24,12 +24,12 @@ sealed trait InMessage extends SocketObject {
     values.validate[inValue](format).get
   }
 
-  def unapply(jsonValue: JsType)(implicit oFormat: OFormat[inValue]): Option[inValue] = {
-    (jsonValue \ MSG_TYPE).validate[String].asOpt.flatMap {
-      case this.inMsg => (jsonValue \ VALUE).validate[inValue].asOpt
-      case _ => None
-    }
-  }
+  //  def unapply(jsonValue: JsType)(implicit oFormat: OFormat[inValue]): Option[inValue] = {
+  //    (jsonValue \ MSG_TYPE).validate[String].asOpt.flatMap {
+  //      case this.inMsg => (jsonValue \ VALUE).validate[inValue].asOpt
+  //      case _ => None
+  //    }
+  //  }
 }
 
 object InMessage {
@@ -114,8 +114,6 @@ object AskForGame extends InMessage with OutMessage {
   override val outMsg: String = "askForGameRet"
   override type outValue = AcceptGame
 
-  override def unapply(jsonValue: JsType)(implicit oFormat: OFormat[UserElement]): Option[UserElement] =
-    super.unapply(jsonValue)
 }
 
 object GameRequested extends InMessage with OutMessage {

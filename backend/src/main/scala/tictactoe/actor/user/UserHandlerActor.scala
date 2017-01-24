@@ -83,7 +83,7 @@ class UserHandlerActor(user: User, token: TOKEN) extends Actor with Logging {
 
   def handleAskOtherPlayerForGame(user: UserElement): Unit = {
 
-    userManager.?(RequestUserHandlerForToken)(Timeout(10, TimeUnit.SECONDS), self).mapTo[UserHandlerIfPresent]
+    userManager.?(RequestUserHandlerForToken(token))(Timeout(10, TimeUnit.SECONDS), self).mapTo[UserHandlerIfPresent]
       .onComplete {
         case Success(msg) =>
           msg.handlerOpt.foreach(value => {

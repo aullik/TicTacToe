@@ -80,12 +80,12 @@ class WebSocketActor(out: ActorRef, user: User) extends Actor with Logging {
       val json: JsType = Json.parse(msg)
       json match {
         case UserStatusMSG(_) => WithUserHandler(handleUserStatus())
-        case AskForGame(value: JsType) => WithUserHandler(handleAskForGame(value))
-        case GameRequested(value: JsType) => WithUserHandler(handleGameRequested(value))
+        case AskForGame(value) => WithUserHandler(handleAskForGame(value))
+        case GameRequested(value) => WithUserHandler(handleGameRequested(value))
         case GameStatus(_) => WithUserHandler(handleGameStatus())
         case GamePlayers(_) => WithUserHandler(handleGamePlayers())
-        case Move(value: JsType) => WithUserHandler(handleMove(value))
-        case DirectMessage(value: JsType) => WithUserHandler(handleMessage(value))
+        case Move(value) => WithUserHandler(handleMove(value))
+        case DirectMessage(value) => WithUserHandler(handleMessage(value))
         case any => throw new IllegalArgumentException(s"Invalid message: + $any")
       }
     } catch {
