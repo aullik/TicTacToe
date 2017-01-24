@@ -141,6 +141,13 @@
             </div>
          </div>
       </div>
+      <paper-dialog id="paperDialogAnimated" no-cancel-on-esc-key no-cancel-on-outside-click>
+         <h2 id="callRequestTitle">Das Spiel ist fertig</h2>
+         <div class="buttons">
+            <paper-button raised raised id="redirect">zurück zur Index</paper-button>
+         </div>
+      </paper-dialog>
+      <a style="display: none" id="redirect" href='@routes.ScalaRoutes.index()'></a>
    </template>
    <script>
         // Let the library know where WebSocketMain.swf is:
@@ -150,6 +157,7 @@
            is: 'my-tictactoe',
            listeners: {
               'btnChat.tap': '_sendMessage',
+              'redirect.tap': '_redirect',
            },
            properties: {
               user: {
@@ -172,6 +180,9 @@
                  type: Array,
                  value: []
               }
+           },
+           _redirect: function () {
+              this.$.redirect.click();
            },
            getFirstChart: function (myUser) {
               return myUser.name.charAt(0).toUpperCase();
@@ -249,6 +260,9 @@
                  case "gamePlayersRet":
                     this.handleGamePlayersRet(msg.value);
                     break;
+                 case "returnToIndex":
+                    handleReturn(msg.value)
+                    break;
               }
            },
            handleAcceptMessage: function (message) {
@@ -258,6 +272,9 @@
            handleGamePlayersRet: function (data) {
               this.set('user', data.me)
               this.set('otherUser', data.other)
+           },
+           handleReturn: function(data){
+
            }
         });
     </script>

@@ -20,6 +20,10 @@ body {
     height: 100%;
     padding: 0;
 }
+.tictactoeImage{
+    background: url("/assets/images/tictactoe.jpg");
+    background-size: 100% 100%;
+}
 
 
 /* chat */
@@ -186,12 +190,18 @@ canvas {
 }
 .google {
     background: #D14836;
+    background: url("/assets/images/providers/google.png");
+    background-size: 100% 100%;
 }
 
 .facebook {
     background: #3B5998;
+    background: url("/assets/images/providers/facebook.png");
+    background-size: 100% 100%;
 }
 
 .github {
     background: black;
+    background: url("/assets/images/providers/github.png");
+    background-size: 100% 100%;
 }

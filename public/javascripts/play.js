@@ -242,17 +242,14 @@ var socket = new WebSocket("wss://" + window.location.host + "/socket/");
                 }
             }
         );
-        setTimedOut(function () {
-            this.showFinishModal(message);
-        }, 5000);
     }
-
+/*
     function showFinishModal(message) {
         if (framework == 0) {
             $('.gameFinishedModal').html(message);
             $('#gameFinishModal').modal({backdrop: 'static', keyboard: false});
         }
-    }
+    }*/
 
     // ---- machine IA minimax alpha-beta 2 levels ----
     /*
@@ -626,10 +623,9 @@ var socket = new WebSocket("wss://" + window.location.host + "/socket/");
                 if (sphere !== undefined) {
                     sphere.s = me
                 }
-                if (i == data.moves.length - 1 && who == "M") {
-                    played = true;
-                }
-
+            }
+            if (data.yourTurn) {
+                played = false;
             }
         }
     }

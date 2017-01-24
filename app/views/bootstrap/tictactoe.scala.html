@@ -37,12 +37,12 @@
       <div class="modal-dialog" role="document">
          <div class="modal-content">
             <div class="modal-header">
-               <h4 class="modal-title">Game finished</h4>
+               <h4 class="modal-title">Das Spiel ist fertig</h4>
             </div>
             <div class="modal-content gameFinishedModal">
             </div>
             <div class="modal-footer">
-               <button type="button" class="btn btn-default redirectButton">redirect</button>
+               <a href="/index" type="button" class="btn btn-default redirectButton">züruck zu index</a>
             </div>
          </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
@@ -98,14 +98,20 @@
             case "gamePlayersRet":
                handleGamePlayersRet(msg.value);
                break;
+            case "returnToIndex":
+               handleReturn(msg.value)
+               break;
          }
       };
-
+      function handleReturn(data) {
+         setTimeout(function () {
+            $('.gameFinishedModal').modal({backdrop: 'static', keyboard: false});
+         }, 1000);
+      }
       function handleAcceptMessage(message){
-         //message = message.user = this.otherUser;
-         //console.log(message)
+         message = message.user = this.otherUser;
          if(message){
-             //$('#chatContainer').append(addMessage(message));
+             $('#chatContainer').append(addMessage(message));
          }
       }
       function handleGamePlayersRet(data) {

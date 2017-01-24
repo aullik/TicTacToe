@@ -53,9 +53,15 @@ export class ChatComponent {
             case 'gamePlayersRet':
                 this.handleGamePlayersRet(msg.value);
                 break;
+            case 'returnToIndex':
+                this.handleReturn(msg.value);
+                break;
             default:
                 console.warn('Could not handle this message: ' + msg);
         }
+    }
+    public handleReturn(data: any) {
+
     }
     public handleAcceptMessage(message: any) {
         message.user = this.otherUser;

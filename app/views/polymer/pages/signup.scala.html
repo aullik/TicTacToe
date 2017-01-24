@@ -57,14 +57,24 @@
       }
       .google {
          background: #D14836;
+         background: url("/assets/images/providers/google.png");
+         background-size: 100% 100%;
       }
 
       .facebook {
          background: #3B5998;
+         background: url("/assets/images/providers/facebook.png");
+         background-size: 100% 100%;
       }
 
       .github {
          background: black;
+         background: url("/assets/images/providers/github.png");
+         background-size: 100% 100%;
+      }
+      .tictactoeImage{
+         background: url("/assets/images/tictactoe.jpg");
+         background-size: 100% 100%;
       }
       </style>
       <div class="mainContent">
@@ -78,7 +88,7 @@
             The winning row can be horizontal, vertical, or diagonal on a single board as in regular tic-tac-toe,
             or vertically in a column, or a diagonal line through four boards.
             <br >
-            <img src="@routes.Assets.at("/images/tictactoe.jpg")" alt="TicTacToe 3D">
+           <div class="tictactoeImage"></div>
       </paper-card>
          <paper-card class="content">
 
@@ -96,12 +106,9 @@
                      <paper-button raised onclick="_submit(event)">Submit</paper-button>
                   </form>
                      <!--routes.SocialAuthController.authenticate("github") -->
-                  <a href="@routes.ScalaRoutes.oAuth("github")" class="provider github" title="github">
-                     <img src="@routes.Assets.at("images/providers/github.png")" alt="github"></a>
-                  <a href="@routes.ScalaRoutes.oAuth("facebook")" class="provider facebook" title="facebook">
-                     <img src="@routes.Assets.at("images/providers/facebook.png")" alt="facebook"></a>
-                  <a href="@routes.ScalaRoutes.oAuth("google")" class="provider google" title="google">
-                     <img src="@routes.Assets.at("images/providers/google.png")" alt="google"></a>
+                  <a href="@routes.ScalaRoutes.oAuth("github")" class="provider github" title="github"></a>
+                  <a href="@routes.ScalaRoutes.oAuth("facebook")" class="provider facebook" title="facebook"></a>
+                  <a href="@routes.ScalaRoutes.oAuth("google")" class="provider google" title="google"></a>
                </div>
                <div class="formContainer">
                   <form is="iron-form" method="post" id="signUpForm" action="@routes.ScalaRoutes.signUp()" content-type="application/json">
