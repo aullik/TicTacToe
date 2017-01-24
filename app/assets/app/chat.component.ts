@@ -36,7 +36,7 @@ export class ChatComponent {
         return color;
     }
     public ticSocketOpen(event: any) {
-        if(this.firstOpen) {
+        if (this.firstOpen) {
             this.ticSocket.send(JSON.stringify({
                 msgType: 'gamePlayers',
                 value: {},
