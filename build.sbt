@@ -67,6 +67,7 @@ lazy val `tictactoe` = (project in file("."))
 
 lazy val `backend` = (project in file("backend"))
   .settings(commonSettings)
+  //  .settings(libraryDependencies += "com.typesafe.play" %% "play-json" % "2.5.9")
   .settings(name := "TicTacToe-backend")
 
 

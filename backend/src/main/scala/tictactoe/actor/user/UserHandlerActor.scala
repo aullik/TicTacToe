@@ -28,6 +28,10 @@ class UserHandlerActor(user: User, token: TOKEN) extends Actor with Logging {
   private var gameOpt: Option[ActorRef] = None
   private var opponentOpt: Option[(UserElement, ActorRef)] = None
   private var moves: List[PlayerMove] = Nil
+  private var startedThisGame = false
+
+  private val beingAskedBy = mutable.Map.empty[TOKEN, ActorRef]
+
 
   override def preStart(): Unit = {
     lobby ! LobbyActor.RegisterUserToken(user.name, token)
@@ -51,12 +55,9 @@ class UserHandlerActor(user: User, token: TOKEN) extends Actor with Logging {
   }
 
   def handleRequestStatus(): Unit = {
-    sender() ! UserStatus.toJson(UserStatus(user.name, token, lobbyCache.values.toList))
+    sender() ! UserStatusMSG.toJson(UserStatus(user.name, token, lobbyCache.values.toList))
   }
 
-  def handleRequestGameStatus(): Unit = {
-    GameStatus.toJson(GameStatus(moves))
-  }
 
   def handleGetAllReturn(list: List[UserElement]): Unit = {
     list.foreach(e => lobbyCache.put(e.token, e))
@@ -89,10 +90,8 @@ class UserHandlerActor(user: User, token: TOKEN) extends Actor with Logging {
             self ! AskOtherPlayerForGameFORWARD(user, value.handler)
           })
         case Failure(_) =>
-      }
+      }(context.dispatcher)
   }
-
-  private val beingAskedBy = mutable.Map.empty[TOKEN, ActorRef]
 
 
   def handleAskOtherPlayerForGame(user: UserElement, userActor: ActorRef): Unit = {
@@ -131,12 +130,13 @@ class UserHandlerActor(user: User, token: TOKEN) extends Actor with Logging {
         val deny = AcceptOrDenyGameWithRef(UserElement(user.name, token), None, self)
         if (accept) {
           val gameRef: ActorRef = context.actorOf(GameManagerActor.props((otherPlayer.token, other), (token, self)))
-          //TODO Tell Lobby InGame
+          startedThisGame = true
           gameOpt = Some(gameRef)
           opponentOpt = Some((otherPlayer, other))
           other ! deny.copy(accept = gameOpt)
           beingAskedBy.values.foreach(_ ! deny)
           beingAskedBy.clear()
+          messageInGame()
         } else {
           other ! deny
         }
@@ -155,20 +155,34 @@ class UserHandlerActor(user: User, token: TOKEN) extends Actor with Logging {
             case Some(gameRef) =>
               if (otherRef != op)
                 throw new IllegalStateException(s"got a reply from ${otherPlayer.name} without asking him")
-              //TODO Tell Lobby InGame
               gameOpt = Some(gameRef)
+              startedThisGame = false
               true
             case None =>
               false
           }
         broadcast(AskForGame.toJson(AcceptGame(otherPlayer.name, otherPlayer.token, isAccept)))
+        if (isAccept) messageInGame()
     }
   }
 
 
+  private def messageInGame(): Unit = {
+    lobby ! LobbyActor.UnRegisterUserToken(this.token, this.user.name)
+    broadcast(StartGame.toJson(EmptyMessage))
+  }
+
+
   def handleAskGameStatus(): Unit = {
-    if (gameOpt.isDefined)
-      broadcast(GameStatus.toJson(GameStatus(moves)))
+    if (gameOpt.isEmpty)
+      return
+
+    val yourTurn =
+      moves.headOption match {
+        case None => startedThisGame
+        case Some(playerMove) => playerMove.pMove.startsWith("O")
+      }
+    broadcast(GameStatus.toJson(GameStatus(moves.reverse, yourTurn)))
   }
 
   def handleAskGamePlayers(): Unit = {
@@ -177,8 +191,43 @@ class UserHandlerActor(user: User, token: TOKEN) extends Actor with Logging {
   }
 
   def handleGameMove(move: Move): Unit = {
-    if (gameOpt.isDefined) null
-    //TODO
+    gameOpt match {
+      case None => //ignore
+        warn("move has been called without a running game")
+      case Some(game) => game ! GameManagerActor.DoMove(move.move)
+    }
+  }
+
+  private def buildPlayerMove(token: String, move: String): PlayerMove = {
+    val p = if (token == this.token) "M-" else "O-"
+    PlayerMove(p + move)
+  }
+
+  def handleTokenMoved(token: String, move: String): Unit = {
+    val pm = buildPlayerMove(token, move)
+    moves = pm :: moves
+
+    broadcast(PlayerMove.toJson(pm))
+  }
+
+  def handleTokenEndMove(token: String, move: String, tie: Boolean): Unit = {
+    gameOpt = None
+    opponentOpt = None
+    moves = Nil
+    startedThisGame = false
+    broadcast(GameFinish.toJson(GameFinish(buildPlayerMove(token, move).pMove, tie)))
+
+    messageReturnToIndex()
+  }
+
+  def handleInvalidMove(token: String, move: String): Unit = {
+    warn(s"invalid move: token $token,  move: $move")
+    //Ignore
+  }
+
+  private def messageReturnToIndex(): Unit = {
+    lobby ! LobbyActor.RegisterUserToken(this.token, this.user.name)
+    broadcast(ReturnToIndex.toJson(EmptyMessage))
   }
 
 
@@ -198,7 +247,6 @@ class UserHandlerActor(user: User, token: TOKEN) extends Actor with Logging {
     case RegisterWebSocket() => handleRegisterWebSocket()
     case UnRegisterWebSocket() => handleUnRegisterWebSocket()
     case RequestStatus() => handleRequestStatus()
-    case RequestGameStatus() => handleRequestGameStatus()
 
     case LobbyActor.GetAllReturn(list: List[UserElement]) =>
       handleGetAllReturn(list: List[UserElement])
@@ -220,6 +268,13 @@ class UserHandlerActor(user: User, token: TOKEN) extends Actor with Logging {
     case AskGameStatus() => handleAskGameStatus()
     case AskGamePlayers() => handleAskGamePlayers()
     case GameMove(move: Move) => handleGameMove(move: Move)
+
+    case GameManagerActor.TokenMoved(token: String, move: String) =>
+      handleTokenMoved(token: String, move: String)
+    case GameManagerActor.TokenEndMove(token: String, move: String, tie: Boolean) =>
+      handleTokenEndMove(token: String, move: String, tie: Boolean)
+    case GameManagerActor.InvalidMove(token: String, move: String) =>
+      handleInvalidMove(token: String, move: String)
 
     case SendDirectMessage(directMessage: DirectMessage) =>
       handleSendDirectMessage(directMessage: DirectMessage)

@@ -1,152 +1,134 @@
 package tictactoe.actor
 
-import akka.actor._
+import akka.actor.{Actor, ActorRef, Props}
 import grizzled.slf4j.Logging
-import org.json4s.JsonAST.JObject
-import org.json4s._
-import org.json4s.jackson.Serialization
 import play.api.libs.json.Json
+import tictactoe.actor.messages.WebSocketActorMessages.JsType
 import tictactoe.actor.messages._
-import tictactoe.actor.user.UserManagerActor
-import tictactoe.actor.user.UserManagerActor.{AcceptAndStartGameForward, AllLoggedInReturn, AskUserForGameForward}
+import tictactoe.actor.user.UserHandlerActor.BroadcastMessage
+import tictactoe.actor.user.{UserHandlerActor, UserHandlerContainer, UserTokenManagerActor}
 import tictactoe.model.User
-import util.FunctionalHelper.ofTuple
-
 
 /**
   */
 class WebSocketActor(out: ActorRef, user: User) extends Actor with Logging {
 
+  private val userManager = context.actorSelection(context.system / UserTokenManagerActor.NAME)
 
-  private implicit val formats = Serialization.formats(NoTypeHints)
+  private var userHandler: Option[UserHandlerContainer] = None
 
-  private val userManager = context.actorSelection(context.system / UserManagerActor.NAME)
+  override def preStart(): Unit = {
+    userManager ! UserTokenManagerActor.RegisterForUser(user)
+  }
 
-  userManager ! UserManagerActor.SubscribeToUserAnnouncement(user)
-
-  var gameManagerOpt: Option[ActorRef] = None
+  override def postStop(): Unit = {
+    userHandler.foreach(_.handler ! UserHandlerActor.UnRegisterWebSocket())
+  }
 
   object ExtendedFunction extends PartialFunction[Any, Unit] {
 
 
     private val pf: PartialFunction[Any, Unit] = {
       case msg: String => handleMsg(msg)
-      case UserManagerActor.LoggedInAnnouncement(username, usertoken) => handleLoggedInAnnouncement(username, usertoken)
-      case UserManagerActor.LoggedOutAnnouncement(username, usertoken) => handleLoggedOutAnnouncement(username, usertoken)
-      case AskUserForGameForward(senderName: String, senderToken: String) => handleAskUserForGameForward(senderName: String, senderToken: String)
-      case AllLoggedInReturn(usrToken, userTokenList, gameManager) => handleAllLoggedInReturn(usrToken, userTokenList, gameManager)
-      case AcceptAndStartGameForward(senderName: String, senderToken: String, accept: Boolean) => handleAcceptAndStartGameForward(senderName: String, senderToken: String, accept: Boolean)
+      case BroadcastMessage(msg) => handleBroadcastMessage(msg)
+      case UserTokenManagerActor.UserHandlerIfPresent(opt) => setUserHandler(opt)
 
-
-      case any => warn(s"illegal message + $any")
-        throw new IllegalArgumentException("Invalid message")
+      case any => error(s"Invalid message: + $any")
+        throw new IllegalArgumentException(s"Invalid message: + $any")
     }
 
     override def isDefinedAt(x: Any): Boolean = pf.isDefinedAt(x)
 
-    override def apply(v1: Any): Unit =
-      try {
-        pf.apply(v1)
-      } catch {
-        case t: Throwable => error("Exception in actor: " + t)
-          throw t
+    override def apply(v1: Any): Unit = {
+      if (userHandler.isDefined || v1.isInstanceOf[UserTokenManagerActor.UserHandlerIfPresent]) {
+        pf(v1)
+      } else {
+        //send to self -> move to the back of the inbox. UserTokenManagerActor.UserHandlerIfPresent is needed to set handler
+        self.!(v1)(sender())
       }
+    }
   }
 
-  def receive = ExtendedFunction
+  private def setUserHandler(opt: Option[UserHandlerContainer]) = {
+    opt match {
+      case None => throw new IllegalArgumentException("userHandler must be set!")
+      case some => userHandler = some
+    }
+  }
+
+  def handleBroadcastMessage(msg: String): Unit = {
+    out ! msg
+  }
+
+
+  override def receive: Receive = ExtendedFunction
+
+  object WithUserHandler {
+    def apply(block: (UserHandlerContainer) => Unit): Unit = {
+      userHandler match {
+        case None => throw new IllegalStateException("no UserHandler")
+        case Some(cont) => block(cont)
+      }
+
+    }
+
+  }
+
 
   def handleMsg(msg: String): Unit = {
-    try Json.parse(msg) match {
-      case UserStatus(_) => handleUserStatus()
-      case AskForGame(value) => handleAskForGame(value)
-      case GameRequested(value) => handleGameRequested(value)
-      case GameStatus(_) => handleGameStatus()
-      case GamePlayers(_) => handleGamePlayers()
-      case Move(value) => handleMove(value)
-      case DirectMessage(value) => handleMessage(value)
-      case any => throw new IllegalArgumentException(s"Invalid message: + $any")
+    try {
+      val json: JsType = Json.parse(msg)
+      json match {
+        case UserStatusMSG(_) => WithUserHandler(handleUserStatus())
+        case AskForGame(value: JsType) => WithUserHandler(handleAskForGame(value))
+        case GameRequested(value: JsType) => WithUserHandler(handleGameRequested(value))
+        case GameStatus(_) => WithUserHandler(handleGameStatus())
+        case GamePlayers(_) => WithUserHandler(handleGamePlayers())
+        case Move(value: JsType) => WithUserHandler(handleMove(value))
+        case DirectMessage(value: JsType) => WithUserHandler(handleMessage(value))
+        case any => throw new IllegalArgumentException(s"Invalid message: + $any")
+      }
     } catch {
       case e: Exception =>
-        warn(s"couldn't handle message: $msg. Exception: $e")
+        warn(s"couldn't handle message: $msg. Exception: ", e)
     }
   }
 
 
-  def handleLoggedInAnnouncement(user: String, token: String): Unit = {
-    out ! UserLoggedIn.toJson(UserElement(user, token))
+  def handleUserStatus()(cont: UserHandlerContainer): Unit = {
+    cont.handler ! UserHandlerActor.RequestStatus()
   }
 
-  def handleLoggedOutAnnouncement(user: String, token: String): Unit = {
-    out ! UserLoggedOut.toJson(UserElement(user, token))
+  def handleAskForGame(value: UserElement)(cont: UserHandlerContainer): Unit = {
+    cont.handler ! UserHandlerActor.AskOtherPlayerForGame(value)
   }
 
-  def handleUserStatus(): Unit = {
-    userManager ! UserManagerActor.AllLoggedInRequest(user.email)
+  def handleGameRequested(value: AcceptGame)(cont: UserHandlerContainer): Unit = {
+    cont.handler ! UserHandlerActor.AcceptOrDenyGame(tictactoe.actor.messages.UserElement(value.name, value.token), accept = value.accept)
   }
 
-  def handleAllLoggedInReturn(usrToken: String, userTokenList: List[(String, String)], gameManager: Option[ActorRef]): Unit = {
-    gameManagerOpt = gameManager
-    UserStatus(user.name, usrToken, gameManager.isDefined, userTokenList.map(ofTuple((usr, token) => UserElement(usr, token))))
+  def handleGameStatus()(cont: UserHandlerContainer): Unit = {
+    cont.handler ! UserHandlerActor.AskGameStatus()
   }
 
-  def handleAskForGame(value: UserElement): Unit = {
-    userManager ! UserManagerActor.AskUserForGame(value.token, user)
+  def handleGamePlayers()(cont: UserHandlerContainer): Unit = {
+    cont.handler ! UserHandlerActor.AskGamePlayers()
   }
 
-  def handleAskUserForGameForward(senderName: String, senderToken: String): Unit = {
-    out ! GameRequested.toJson(UserElement(senderName, senderToken))
+  def handleMove(value: Move)(cont: UserHandlerContainer): Unit = {
+    cont.handler ! UserHandlerActor.GameMove(value)
   }
 
-  def handleGameRequested(value: AcceptGame): Unit = {
-    userManager ! UserManagerActor.AcceptAndStartGame(user, value.token, value.accept)
+  def handleMessage(value: DirectMessage)(cont: UserHandlerContainer): Unit = {
+    cont.handler ! UserHandlerActor.SendDirectMessage(value)
   }
 
-  def handleAcceptAndStartGameForward(senderName: String, senderToken: String, accept: Boolean) {
-    out ! AskForGame.toJson(AcceptGame(senderName, senderToken, accept))
-  }
-
-
-  def handleGameStatus(): Unit = {
-    out ! GameStatus.toJson(GameStatus(PlayerMove.list("M-1-2-3", "O-2-2-2")))
-  }
-
-  def handleGamePlayers(): Unit = {
-    out ! GamePlayers.toJson(GamePlayers(UserElement("alice", "aliceToken"), UserElement("bob", "bobToken")))
-  }
-
-  //FIXME only for testing
-  var finishNextTurn = false
-
-  def handleMove(value: Move): Unit = {
-    if (finishNextTurn)
-      out ! GameFinish.toJson(GameFinish("M-" + value.move, tie = true))
-    else {
-      finishNextTurn = true
-      out ! PlayerMove.toJson(PlayerMove("M-" + value.move))
-    }
-
-  }
-
-  def handleMessage(value: DirectMessage): Unit = {
-    out ! DirectMessage.toJson(value)
-  }
-
-
-  override def postStop(): Unit = {
-    userManager ! UserManagerActor.UnSubscribeFromUserAnnouncement(user)
-  }
 }
 
 object WebSocketActor {
 
-  val CHANNEL = "userChannel"
-
-  val NOVALUE: JObject = JObject(Nil)
-
-  val MSG_TYPE = "msgType"
-  val VALUE = "value"
-
   def apply(out: ActorRef, usr: User): Props = {
     Props(new WebSocketActor(out, usr))
+
   }
 }

@@ -12,7 +12,7 @@ import scala.collection.mutable
   */
 class LobbyActor extends Actor with Logging {
 
-  val cache = mutable.Map.empty[String, UserTokenContainer]
+  private val cache = mutable.Map.empty[String, UserTokenContainer]
 
   def handleRegisterUserToken(token: String, username: String): Unit = {
     cache.put(token, UserTokenContainer(token, username, sender()))
