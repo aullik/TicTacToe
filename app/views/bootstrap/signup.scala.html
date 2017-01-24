@@ -104,10 +104,12 @@
                   type: 'POST', // set sending HTTP Request type
                   contentType: 'application/json',
                   success: function (data) {
+                     data = $.parseJSON(data.responseText)
                      if (data === "Registered" || data === "") {
-                        toastr.success('Successfuly registered, we"ve send you a confirmation email');
+                        toastr.success('Wir haben Ihnen eine Email geschickt, ' +
+                                'bitte schauen Sie Ihre Mailbox');
                      }else if(data === "logged in"){
-                        window.location.href = 'http://' + window.location.host + '/index';
+                        window.location.href = 'https://' + window.location.host + '/index';
                      }
                   },
                   error: function (data) { // if error occured

@@ -18,6 +18,8 @@ export class UsersComponent {
     private username: any;
     private token: any;
     private dialogRef: any;
+    private firstOpen: boolean = true;
+
     constructor(public snackBar: MdSnackBar, public dialog: MdDialog) {
         this.socket = new WebSocket('wss://' + window.location.host + '/socket/');
         this.socket.onmessage = this.socketMessage.bind(this);
@@ -26,13 +28,16 @@ export class UsersComponent {
         this.socket.onclose = this.socketClosed.bind(this);
     }
     public socketOpen(event: any) {
-        this.socket.send(JSON.stringify({msgType : 'userStatus', value : {}}));
+        if(this.firstOpen) {
+            this.socket.send(JSON.stringify({msgType : 'userStatus', value : {}}));
+            this.firstOpen = false;
+        }
     }
     public socketError(event: any) {
         alert('error' + event);
     }
     public socketClosed(event: any) {
-        alert('Socket closed');
+        this.socket = new WebSocket('wss://' + window.location.host + '/socket/');
     }
     public socketMessage(event: any) {
         let msg = JSON.parse(event.data);

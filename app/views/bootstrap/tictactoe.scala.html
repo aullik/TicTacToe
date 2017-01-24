@@ -89,6 +89,9 @@
             value: {}
          }));
       }
+      ticSocket.onclose =function () {
+         ticSocket = new WebSocket("wss://" + window.location.host + "/socket/");
+      }
       ticSocket.onmessage = function (event) {
          var msg = JSON.parse(event.data);
          switch (msg.msgType) {

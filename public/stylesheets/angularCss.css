@@ -187,12 +187,12 @@ canvas {
 .provider img{
     width: 40px;
     height: 40px;
-}
+}/*
 .google {
     background: #D14836;
     background: url("/assets/images/providers/google.png");
     background-size: 100% 100%;
-}
+}*/
 
 .facebook {
     background: #3B5998;

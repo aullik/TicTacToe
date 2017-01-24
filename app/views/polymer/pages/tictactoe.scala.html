@@ -179,7 +179,11 @@
               messages: {
                  type: Array,
                  value: []
-              }
+              },
+              firstOpen: {
+                  type: Boolean,
+                  value: true
+              },
            },
            _redirect: function () {
               this.$.redirect.click();
@@ -238,18 +242,21 @@
            },
            onOpen: function (event) {
               console.log('socket opened');
-              this.ticSocket.send(JSON.stringify({
-                 msgType: 'gamePlayers',
-                 value: {}
-              }));
+              if(this.firstOpen){
+                 this.ticSocket.send(JSON.stringify({
+                    msgType: 'gamePlayers',
+                    value: {}
+                 }));
+                 this.firstOpen = false;
+              }
 
            },
            onError: function (event) {
-              console.error("Error: " + JSON.stringify(event.reason));
+              // console.error("Error: " + JSON.stringify(event.reason));
            },
 
            onClose: function (event) {
-              console.log("Web socket closed");
+              this.ticSocket = new WebSocket("wss://" + window.location.host + "/socket/");
            },
            onMessage: function (event) {
               var msg = JSON.parse(event.data);

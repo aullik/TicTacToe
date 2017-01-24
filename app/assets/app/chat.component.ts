@@ -17,6 +17,7 @@ export class ChatComponent {
     private WEB_SOCKET_SWF_LOCATION = '/javascript/WebSocketMain.swf';
     private ticSocket: any = null;
     private myAvatarColor: string;
+    private firstOpen: boolean = true;
     constructor(public dialog: MdDialog) {
         this.ticSocket = new WebSocket('wss://' + window.location.host + '/socket/');
         this.ticSocket.onmessage = this.ticSocketMessage.bind(this);
@@ -35,16 +36,19 @@ export class ChatComponent {
         return color;
     }
     public ticSocketOpen(event: any) {
-        this.ticSocket.send(JSON.stringify({
-            msgType: 'gamePlayers',
-            value: {},
-        }));
+        if(this.firstOpen) {
+            this.ticSocket.send(JSON.stringify({
+                msgType: 'gamePlayers',
+                value: {},
+            }));
+            this.firstOpen = false;
+        }
     }
     public ticSocketError(event: any) {
         alert('error' + event);
     }
     public ticSocketClosed(event: any) {
-        alert('ticSocket closed');
+        this.ticSocket = new WebSocket('wss://' + window.location.host + '/socket/');
     }
     public ticSocketMessage(event: any) {
         let msg = JSON.parse(event.data);

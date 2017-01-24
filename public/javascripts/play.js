@@ -413,13 +413,19 @@ var socket = new WebSocket("wss://" + window.location.host + "/socket/");
         return m;
     }
 
-
+    var firstOpen = true;
     socket.onopen = function () {
         console.log('socket opened');
-        socket.send(JSON.stringify({
-            msgType: 'gameStatus',
-            value: {}
-        }));
+        if(firstOpen){
+            socket.send(JSON.stringify({
+                msgType: 'gameStatus',
+                value: {}
+            }));
+            firstOpen = false;
+        }
+    }
+    socket.onclose =function () {
+        socket = new WebSocket("wss://" + window.location.host + "/socket/");
     }
     // ---- click sphere ----
     socket.onmessage = function (event) {

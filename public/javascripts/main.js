@@ -19,8 +19,6 @@ toastr.options = {
 // Let the library know where WebSocketMain.swf is:
 WEB_SOCKET_SWF_LOCATION = "/javascript/WebSocketMain.swf";
 
-// Write your code in the same way as for native WebSocket:
-//FIXME fix email
 var socket = new WebSocket("wss://" + window.location.host + "/socket/");
 
 var username = undefined;

@@ -145,6 +145,10 @@
                  type: Object,
                  observer: 'webSocketChanged'
               },
+              firstOpen: {
+                  type: Boolean,
+                  value: true
+              },
               modalTitle: String,
               otherToken: String
            },
@@ -220,18 +224,22 @@
            },
            onOpen: function (event) {
               console.log('Socket opened');;
-              this.socket.send(JSON.stringify({msgType: 'userStatus', value: {}}));
+              if(this.firstOpen){
+                 this.socket.send(JSON.stringify({msgType: 'userStatus', value: {}}));
+                 this.firstOpen = false;
+              }
            },
 
            onError: function (event) {
-              console.error("Error: " + JSON.stringify(event.reason));
+              // console.error("Error: " + JSON.stringify(event.reason));
            },
 
            onClose: function (event) {
-              console.log("Web socket closed");
+              this.socket = new WebSocket("wss://" + window.location.host + "/socket/");
            },
            _startGameOnClick: function (event) {
               var id = event.srcElement.id;
+              console.log('testing , id is: '+event.target.id)
               if (id === 'icon') id = event.srcElement.parentElement.id;
               var user = this.users.find(x => x.token == id);
               this.socket.send(JSON.stringify({
