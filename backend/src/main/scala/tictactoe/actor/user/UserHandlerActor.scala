@@ -55,7 +55,7 @@ class UserHandlerActor(user: User, token: TOKEN) extends Actor with Logging {
   }
 
   def handleRequestStatus(): Unit = {
-    sender() ! UserStatusMSG.toJson(UserStatus(user.name, token, lobbyCache.values.toList))
+    sender() ! BroadcastMessage(UserStatusMSG.toJson(UserStatus(user.name, token, lobbyCache.values.toList)))
   }
 
 
@@ -182,12 +182,12 @@ class UserHandlerActor(user: User, token: TOKEN) extends Actor with Logging {
         case None => startedThisGame
         case Some(playerMove) => playerMove.pMove.startsWith("O")
       }
-    broadcast(GameStatus.toJson(GameStatus(moves.reverse, yourTurn)))
+    sender() ! BroadcastMessage(GameStatus.toJson(GameStatus(moves.reverse, yourTurn)))
   }
 
   def handleAskGamePlayers(): Unit = {
     if (gameOpt.isDefined)
-      broadcast(GamePlayers.toJson(GamePlayers(me = UserElement(user.name, token), other = opponentOpt.get._1)))
+      sender() ! BroadcastMessage(GamePlayers.toJson(GamePlayers(me = UserElement(user.name, token), other = opponentOpt.get._1)))
   }
 
   def handleGameMove(move: Move): Unit = {
