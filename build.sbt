@@ -46,6 +46,7 @@ lazy val commonSettings = Seq(
     "com.mohiva" %% "play-silhouette-cas" % "4.0.0",
     "com.mohiva" %% "play-silhouette-persistence-reactivemongo" % "4.0.1",
     "com.typesafe.play" %% "play-mailer" % "5.0.0",
+    "org.webjars" %% "webjars-play" % "2.5.0-2",
     "com.iheart" %% "ficus" % "1.4.0",
 
 
@@ -66,6 +67,7 @@ lazy val `tictactoe` = (project in file("."))
 
 lazy val `backend` = (project in file("backend"))
   .settings(commonSettings)
+  //  .settings(libraryDependencies += "com.typesafe.play" %% "play-json" % "2.5.9")
   .settings(name := "TicTacToe-backend")
 
 

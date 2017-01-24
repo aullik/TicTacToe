@@ -20,7 +20,6 @@ Boolean: true
     "value": {
       "name": "???",
       "token": "???",
-      "inGame": true,
       "users": [
         {
           "name": "???",
@@ -65,7 +64,7 @@ Boolean: true
     }
   }
 
-  OUT: renamed from 'requestGame'
+  OUT: renamed from 'requestGame' -> to player B
   {
     "msgType": "gameRequested",
     "value": {
@@ -74,7 +73,7 @@ Boolean: true
     }
   }
 
-  IN: renamed from 'responseGame'
+  IN: renamed from 'responseGame'  -> from player B
   {
     "msgType": "gameRequestedRet",
     "value": {
@@ -84,7 +83,7 @@ Boolean: true
     }
   }
 
-  OUT: renamed from 'askForGameAck'
+  OUT: renamed from 'askForGameAck'  -> return to caller of askForGame
   {
     "msgType": "askForGameRet",
     "value": {
@@ -96,7 +95,7 @@ Boolean: true
 
 # Start the game
 
-  OUT:
+  OUT:  send to both
   {
     "msgType": "startGame",
     "value": {}
@@ -119,7 +118,8 @@ Boolean: true
         {
           "pMove": "M-1-2-3"
         }
-      ]
+      ],
+      "yourTurn": true
     }
   }
 
@@ -160,7 +160,7 @@ Boolean: true
     }
   }
 
-  OUT:
+  OUT: //send only gameFinish for last Move
   {
     "msgType": "gameFinish",
     "value": {
@@ -168,6 +168,13 @@ Boolean: true
       "tie": true
     }
   }
+
+  OUT: after GameFinish
+  {
+    "msgType": "returnToIndex",
+    "value":{}
+  }
+
 
 # handling Messages
 
