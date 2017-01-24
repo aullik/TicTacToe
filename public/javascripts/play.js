@@ -592,6 +592,7 @@ var socket = new WebSocket("wss://" + window.location.host + "/socket/");
 
 
     function handlePlayerMoved(data) {
+        console.log(data)
         if (data.pMove.split('-')[0] == "O") {
             var sphere = fSphere(data.pMove.slice(2))
             sphere.s = machine
@@ -614,6 +615,7 @@ var socket = new WebSocket("wss://" + window.location.host + "/socket/");
      }
      */
     function handleGameStatusRet(data) {
+        console.log(data)
         if (data) {
             for (var i = 0; i < data.moves.length; i++) {
                 var who = data.moves[i].pMove.split('-')[0];
@@ -631,6 +633,7 @@ var socket = new WebSocket("wss://" + window.location.host + "/socket/");
     }
 
     function handleGameFinish(data) {
+        console.log(data)
         if (data) {
             handleMoveAck(data.pMove);
             end = data.pMove.split('-')[0] == "O" ? machine : human;

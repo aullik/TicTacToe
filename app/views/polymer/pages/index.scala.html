@@ -26,6 +26,13 @@
          background-color: var(--paper-green-500);
          color: white;
       }
+      .logoutButton{
+         position: absolute;
+         bottom: 5px;
+         right: 5px;
+         border-radius: 4px;
+         outline: none;
+      }
 
       .heading {
          height: 100%;
@@ -106,6 +113,8 @@
             <paper-button raised id="acceptCall">accept</paper-button>
          </div>
       </paper-dialog>
+
+      <a href="@routes.ScalaRoutes.logout()" type="button" class="btn btn-success logoutButton">logout</a>
       <a style="display: none" id="redirect" href='@routes.ScalaRoutes.game()'></a>
    </template>
 
@@ -174,19 +183,23 @@
               }
            },
            userHandleStatusRet: function (data) {
+               console.log(data)
               this.users = data.users;
               this.username = data.name;
               this.token = data.token;
            },
            handleUserLoggedIn: function (data) {
+              console.log(data)
               this.push('users', data);
            },
            handleUserLoggedOut: function (data) {
+              console.log(data)
               var index = this.users.findIndex(x => x.token == data.token
               );
               this.splice('users', index, 1);
            },
            handleRequestGame: function (data) {
+              console.log(data)
               if (data) {
                  this.modalTitle = "Call to start a game with " + data.name;
                  this.otherToken = data;
@@ -194,6 +207,7 @@
               }
            },
            handleCallAskForGameRet: function (data) {
+              console.log(data)
               if (data.accept !== undefined && data.accept == false) {
                  this.$.callToast.text = "call denied";
                  this.$.callToast.open();
