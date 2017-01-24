@@ -58,9 +58,6 @@ class UserHandlerActor(user: User, token: TOKEN) extends Actor with Logging {
     sender() ! UserStatus.toJson(UserStatus(user.name, token, lobbyCache.values.toList))
   }
 
-  def handleRequestGameStatus(): Unit = {
-    GameStatus.toJson(GameStatus(moves))
-  }
 
   def handleGetAllReturn(list: List[UserElement]): Unit = {
     list.foreach(e => lobbyCache.put(e.token, e))
@@ -179,7 +176,7 @@ class UserHandlerActor(user: User, token: TOKEN) extends Actor with Logging {
   def handleAskGameStatus(): Unit = {
     if (gameOpt.isEmpty)
       return
-    
+
     val yourTurn =
       moves.headOption match {
         case None => startedThisGame
@@ -250,7 +247,6 @@ class UserHandlerActor(user: User, token: TOKEN) extends Actor with Logging {
     case RegisterWebSocket() => handleRegisterWebSocket()
     case UnRegisterWebSocket() => handleUnRegisterWebSocket()
     case RequestStatus() => handleRequestStatus()
-    case RequestGameStatus() => handleRequestGameStatus()
 
     case LobbyActor.GetAllReturn(list: List[UserElement]) =>
       handleGetAllReturn(list: List[UserElement])
