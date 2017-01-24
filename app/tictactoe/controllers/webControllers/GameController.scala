@@ -44,11 +44,7 @@ object GameController {
     * @return
     */
   def game(request: SecuredRequest[TicTacToeEnv, AnyContent], fws: FrameworkSelector): Result = {
-    val gameopt = cacheUserName2Game.get(request.identity.name)
-
-    gameopt.map(game => {
-      fws.game
-    }).getOrElse(BadRequest("No game for user"))
+    fws.game
   }
 
 
