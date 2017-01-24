@@ -38,7 +38,13 @@
                   <div class="btn-group">
                      <input type="button" class="login loginmodal-submit" value="Submit" />
                   </div>
-               </form>
+               </form><!-- -->
+               <a href="@routes.ScalaRoutes.oAuth("github")" class="provider github" title="github">
+                  <img src="@routes.Assets.at("images/providers/github.png")" alt="github"></a>
+               <a href="@routes.ScalaRoutes.oAuth("facebook")" class="provider facebook" title="facebook">
+                  <img src="@routes.Assets.at("images/providers/facebook.png")" alt="facebook"></a>
+               <a href="@routes.ScalaRoutes.oAuth("google")" class="provider google" title="google">
+                  <img src="@routes.Assets.at("images/providers/google.png")" alt="google"></a>
             </div>
             <div class="tab-pane loginmodal-container" id="signUp">
                <form method="POST" action='@routes.ScalaRoutes.signUp()' Content-type="application/json" id="signupForm">
@@ -103,6 +109,8 @@
                   success: function (data) {
                      if (data === "Registered" || data === "") {
                         toastr.success('Successfuly registered, we"ve send you a confirmation email');
+                     }else if(data === "logged in"){
+                        window.location.href = 'http://' + window.location.host + '/index';
                      }
                   },
                   error: function (data) { // if error occured

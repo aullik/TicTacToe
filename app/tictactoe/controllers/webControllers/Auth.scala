@@ -142,7 +142,7 @@ class Auth @Inject private(val silhouette: Silhouette[TicTacToeEnv],
             case Some(user) => for {
               authenticator <- env.authenticatorService.create(loginInfo)(request).map(authenticatorWithRememberMe(_, rememberMe))
               cookie <- env.authenticatorService.init(authenticator)(request)
-              result <- env.authenticatorService.embed(cookie, Redirect(routes.ScalaRoutes.index()))(request)
+              result <- env.authenticatorService.embed(cookie, Ok("logged in"))(request)
             } yield {
               env.eventBus.publish(LoginEvent(user, request))
               result

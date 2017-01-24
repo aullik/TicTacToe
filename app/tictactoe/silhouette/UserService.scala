@@ -29,4 +29,5 @@ class UserService @Inject()(userController: UserController) extends IdentityServ
       case e: EntityNotFoundException => Future.successful(None)
     }
   }
+
 }

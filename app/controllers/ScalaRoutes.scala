@@ -30,6 +30,8 @@ class ScalaRoutes @Inject()(val messagesApi: MessagesApi,
 
   def login = UnAuthenticatedPost(Auth.authenticate _)
 
+  def oAuth(provider: String) = UnAuthenticatedPost(SocialAuthController.authenticate(provider) _)
+
   def logout = AuthenticatedGet(Auth.signOut _)
 
   def selectFramework(framework: String) = BasicPost(FrameworkSelector.selectFramework(framework) _)
@@ -48,7 +50,6 @@ class ScalaRoutes @Inject()(val messagesApi: MessagesApi,
       case e: Exception => BadRequest
     }
   }
-
 
   private object AuthenticatedGet extends AuthenticatedAction(messagesApi, silhouette)
 
