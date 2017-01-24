@@ -28,7 +28,7 @@ export class UsersComponent {
         this.socket.onclose = this.socketClosed.bind(this);
     }
     public socketOpen(event: any) {
-        if(this.firstOpen) {
+        if (this.firstOpen) {
             this.socket.send(JSON.stringify({msgType : 'userStatus', value : {}}));
             this.firstOpen = false;
         }
