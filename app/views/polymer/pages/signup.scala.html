@@ -43,6 +43,29 @@
          --paper-toast-background-color: green;
          --paper-toast-color: white;
       }
+      .provider {
+         display: inline-block;
+         width: 40px;
+         height: 40px;
+         border-radius: 4px;
+         outline: none;
+         margin-right: 15px;
+      }
+      .provider img{
+         width: 40px;
+         height: 40px;
+      }
+      .google {
+         background: #D14836;
+      }
+
+      .facebook {
+         background: #3B5998;
+      }
+
+      .github {
+         background: black;
+      }
       </style>
       <div class="mainContent">
          <paper-card class="content paddingCenter" heading="TicTacToe 3D">
@@ -72,6 +95,13 @@
                      <paper-toggle-button style="height: 62px;" checked="{{rememberMe}}">Remember Me</paper-toggle-button>
                      <paper-button raised onclick="_submit(event)">Submit</paper-button>
                   </form>
+                     <!--routes.SocialAuthController.authenticate("github") -->
+                  <a href="@routes.ScalaRoutes.oAuth("github")" class="provider github" title="github">
+                     <img src="@routes.Assets.at("images/providers/github.png")" alt="github"></a>
+                  <a href="@routes.ScalaRoutes.oAuth("facebook")" class="provider facebook" title="facebook">
+                     <img src="@routes.Assets.at("images/providers/facebook.png")" alt="facebook"></a>
+                  <a href="@routes.ScalaRoutes.oAuth("google")" class="provider google" title="google">
+                     <img src="@routes.Assets.at("images/providers/google.png")" alt="google"></a>
                </div>
                <div class="formContainer">
                   <form is="iron-form" method="post" id="signUpForm" action="@routes.ScalaRoutes.signUp()" content-type="application/json">

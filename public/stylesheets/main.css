@@ -155,7 +155,7 @@ body {
     font-weight: 400;
     text-align: center;
     display: inline-block;
-    opacity: 0.6;
+    opacity: 1;
     transition: opacity ease 0.5s;
 }
 
@@ -315,4 +315,36 @@ canvas {
     left: 0;
     right: 0;
     background: #111;
+}
+.provider {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    border-radius: 4px;
+    outline: none;
+    margin-right: 15px;
+}
+.logoutButton{
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    width: 40px;
+    height: 40px;
+    border-radius: 4px;
+    outline: none;
+}
+.provider img{
+    width: 40px;
+    height: 40px;
+}
+.google {
+    background: #D14836;
+}
+
+.facebook {
+    background: #3B5998;
+}
+
+.github {
+    background: black;
 }

@@ -1,7 +1,9 @@
 package tictactoe.controllers.webControllers
 
+
 import com.google.inject.{Inject, Singleton}
 import com.mohiva.play.silhouette.api.actions.SecuredRequest
+import com.mohiva.play.silhouette.impl.providers.CommonSocialProfile
 import controllers.routes
 import grizzled.slf4j.Logging
 import play.api.mvc.Results._
@@ -15,7 +17,7 @@ import tictactoe.persistence.entityManagement.mutator.Wrapper
 import tictactoe.viewModel.{LoginData, SignUpData, ViewModel}
 
 import scala.collection.mutable
-import scala.util.Random
+import scala.util.{Failure, Random, Try, Success}
 
 /**
   */
@@ -184,6 +186,18 @@ class UserController @Inject private(server: TicTacToeServer) extends Logging {
   def getPassword(userId: UserId): String = {
     info(s"getPassword(playerId=$userId")
     server.persistence.authenticationManager.readPasswordHash(userId).get
+  }
+  def saveOauth(profile: CommonSocialProfile):User = {
+    Try {
+      getUserByEmail(profile.email.get)
+    } match {
+      case Success(user) => user.get
+      case Failure(_) => server.persistence.userManager.add(
+        User(
+          name = profile.fullName.get,
+          email = profile.email.get
+        )).get
+    }
   }
 
 }
