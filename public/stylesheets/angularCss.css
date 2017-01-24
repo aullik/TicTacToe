@@ -196,13 +196,13 @@ canvas {
 
 .facebook {
     background: #3B5998;
-    background: url("/assets/images/providers/facebook.png");
+    background: url("https://www.facebook.com/images/fb_icon_325x325.png");
     background-size: 100% 100%;
 }
 
 .github {
     background: black;
-    background: url("/assets/images/providers/github.png");
+    background: url("https://assets-cdn.github.com/images/modules/open_graph/github-mark.png");
     background-size: 100% 100%;
 }
 .logoutButton{

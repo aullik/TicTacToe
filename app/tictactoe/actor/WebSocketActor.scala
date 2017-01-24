@@ -57,6 +57,7 @@ class WebSocketActor(out: ActorRef, user: User) extends Actor with Logging {
   }
 
   def handleBroadcastMessage(msg: String): Unit = {
+    info(msg)
     out ! msg
   }
 
@@ -76,7 +77,7 @@ class WebSocketActor(out: ActorRef, user: User) extends Actor with Logging {
 
 
   def handleMsg(msg: String): Unit = {
-    info(msg);
+    info(msg)
     try {
       val json: JsType = Json.parse(msg)
       json match {
