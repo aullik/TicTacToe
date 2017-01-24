@@ -137,7 +137,7 @@ object PlayerMove extends OutMessage {
   }
 }
 
-case class GameStatus(moves: List[PlayerMove])
+case class GameStatus(moves: List[PlayerMove], yourTurn: Boolean)
 
 object GameStatus extends InMessage with OutMessage {
   implicit val form: OFormat[GameStatus] = Json.format[GameStatus]
@@ -171,6 +171,11 @@ object Move extends InMessage {
 
 }
 
+
+object ReturnToIndex extends OutMessage {
+  override val outMsg: String = "returnToIndex"
+  override type outValue = EmptyMessage
+}
 
 case class GameFinish(pMove: String, tie: Boolean)
 

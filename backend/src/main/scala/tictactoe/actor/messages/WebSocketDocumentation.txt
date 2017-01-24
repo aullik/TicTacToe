@@ -118,7 +118,8 @@ Boolean: true
         {
           "pMove": "M-1-2-3"
         }
-      ]
+      ],
+      "yourTurn": true
     }
   }
 
@@ -159,7 +160,7 @@ Boolean: true
     }
   }
 
-  OUT:
+  OUT: //send only gameFinish for last Move
   {
     "msgType": "gameFinish",
     "value": {
@@ -167,6 +168,13 @@ Boolean: true
       "tie": true
     }
   }
+
+  OUT: after GameFinish
+  {
+    "msgType": "returnToIndex",
+    "value":{}
+  }
+
 
 # handling Messages
 

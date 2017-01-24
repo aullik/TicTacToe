@@ -13,6 +13,7 @@ import tictactoe.controllers.webControllers.{WebController, WebControllerContain
 import grizzled.slf4j.Logging
 import play.api.libs.streams.ActorFlow
 import play.api.mvc._
+import tictactoe.TicTacToeServer
 import tictactoe.silhouette.TicTacToeEnv
 
 import scala.concurrent.ExecutionContext.Implicits.{global => executionContext}
@@ -24,6 +25,7 @@ import scala.util.{Failure, Success, Try}
 class WebSocketsControl @Inject()(implicit system: ActorSystem,
                                   val silhouette: Silhouette[TicTacToeEnv],
                                   val mat: Materializer,
+                                  val server: TicTacToeServer, //make sure backend Actors are started
                                   val webProvider: Provider[WebControllerContainer]
                                  ) extends WebController with Controller with Logging {
 
