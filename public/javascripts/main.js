@@ -91,11 +91,14 @@ function userHandleStatusRet(data) {
 }
 function handleUserLoggedIn(data) {
     if(data.name && data.token){
+        users.push(data);
         $('.allUsers').append(userBlock(data.name, data.token));
     }
 }
 function handleUserLoggedOut(data) {
     if(data.name && data.token){
+        var index = this.users.findIndex(x => x.token == data.token);
+        this.users.splice(index, 1);
         $('#'+data.token).remove();
     }
 }
@@ -139,6 +142,7 @@ $(document).on('click','.callAccept', function (){
 function hideRequestGameModalAndSendResp(accept) {
     $('#incomingCallModal').modal('hide');
     var otherUser = $('#otherUserModal').val();
+    console.log("otherUserId "+ otherUser);
     var user = users.find(x => x.token == otherUser);
     console.log('gameRequestedRet: ');
     console.log(user);
