@@ -32,7 +32,7 @@ export class AuthComponent {
         this.loginModel.loading = true;
         this.HTTPService.post('/login', JSON.stringify({email: this.loginModel.email,
             password: this.loginModel.password, rememberMe: this.loginModel.rememberMe}))
-            .subscribe( response => {
+            .subscribe( response => { console.warn(JSON.stringify(response));
                 window.location.href = 'http://' + window.location.host + '/index'; },
                 error =>  this.loginModel.errorMessage = <any> error);
         this.loginModel.loading = false;
