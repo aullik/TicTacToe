@@ -90,7 +90,8 @@ class WebSocketActor(out: ActorRef, user: User) extends Actor with Logging {
   override def receive: Receive = defaultReceive
 
   object WithUserHandler {
-    def apply(block: (UserHandlerContainer) => Unit): Unit = {
+    def apply(block: (UserHandlerContainer) => Unit, msg: String): Unit = {
+      info(s"IN  ${user.name}:  $msg")
       userHandler match {
         case None => throw new IllegalStateException("no UserHandler")
         case Some(cont) => block(cont)
@@ -100,23 +101,24 @@ class WebSocketActor(out: ActorRef, user: User) extends Actor with Logging {
 
 
   def handleMsg(msg: String): Unit = {
-    info(s"IN  ${user.name}:  $msg")
     try {
       val json: JsType = Json.parse(msg)
       json match {
         case KeepAlive(_) => handleKeepAlive()
-        case UserStatusMSG(_) => WithUserHandler(handleUserStatus())
-        case AskForGame(value) => WithUserHandler(handleAskForGame(value))
-        case GameRequested(value) => WithUserHandler(handleGameRequested(value))
-        case GameStatus(_) => WithUserHandler(handleGameStatus())
-        case GamePlayers(_) => WithUserHandler(handleGamePlayers())
-        case Move(value) => WithUserHandler(handleMove(value))
-        case DirectMessage(value) => WithUserHandler(handleMessage(value))
-        case any => throw new IllegalArgumentException(s"Invalid message: + $any")
+        case UserStatusMSG(_) => WithUserHandler(handleUserStatus(), msg)
+        case AskForGame(value) => WithUserHandler(handleAskForGame(value), msg)
+        case GameRequested(value) => WithUserHandler(handleGameRequested(value), msg)
+        case GameStatus(_) => WithUserHandler(handleGameStatus(), msg)
+        case GamePlayers(_) => WithUserHandler(handleGamePlayers(), msg)
+        case Move(value) => WithUserHandler(handleMove(value), msg)
+        case DirectMessage(value) => WithUserHandler(handleMessage(value), msg)
+        case any =>
+          info(s"IN  ${user.name}:  $msg")
+          throw new IllegalArgumentException(s"Invalid message: + $any")
       }
     } catch {
       case e: Exception =>
-        warn(s"couldn't handle message: $msg. Exception: ", e)
+        warn(s"couldn't handle message: $msg. for user ${user.name} Exception: ", e)
     }
   }
 
