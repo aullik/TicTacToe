@@ -145,14 +145,6 @@
                  type: Object,
                  observer: 'webSocketChanged'
               },
-              firstOpen: {
-                  type: Boolean,
-                  value: true
-              },
-              socketError: {
-                 type: Boolean,
-                 value: false
-              },
               modalTitle: String,
               otherToken: String
            },
@@ -186,9 +178,17 @@
                  case 'startGame':
                     this.handleStartGame(msg.value);
                     break;
+                 case 'keepAliveAck':
+                    this.handleKeepAliveAck(msg.value);
+                    break;
                  default:
                     console.warn("Could not handle this message: " + msg);
               }
+           },
+           handleKeepAliveAck: function (data) {
+              setTimeout(function () {
+                 this.socket.send(JSON.stringify({msgType:'keepAlive', value: {}}));
+              }, 2000)
            },
            userHandleStatusRet: function (data) {
                console.log(data)
@@ -228,21 +228,18 @@
            },
            onOpen: function (event) {
               console.log('Socket opened');;
-              if(this.firstOpen){
-                 this.socket.send(JSON.stringify({msgType: 'userStatus', value: {}}));
-                 this.firstOpen = false;
-              }
+              this.socket.send(JSON.stringify({msgType: 'userStatus', value: {}}));
+              setTimeout(function () {
+                 this.socket.send(JSON.stringify({msgType:'keepAlive', value: {}}));
+              }, 2000)
            },
 
            onError: function (event) {
-               this.socketError = true;
               // console.error("Error: " + JSON.stringify(event.reason));
            },
 
            onClose: function (event) {
-              if(!this.socketError){
-                 this.socket = new WebSocket("wss://" + window.location.host + "/socket/");
-              }
+              console.log('socket closed');
            },
            _startGameOnClick: function (event) {
               var id = event.srcElement.id;

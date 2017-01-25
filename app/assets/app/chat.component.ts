@@ -17,7 +17,6 @@ export class ChatComponent {
     private WEB_SOCKET_SWF_LOCATION = '/javascript/WebSocketMain.swf';
     private ticSocket: any = null;
     private myAvatarColor: string;
-    private firstOpen: boolean = true;
     constructor(public dialog: MdDialog) {
         this.ticSocket = new WebSocket('wss://' + window.location.host + '/socket/');
         this.ticSocket.onmessage = this.ticSocketMessage.bind(this);
@@ -36,19 +35,19 @@ export class ChatComponent {
         return color;
     }
     public ticSocketOpen(event: any) {
-        if (this.firstOpen) {
-            this.ticSocket.send(JSON.stringify({
-                msgType: 'gamePlayers',
-                value: {},
-            }));
-            this.firstOpen = false;
-        }
+        this.ticSocket.send(JSON.stringify({
+            msgType: 'gamePlayers',
+            value: {},
+        }));
+        setTimeout(() => {
+            this.ticSocket.send(JSON.stringify({msgType:'keepAlive', value: {}}));
+        }, 2000);
     }
     public ticSocketError(event: any) {
         alert('error' + event);
     }
     public ticSocketClosed(event: any) {
-        this.ticSocket = new WebSocket('wss://' + window.location.host + '/socket/');
+        console.warn('socket closed');
     }
     public ticSocketMessage(event: any) {
         let msg = JSON.parse(event.data);
@@ -62,9 +61,17 @@ export class ChatComponent {
             case 'returnToIndex':
                 this.handleReturn(msg.value);
                 break;
+            case 'keepAliveAck':
+                this.handleKeepAliveAck(msg.value);
+                break;
             default:
                 console.warn('Could not handle this message: ' + msg);
         }
+    }
+    public handleKeepAliveAck(data: any) {
+        setTimeout(() => {
+            this.ticSocket.send(JSON.stringify({msgType:'keepAlive', value: {}}));
+        }, 2000);
     }
     public handleReturn(data: any) {
         let dialogRefCall = this.dialog.open(BackToIndexModal, {disableClose: true});

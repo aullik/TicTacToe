@@ -18,7 +18,6 @@ export class UsersComponent {
     private username: any;
     private token: any;
     private dialogRef: any;
-    private firstOpen: boolean = true;
 
     constructor(public snackBar: MdSnackBar, public dialog: MdDialog) {
         this.socket = new WebSocket('wss://' + window.location.host + '/socket/');
@@ -28,16 +27,16 @@ export class UsersComponent {
         this.socket.onclose = this.socketClosed.bind(this);
     }
     public socketOpen(event: any) {
-        if (this.firstOpen) {
-            this.socket.send(JSON.stringify({msgType : 'userStatus', value : {}}));
-            this.firstOpen = false;
-        }
+        this.socket.send(JSON.stringify({msgType : 'userStatus', value : {}}));
+        setTimeout(() => {
+            this.socket.send(JSON.stringify({msgType:'keepAlive', value: {}}));
+        }, 2000);
     }
     public socketError(event: any) {
         alert('error' + event);
     }
     public socketClosed(event: any) {
-        this.socket = new WebSocket('wss://' + window.location.host + '/socket/');
+        console.warn('socket closed');
     }
     public socketMessage(event: any) {
         let msg = JSON.parse(event.data);
@@ -52,17 +51,25 @@ export class UsersComponent {
                 this.handleUserLoggedOut(msg.value);
                 break;
             case 'gameRequested':
-               /// this.handleRequestGame(msg.value);
+                this.handleRequestGame(msg.value);
                 break;
             case 'askForGameRet':
-               // this.handleCallAskForGameRet(msg.value);
+                this.handleCallAskForGameRet(msg.value);
                 break;
             case 'startGame':
-               // this.handleStartGame(msg.value);
+                this.handleStartGame(msg.value);
+                break;
+            case 'keepAliveAck':
+                this.handleKeepAliveAck(msg.value);
                 break;
             default:
                 console.warn('Could not handle this message: ' + msg);
         }
+    }
+    public handleKeepAliveAck(data: any) {
+        setTimeout(() => {
+            this.socket.send(JSON.stringify({msgType:'keepAlive', value: {}}));
+        }, 2000);
     }
     public userHandleStatusRet(data: any) {
         this.username = data.name;

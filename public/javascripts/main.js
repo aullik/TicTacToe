@@ -21,14 +21,15 @@ WEB_SOCKET_SWF_LOCATION = "/javascript/WebSocketMain.swf";
 
 var socket = new WebSocket("wss://" + window.location.host + "/socket/");
 
-var username = undefined;
+var username;
 var users;
 
 this.socket.onopen = function onOpen(event) {
     console.log('Socket opened');;
-    if(username == undefined){
-        socket.send(JSON.stringify({msgType:'userStatus', value: {}}));
-    }
+    socket.send(JSON.stringify({msgType:'userStatus', value: {}}));
+    setTimeout(function () {
+        socket.send(JSON.stringify({msgType:'keepAlive', value: {}}));
+    }, 2000)
 }
 
 this.socket.onerror = function onError(event) {
@@ -36,8 +37,8 @@ this.socket.onerror = function onError(event) {
 }
 
 this.socket.onclose = function onClose(event) {
-    console.log("socket close and opened")
-    socket = new WebSocket("wss://" + window.location.host + "/socket/");
+    console.log("socket closed")
+    //socket = new WebSocket("wss://" + window.location.host + "/socket/");
 }
 this.socket.onmessage = function socketOnMessage(event){
     var msg = JSON.parse(event.data);
@@ -61,11 +62,19 @@ this.socket.onmessage = function socketOnMessage(event){
         case 'startGame':
             handleStartGame(msg.value);
             break;
+        case 'keepAliveAck':
+            handleKeepAliveAck(msg.value);
+            break;
         default:
             console.warn("Could not handle this message: " + msg);
     }
 
 };
+function handleKeepAliveAck(data) {
+    setTimeout(function () {
+        socket.send(JSON.stringify({msgType:'keepAlive', value: {}}));
+    }, 2000)
+}
 function userHandleStatusRet(data) {
     username = data.name;
     token = data.token;

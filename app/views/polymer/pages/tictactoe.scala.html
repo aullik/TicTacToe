@@ -180,14 +180,6 @@
                  type: Array,
                  value: []
               },
-              firstOpen: {
-                  type: Boolean,
-                  value: true
-              },
-              socketError: {
-                 type: Boolean,
-                 value: false
-              },
            },
            _redirect: function () {
               this.$.redirect.click();
@@ -246,13 +238,13 @@
            },
            onOpen: function (event) {
               console.log('socket opened');
-              if(this.firstOpen){
-                 this.ticSocket.send(JSON.stringify({
-                    msgType: 'gamePlayers',
-                    value: {}
-                 }));
-                 this.firstOpen = false;
-              }
+              this.ticSocket.send(JSON.stringify({
+                 msgType: 'gamePlayers',
+                 value: {}
+              }));
+              setTimeout(function () {
+                 this.ticSocket.send(JSON.stringify({msgType:'keepAlive', value: {}}));
+              }, 2000)
 
            },
            onError: function (event) {
@@ -277,7 +269,17 @@
                  case "returnToIndex":
                     handleReturn(msg.value)
                     break;
+                 case 'keepAliveAck':
+                    this.handleKeepAliveAck(msg.value);
+                    break;
+                 default:
+                    console.warn("Could not handle this message: " + msg);
               }
+           },
+           handleKeepAliveAck: function (data) {
+              setTimeout(function () {
+                 this.ticSocket.send(JSON.stringify({msgType:'keepAlive', value: {}}));
+              }, 2000)
            },
            handleAcceptMessage: function (message) {
               message.user = this.otherUser;

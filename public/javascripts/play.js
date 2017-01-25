@@ -413,16 +413,15 @@ var socket = new WebSocket("wss://" + window.location.host + "/socket/");
         return m;
     }
 
-    var firstOpen = true;
     socket.onopen = function () {
         console.log('socket opened');
-        if(firstOpen){
-            socket.send(JSON.stringify({
-                msgType: 'gameStatus',
-                value: {}
-            }));
-            firstOpen = false;
-        }
+        socket.send(JSON.stringify({
+            msgType: 'gameStatus',
+            value: {}
+        }));
+        setTimeout(function () {
+            socket.send(JSON.stringify({msgType:'keepAlive', value: {}}));
+        }, 2000)
     }
     socket.onclose =function () {
         socket = new WebSocket("wss://" + window.location.host + "/socket/");
@@ -441,13 +440,20 @@ var socket = new WebSocket("wss://" + window.location.host + "/socket/");
             case 'gameFinish':
                 handleGameFinish(msg.value);
                 break;
+            case 'keepAliveAck':
+                handleKeepAliveAck(msg.value);
+                break;
             default:
                 console.warn("Could not handle this message: " + msg);
         }
 
     };
 
-
+    function handleKeepAliveAck(data) {
+        setTimeout(function () {
+            socket.send(JSON.stringify({msgType:'keepAlive', value: {}}));
+        }, 2000)
+    }
     function handlePlayerMoved(data) {
         console.log(data)
         if (data.pMove.split('-')[0] == "O") {

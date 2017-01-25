@@ -88,9 +88,12 @@
             msgType:'gamePlayers',
             value: {}
          }));
+         setTimeout(function () {
+            ticSocket.send(JSON.stringify({msgType:'keepAlive', value: {}}));
+         }, 2000)
       }
       ticSocket.onclose =function () {
-         ticSocket = new WebSocket("wss://" + window.location.host + "/socket/");
+         console.log('socket closed')
       }
       ticSocket.onmessage = function (event) {
          var msg = JSON.parse(event.data);
@@ -104,8 +107,18 @@
             case "returnToIndex":
                handleReturn(msg.value)
                break;
+            case 'keepAliveAck':
+               handleKeepAliveAck(msg.value);
+               break;
+            default:
+               console.warn("Could not handle this message: " + msg);
          }
       };
+      function handleKeepAliveAck(data) {
+         setTimeout(function () {
+            ticSocket.send(JSON.stringify({msgType:'keepAlive', value: {}}));
+         }, 2000)
+      }
       function handleReturn(data) {
          setTimeout(function () {
             $('#gameFinishedModal').modal({backdrop: 'static', keyboard: false});
