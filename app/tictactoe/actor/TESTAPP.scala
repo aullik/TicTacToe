@@ -27,8 +27,8 @@ object TESTAPP extends App {
 
   val out = system.actorOf(Props(new OutActor()))
 
-  val alice = User(UserId(), "alice", "", "alice@email.de", emailConfirmed = true)
-  val bob = User(UserId(), "bob", "", "bob@email.de", emailConfirmed = true)
+  val alice = User(UserId(), "alice", "alice@email.de", emailConfirmed = true)
+  val bob = User(UserId(), "bob", "bob@email.de", emailConfirmed = true)
 
   private val userTokenManagerActor: ActorRef = system.actorOf(UserTokenManagerActor.props, UserTokenManagerActor.NAME)
   private val lobbyActor: ActorRef = system.actorOf(LobbyActor.props, LobbyActor.NAME)
