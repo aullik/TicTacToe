@@ -463,9 +463,13 @@ var socket = new WebSocket("wss://" + window.location.host + "/socket/");
     function handlePlayerMoved(data) {
         // if (data.pMove.split('-')[0] == "O") {
         var sphere = fSphere(data.pMove.slice(2))
-        sphere.s = machine
-        played = false;
-        showTempMessage("jetzt du bist dran");
+        if (data.pMove.split('-')[0] == "O") {
+            sphere.s = machine;
+            played = false;
+            showTempMessage("jetzt du bist dran");
+        }else{
+            sphere.s = human;
+        }
         //}
     }
 
