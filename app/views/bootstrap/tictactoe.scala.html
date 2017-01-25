@@ -108,11 +108,11 @@
       };
       function handleReturn(data) {
          setTimeout(function () {
-            $('.gameFinishedModal').modal({backdrop: 'static', keyboard: false});
+            $('#gameFinishedModal').modal({backdrop: 'static', keyboard: false});
          }, 1000);
       }
       function handleAcceptMessage(message){
-         message = message.user = this.otherUser;
+         message.user = this.otherUser;
          if(message){
              $('#chatContainer').append(addMessage(message));
          }

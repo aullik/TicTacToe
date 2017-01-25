@@ -228,7 +228,7 @@ var socket = new WebSocket("wss://" + window.location.host + "/socket/");
         over, dx = 0,
         dy = 0,
         message = "";
-    var fillColor = ["", "#0f0", "#f00", "#fff"];
+    var fillColor = ["", "#f00", "#0f0", "#fff"];
 
     function run() {
         requestAnimationFrame(run);
@@ -479,7 +479,7 @@ var socket = new WebSocket("wss://" + window.location.host + "/socket/");
     function handleGameFinish(data) {
         console.log(data)
         if (data) {
-            handleMoveAck(data.pMove);
+            handlePlayerMoved(data.pMove);
             end = data.pMove.split('-')[0] == "O" ? machine : human;
             end = data.tie == false ? end : nul;
             manageEnd()

@@ -83,11 +83,11 @@
                "progressBar": false,
                "positionClass": "toast-bottom-center",
                "preventDuplicates": false,
-               "onclick": null,
+               "onclick": null,/*
                "showDuration": "300",
                "hideDuration": "1000",
                "timeOut": "5000",
-               "extendedTimeOut": "1000",
+               "extendedTimeOut": "1000",*/
                "showEasing": "swing",
                "hideEasing": "linear",
                "showMethod": "fadeIn",
@@ -97,14 +97,11 @@
                var data = $(this).parent().parent().serializeObject();
                data.rememberMe = data.rememberMe == undefined ? false : true;
                $.ajax({
-                  url: $(this).parent().parent().attr('action'), // php script to retern json encoded string
-                  data: JSON.stringify(data),  // serialized data to send on server
-                  // dataType: 'json', // set recieving type - JSON in case of a question
-                  type: 'POST', // set sending HTTP Request type
+                  url: $(this).parent().parent().attr('action'),
+                  data: JSON.stringify(data),
+                  type: 'POST',
                   contentType: 'application/json',
                   success: function (data) {
-                     console.log(data)
-                     console.log(data.responseText)
                      if (data === "Registered" || data === "") {
                         toastr.success('Wir haben Ihnen eine Email geschickt, ' +
                                 'bitte schauen Sie Ihre Mailbox');
