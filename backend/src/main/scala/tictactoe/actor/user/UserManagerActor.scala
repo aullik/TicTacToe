@@ -53,7 +53,7 @@ class UserManagerActor private() extends Actor {
   def removeContainer(container: Container): Unit = {
     loggedInUserCache.remove(container.usr.email)
     tokenCache.remove(container.token)
-    messageSubscribers(LoggedOutAnnouncement(container.usr.name, container.usr.token))
+    messageSubscribers(LoggedOutAnnouncement(container.usr.name, container.token))
   }
 
   def messageSubscribers(message: Any): Unit = {

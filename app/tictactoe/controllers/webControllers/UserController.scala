@@ -10,12 +10,13 @@ import tictactoe.model.User
 import tictactoe.model.entity.UserId
 import tictactoe.persistence.entityManagement.mutator.Wrapper
 
-import scala.util.{Failure, Success, Try}
+import scala.util.{Failure, Random, Success, Try}
 
 /**
   */
 @Singleton
 class UserController @Inject private(server: TicTacToeServer) extends Logging {
+  private lazy val rnd: Random = new Random()
 
   //==============================================================================================
 
@@ -80,17 +81,40 @@ class UserController @Inject private(server: TicTacToeServer) extends Logging {
     } match {
       case Success(user) => user.get
       case Failure(_) =>
-        warn(profile.fullName)
-        warn(profile.email)
-        warn(profile.firstName)
-        warn(profile.lastName)
-
         server.persistence.userManager.add(
-          User(
-            name = profile.fullName.get,
-            email = profile.email.get
-          )).get
+          buildUserOfCommonSocialProfile(profile)
+        ).get
     }
+  }
+
+  private def nextChar(): Char = {
+    //97-122 -> a-z
+    (rnd.nextInt(122 - 97 + 1) + 97).toChar
+  }
+
+  private def buildUserOfCommonSocialProfile(profile: CommonSocialProfile): User = {
+    val email =
+      profile.email match {
+        case Some(em) => em
+        case None =>
+          warn("no email set")
+          val sb = new StringBuilder()
+          for (i <- 1 to 6)
+            sb.append(nextChar())
+          sb.append('@')
+          for (i <- 1 to 4)
+            sb.append(nextChar())
+          sb.append(".de")
+          sb.toString()
+      }
+    val usrName =
+      profile.fullName match {
+        case Some(un) => un
+        case None =>
+          warn("no username set")
+          email.split('@')(0)
+      }
+    User(UserId(), usrName, email)
   }
 
 }
