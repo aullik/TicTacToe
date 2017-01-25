@@ -45,11 +45,16 @@ class LobbyActor extends Actor with Logging {
 
   }
 
+  def handleAskPlayerInGame(token: String): Unit = {
+    sender() ! ReturnPlayerInGame(cache.get(token).exists(_.ingame))
+  }
+
   override def receive: Receive = {
     case RegisterUserToken(token: String, username: String) => handleRegisterUserToken(token: String, username: String)
     case UnRegisterUserToken(token: String, username: String) => handleUnRegisterUserToken(token: String, username: String)
     case GetAll() => handleGetAll()
     case SetUserTokenInGame(token: String, inGame: Boolean) => handleSetUserTokenInGame(token: String, inGame: Boolean)
+    case AskPlayerInGame(token: String) => handleAskPlayerInGame(token: String)
 
 
     case any => warn(s"illegal message + $any")
@@ -77,6 +82,10 @@ object LobbyActor {
   case class GetAll()
 
   case class GetAllReturn(list: List[UserElement])
+
+  case class AskPlayerInGame(token: String)
+
+  case class ReturnPlayerInGame(inGame: Boolean)
 
 
   def props: Props = Props(new LobbyActor())

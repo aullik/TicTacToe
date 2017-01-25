@@ -6,11 +6,10 @@ import com.google.inject.Provider
 import com.mohiva.play.silhouette.api.Silhouette
 import framework.FrameworkSelector
 import tictactoe.authentication.{AuthenticatedAction, BasicAction, UnAuthenticatedAction}
-import tictactoe.controllers.webControllers.{AuthController, WebController, WebControllerContainer}
+import tictactoe.controllers.webControllers.{AuthController, TicTacToeApplication, WebController, WebControllerContainer}
 import play.api.i18n.MessagesApi
 import play.api.mvc._
 import tictactoe.silhouette.TicTacToeEnv
-import tictactoe.controllers.TicTacToeApplication
 
 
 class ScalaRoutes @Inject()(val messagesApi: MessagesApi,
