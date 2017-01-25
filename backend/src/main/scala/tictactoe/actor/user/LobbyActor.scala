@@ -29,7 +29,7 @@ class LobbyActor extends Actor with Logging {
   }
 
   def handleGetAll(): Unit = {
-    val list = cache.toStream.map(ofTuple((_, cont) => UserElement(cont.username, cont.token))).toList
+    val list = cache.toStream.filterNot(_._2.ingame).map(ofTuple((_, cont) => UserElement(cont.username, cont.token))).toList
     sender() ! GetAllReturn(list)
   }
 
