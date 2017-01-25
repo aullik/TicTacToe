@@ -8,6 +8,7 @@ import tictactoe.silhouette.TicTacToeEnv
 import javax.inject.Singleton
 
 import akka.actor.ActorSystem
+import controllers.routes
 
 import scala.concurrent.{ExecutionContextExecutor, Future}
 
@@ -15,12 +16,12 @@ import scala.concurrent.{ExecutionContextExecutor, Future}
 /**
   */
 @Singleton
-class TicTacToeApplication @Inject()(gameController: GameController, system: ActorSystem) {
+class TicTacToeApplication @Inject()(gameController: GameController, system: ActorSystem) extends Controller {
   implicit val exc: ExecutionContextExecutor = system.dispatcher
 
 
   def index(request: SecuredRequest[TicTacToeEnv, AnyContent], fws: FrameworkSelector): Future[Result] = {
-    gameController.checkInGame(request.identity).map(if (_) fws.game else fws.index)
+    gameController.checkInGame(request.identity).map(if (_) Redirect(routes.ScalaRoutes.game()) else fws.index)
   }
 
 

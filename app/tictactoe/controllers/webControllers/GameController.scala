@@ -7,7 +7,7 @@ import akka.pattern.ask
 import com.google.inject.Inject
 import com.mohiva.play.silhouette.api.actions.SecuredRequest
 import framework.FrameworkSelector
-import play.api.mvc.{AnyContent, Result}
+import play.api.mvc.{AnyContent, Controller, Result}
 import tictactoe.TicTacToeServer
 import tictactoe.actor.user.{LobbyActor, UserTokenManagerActor}
 import tictactoe.model.User
@@ -16,13 +16,14 @@ import javax.inject.Singleton
 
 import akka.actor.ActorSystem
 import akka.util.Timeout
+import controllers.routes
 
 import scala.concurrent.{ExecutionContextExecutor, Future}
 
 /**
   */
 @Singleton
-class GameController @Inject()(server: TicTacToeServer, system: ActorSystem) {
+class GameController @Inject()(server: TicTacToeServer, system: ActorSystem) extends Controller {
   implicit val exc: ExecutionContextExecutor = system.dispatcher
 
   /**
@@ -32,7 +33,7 @@ class GameController @Inject()(server: TicTacToeServer, system: ActorSystem) {
     * @return
     */
   def game(request: SecuredRequest[TicTacToeEnv, AnyContent], fws: FrameworkSelector): Future[Result] = {
-    checkInGame(request.identity).map(if (_) fws.game else fws.index)
+    checkInGame(request.identity).map(if (_) fws.game else Redirect(routes.ScalaRoutes.index()))
   }
 
   def checkInGame(user: User): Future[Boolean] = {
