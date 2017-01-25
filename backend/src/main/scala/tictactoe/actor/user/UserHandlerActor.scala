@@ -132,7 +132,7 @@ class UserHandlerActor(user: User, token: TOKEN) extends Actor with Logging {
         val deny = AcceptOrDenyGameWithRef(UserElement(user.name, token), None, self)
         if (accept) {
           info(s"starting game with p0: ${other._2}, p1: ${user.name}")
-          val gameRef: ActorRef = context.actorOf(GameManagerActor.props((otherPlayer.token, other._1), (token, self)))
+          val gameRef: ActorRef = context.actorOf(GameManagerActor.props((token, self), (otherPlayer.token, other._1)))
           startedThisGame = true
           gameOpt = Some(gameRef)
           opponentOpt = Some((otherPlayer, other._1))
