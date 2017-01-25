@@ -429,7 +429,9 @@ var socket = new WebSocket("wss://" + window.location.host + "/socket/");
     // ---- click sphere ----
     socket.onmessage = function (event) {
         var msg = JSON.parse(event.data);
-        console.log(msg)
+        if(msg.msgType !== 'keepAliveAck') {
+            console.log(msg)
+        }
         switch (msg.msgType) {
             case "playerMoved":
                 handlePlayerMoved(msg.value);
@@ -485,7 +487,7 @@ var socket = new WebSocket("wss://" + window.location.host + "/socket/");
     function handleGameFinish(data) {
         console.log(data)
         if (data) {
-            handlePlayerMoved(data.pMove);
+            handlePlayerMoved(data);
             end = data.pMove.split('-')[0] == "O" ? machine : human;
             end = data.tie == false ? end : nul;
             manageEnd()
@@ -513,7 +515,7 @@ var socket = new WebSocket("wss://" + window.location.host + "/socket/");
         }, 800);
     }
 
-    var played = false;
+    var played = true;
     pointer.click = function () {
         if (played) {
             showTempMessage("Warte bis der andere Player spielt");

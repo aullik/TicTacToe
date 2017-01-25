@@ -42,7 +42,9 @@ this.socket.onclose = function onClose(event) {
 }
 this.socket.onmessage = function socketOnMessage(event){
     var msg = JSON.parse(event.data);
-    console.log(msg)
+    if(msg.msgType !== 'keepAliveAck') {
+        console.log(msg)
+    }
     switch (msg.msgType) {
         case "userStatusRet":
             userHandleStatusRet(msg.value);

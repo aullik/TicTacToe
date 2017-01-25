@@ -20,6 +20,7 @@ import {UsersComponent}     from './users.component';
 import {ChatComponent}     from './chat.component';
 import {SpinningModal}     from './spinningModal.component';
 import {CallModal}     from './callModal.component';
+import {BackToIndexModal}     from './backToIndexModal.component';
 /*
 import {IntroComponent}   from './intro.component';
 import {ManualComponent}  from './manual.component';
@@ -46,8 +47,9 @@ import {HistoryComponent} from './history.component';*/
         ChatComponent,
         SpinningModal,
         CallModal,
+        BackToIndexModal,
     ],
-    bootstrap: [AppComponent, SpinningModal, CallModal],
+    bootstrap: [AppComponent, SpinningModal, CallModal, BackToIndexModal],
 })
 
 export class AppModule {

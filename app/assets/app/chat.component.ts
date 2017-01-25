@@ -51,6 +51,9 @@ export class ChatComponent {
     }
     public ticSocketMessage(event: any) {
         let msg = JSON.parse(event.data);
+        if(msg.msgType !== 'keepAliveAck') {
+            console.log(msg)
+        };
         switch (msg.msgType) {
             case 'acceptMessage':
                 this.handleAcceptMessage(msg.value);
