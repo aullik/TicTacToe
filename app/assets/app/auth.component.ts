@@ -37,6 +37,7 @@ export class AuthComponent {
                             console.warn(JSON.stringify(response));
                             window.location.href = 'http://' + window.location.host + '/index'; });
         this.loginModel.loading = false;
+        window.location.href = window.location.href;
     }
     public submitSignup() {
         this.signUpModel.loading = true;
