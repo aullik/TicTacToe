@@ -288,7 +288,7 @@
            },
            handleAcceptMessage: function (message) {
               message.user = this.otherUser;
-              this.messages.push(message);
+              this.push('messages', message);
            },
            handleGamePlayersRet: function (data) {
               this.set('user', data.me)
