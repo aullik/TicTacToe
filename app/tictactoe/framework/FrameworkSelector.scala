@@ -43,7 +43,7 @@ object FrameworkSelector extends Controller {
 
   private final val IDENT = "framework"
 
-  private final val default = AngularSelector
+  private final val default = BootstrapSelector
 
   def getFramework(request: Request[AnyContent]): FrameworkSelector = {
     request.session.get(IDENT).flatMap {

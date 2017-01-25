@@ -177,7 +177,7 @@ canvas {
 }
 /* aop */
 .provider {
-    display: inline-block;
+    display: none;
     width: 40px;
     height: 40px;
     border-radius: 4px;
