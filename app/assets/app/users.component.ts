@@ -68,7 +68,7 @@ export class UsersComponent {
     }
     public handleKeepAliveAck(data: any) {
         setTimeout(() => {
-            this.socket.send(JSON.stringify({msgType:'keepAlive', value: {}}));
+            this.socket.send(JSON.stringify({msgType: 'keepAlive', value: {}}));
         }, 2000);
     }
     public userHandleStatusRet(data: any) {

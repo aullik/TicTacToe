@@ -70,7 +70,7 @@ export class ChatComponent {
     }
     public handleKeepAliveAck(data: any) {
         setTimeout(() => {
-            this.ticSocket.send(JSON.stringify({msgType:'keepAlive', value: {}}));
+            this.ticSocket.send(JSON.stringify({msgType: 'keepAlive', value: {}}));
         }, 2000);
     }
     public handleReturn(data: any) {
