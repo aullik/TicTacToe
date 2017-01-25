@@ -229,6 +229,9 @@ class UserHandlerActor(user: User, token: TOKEN) extends Actor with Logging {
 
   private def messageReturnToIndex(): Unit = {
     lobby ! LobbyActor.RegisterUserToken(this.token, this.user.name)
+
+    //FIXME REMOVE
+    Thread.sleep(100)
     broadcast(ReturnToIndex.toJson(EmptyMessage))
   }
 
