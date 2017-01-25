@@ -335,7 +335,11 @@ var socket = new WebSocket("wss://" + window.location.host + "/socket/");
         },
         init: function () {
             var ctx = this.elem.getContext('2d');
-            $('body /deep/ #game').append(this.elem);
+            if(/firefox/.test( navigator.userAgent.toLowerCase() )){
+                $('body #game').html(this.elem);
+            }else{
+                $('body /deep/ #game').html(this.elem);
+            }
             this.resize();
             this.width = this.elem.width = this.offsetWidth;
             this.height = this.elem.height = this.offsetHeight;

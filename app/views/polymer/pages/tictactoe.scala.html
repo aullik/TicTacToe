@@ -147,7 +147,7 @@
             <paper-button raised raised id="redirect">zurück zur Index</paper-button>
          </div>
       </paper-dialog>
-      <a style="display: none" id="redirect" href='@routes.ScalaRoutes.index()'></a>
+      <a style="display: none" id="redirectIndex" href='@routes.ScalaRoutes.index()'></a>
    </template>
    <script>
         // Let the library know where WebSocketMain.swf is:
@@ -182,7 +182,7 @@
               },
            },
            _redirect: function () {
-              this.$.redirect.click();
+              this.$.redirectIndex.click();
            },
            getFirstChart: function (myUser) {
               return myUser.name.charAt(0).toUpperCase();
