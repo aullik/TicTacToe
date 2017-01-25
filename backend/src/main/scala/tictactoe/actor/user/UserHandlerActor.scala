@@ -162,6 +162,7 @@ class UserHandlerActor(user: User, token: TOKEN) extends Actor with Logging {
               startedThisGame = false
               true
             case None =>
+              opponentOpt = None
               false
           }
         broadcast(AskForGame.toJson(AcceptGame(otherPlayer.name, otherPlayer.token, isAccept)))
