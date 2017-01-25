@@ -131,7 +131,7 @@
       </div>
       <paper-toast id="signUpToastError" class="welcomeErrors" text=""></paper-toast>
       <paper-toast id="signUpToastSuccess" class="welcomeSuccess" text=""></paper-toast>
-      <a style="display: none" id="redirect" href='@routes.ScalaRoutes.index()'></a>
+      <a style="display: none" id="redirect" href='@routes.ScalaRoutes.index()' target="_blank"></a>
    </template>
 
    <script>
@@ -159,7 +159,7 @@
               this.$.signUpToastSuccess.open();
            },
            handleSuccessIn: function () {
-              window.location.href = 'https://' + window.location.host + '/index';
+              this.$.redirect.click();
            }
         });
 </script>
