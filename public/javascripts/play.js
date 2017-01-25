@@ -461,12 +461,18 @@ var socket = new WebSocket("wss://" + window.location.host + "/socket/");
         }, 2000)
     }
     function handlePlayerMoved(data) {
+        // if (data.pMove.split('-')[0] == "O") {
+        var sphere = fSphere(data.pMove.slice(2))
         if (data.pMove.split('-')[0] == "O") {
-            var sphere = fSphere(data.pMove.slice(2))
-            sphere.s = machine
+            sphere.s = machine;
             played = false;
             showTempMessage("jetzt du bist dran");
+        }else{
+            console.log(sphere)
+            console.log(data.pMove)
+            sphere.s = human;
         }
+        //}
     }
 
     function handleGameStatusRet(data) {
