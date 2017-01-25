@@ -15,7 +15,7 @@ class LobbyActor extends Actor with Logging {
   private val cache = mutable.Map.empty[String, UserTokenContainer]
 
   def handleRegisterUserToken(token: String, username: String): Unit = {
-    cache.put(token, UserTokenContainer(token, username, sender()))
+    cache.put(token, new UserTokenContainer(token, username, sender()))
     broadCastMessage(BroadcastRegisterUserToken(token, username))
   }
 
@@ -33,17 +33,31 @@ class LobbyActor extends Actor with Logging {
     sender() ! GetAllReturn(list)
   }
 
+  def handleSetUserTokenInGame(token: String, inGame: Boolean): Unit = {
+    cache.get(token) match {
+      case None => //ignore
+      case Some(usr) =>
+        usr.ingame = inGame
+        if (inGame) broadCastMessage(BroadcastUnRegisterUserToken(token, usr.username))
+        else broadCastMessage(BroadcastRegisterUserToken(token, usr.username))
+
+    }
+
+  }
+
   override def receive: Receive = {
     case RegisterUserToken(token: String, username: String) => handleRegisterUserToken(token: String, username: String)
     case UnRegisterUserToken(token: String, username: String) => handleUnRegisterUserToken(token: String, username: String)
     case GetAll() => handleGetAll()
+    case SetUserTokenInGame(token: String, inGame: Boolean) => handleSetUserTokenInGame(token: String, inGame: Boolean)
+
 
     case any => warn(s"illegal message + $any")
       throw new IllegalArgumentException("Invalid message")
   }
 }
 
-private case class UserTokenContainer(token: String, username: String, ref: ActorRef)
+private class UserTokenContainer(val token: String, val username: String, val ref: ActorRef, var ingame: Boolean = false)
 
 
 object LobbyActor {
@@ -57,6 +71,8 @@ object LobbyActor {
   case class UnRegisterUserToken(token: String, username: String)
 
   case class BroadcastUnRegisterUserToken(token: String, username: String)
+
+  case class SetUserTokenInGame(token: String, inGame: Boolean)
 
   case class GetAll()
 

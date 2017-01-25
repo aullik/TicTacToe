@@ -171,7 +171,7 @@ class UserHandlerActor(user: User, token: TOKEN) extends Actor with Logging {
 
 
   private def messageInGame(): Unit = {
-    lobby ! LobbyActor.UnRegisterUserToken(this.token, this.user.name)
+    lobby ! LobbyActor.SetUserTokenInGame(this.token, inGame = true)
     broadcast(StartGame.toJson(EmptyMessage))
   }
 
@@ -229,10 +229,8 @@ class UserHandlerActor(user: User, token: TOKEN) extends Actor with Logging {
   }
 
   private def messageReturnToIndex(): Unit = {
-    lobby ! LobbyActor.RegisterUserToken(this.token, this.user.name)
+    lobby ! LobbyActor.SetUserTokenInGame(this.token, inGame = false)
 
-    //FIXME REMOVE
-    Thread.sleep(100)
     broadcast(ReturnToIndex.toJson(EmptyMessage))
   }
 
