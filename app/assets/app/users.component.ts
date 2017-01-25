@@ -29,7 +29,7 @@ export class UsersComponent {
     public socketOpen(event: any) {
         this.socket.send(JSON.stringify({msgType : 'userStatus', value : {}}));
         setTimeout(() => {
-            this.socket.send(JSON.stringify({msgType:'keepAlive', value: {}}));
+            this.socket.send(JSON.stringify({msgType: 'keepAlive', value: {}}));
         }, 2000);
     }
     public socketError(event: any) {

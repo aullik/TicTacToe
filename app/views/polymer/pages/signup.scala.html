@@ -106,8 +106,8 @@
                      <paper-button raised onclick="_submit(event)">Submit</paper-button>
                   </form>
                      <!--routes.SocialAuthController.authenticate("github") -->
-                  <a href="@routes.ScalaRoutes.oAuth("github")" class="provider github" title="github"></a>
-                  <a href="@routes.ScalaRoutes.oAuth("facebook")" class="provider facebook" title="facebook"></a>
+                  <a target="_self" href="@routes.ScalaRoutes.oAuth("github")" class="provider github" title="github"></a>
+                  <a target="_self" href="@routes.ScalaRoutes.oAuth("facebook")" class="provider facebook" title="facebook"></a>
                   <!--<a href="routes.ScalaRoutes.oAuth("google")" class="provider google" title="google"></a>-->
                </div>
                <div class="formContainer">

@@ -40,7 +40,7 @@ export class ChatComponent {
             value: {},
         }));
         setTimeout(() => {
-            this.ticSocket.send(JSON.stringify({msgType:'keepAlive', value: {}}));
+            this.ticSocket.send(JSON.stringify({msgType: 'keepAlive', value: {}}));
         }, 2000);
     }
     public ticSocketError(event: any) {
