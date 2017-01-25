@@ -118,7 +118,7 @@ class UserHandlerActor(user: User, token: TOKEN) extends Actor with Logging {
       otherRef ! AcceptOrDenyGameWithRef(UserElement(user.name, token), accept = None, self)
     else {
       beingAskedBy.put(otherPlayer.token, (otherRef, otherPlayer.name))
-      broadcast(GameRequested.toJson(otherPlayer))
+      broadcast(GameRequested.toJson(UserElement(user.name, otherPlayer.token)))
     }
   }
 
