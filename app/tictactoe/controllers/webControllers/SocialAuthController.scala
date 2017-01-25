@@ -52,10 +52,10 @@ class SocialAuthController @Inject()(
             authInfo <- authInfoRepository.save(profile.loginInfo, authInfo)
             authenticator <- silhouette.env.authenticatorService.create(profile.loginInfo)(request)
             value <- silhouette.env.authenticatorService.init(authenticator)(request)
-            result <- silhouette.env.authenticatorService.embed(value, Redirect(routes.ScalaRoutes.index()))(request)
+            result <- silhouette.env.authenticatorService.embed(value, Ok("logged In"))(request)
           } yield {
             silhouette.env.eventBus.publish(LoginEvent(user, request))
-            result
+            Redirect(routes.ScalaRoutes.index())
           }
         }
       case _ => Future.failed(new ProviderException(s"Cannot authenticate with unexpected social provider $provider"))

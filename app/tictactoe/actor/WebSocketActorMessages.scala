@@ -1,8 +1,8 @@
 package tictactoe.actor
 
 import play.api.libs.json._
-import tictactoe.actor.messages.{DirectMessage, Move, UserElement}
 import tictactoe.actor.messages.WebSocketActorMessages.JsType
+import tictactoe.actor.messages.{DirectMessage, Move, UserElement}
 
 /**
   */
@@ -91,6 +91,17 @@ object UserStatusMSG extends InMessage with OutMessage {
 
   override val inMsg = "userStatus"
   override val outMsg = "userStatusRet"
+}
+
+object KeepAlive extends InMessage with OutMessage {
+  override val inMsg: String = "keepAlive"
+  override type inValue = EmptyMessage
+  override val outMsg: String = "keepAliveAck"
+  override type outValue = EmptyMessage
+
+  def json(): String = {
+    s"""{"$MSG_TYPE":"$outMsg","$VALUE":{}}"""
+  }
 }
 
 object UserLoggedIn extends OutMessage {
