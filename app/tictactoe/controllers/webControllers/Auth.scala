@@ -84,7 +84,9 @@ class Auth @Inject private(val silhouette: Silhouette[TicTacToeEnv],
           _ <- authInfoRepository.add(loginInfo, passwordHasherRegistry.current.hash(signUpData.password))
           _ <- tokenService.create(token)
         } yield {
-          Mailer.welcome(savedUser, link = routes.ScalaRoutes.signUpEmail(token.id).absoluteURL()(request))(ms, messages)
+          val link = routes.ScalaRoutes.signUpEmail(token.id).absoluteURL()(request)
+          info(s"SignUp for ${savedUser.name} with link:  $link")
+          Mailer.welcome(savedUser, link = link)(ms, messages)
           Ok("Registered")
         }
     }

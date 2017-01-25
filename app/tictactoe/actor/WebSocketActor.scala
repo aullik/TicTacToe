@@ -121,7 +121,7 @@ class WebSocketActor(out: ActorRef, user: User) extends Actor with Logging {
   }
 
   def handleKeepAlive(): Unit = {
-    sender() ! KeepAlive.json()
+    out ! KeepAlive.json()
   }
 
 
