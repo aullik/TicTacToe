@@ -13,10 +13,10 @@ class TicTacToeServer @Inject() private(system: ActorSystem, environment: Persis
 
   Locale.setDefault(Locale.GERMAN)
 
-  private val lobbyActor: ActorRef = system.actorOf(LobbyActor.props, LobbyActor.NAME)
-  private val userTokenManagerActor: ActorRef = system.actorOf(UserTokenManagerActor.props, UserTokenManagerActor.NAME)
+  final val lobbyActor: ActorRef = system.actorOf(LobbyActor.props, LobbyActor.NAME)
+  final val userTokenManagerActor: ActorRef = system.actorOf(UserTokenManagerActor.props, UserTokenManagerActor.NAME)
 
-  val persistence: Persistence = environment.persistence
+  final val persistence: Persistence = environment.persistence
 
 }
 
