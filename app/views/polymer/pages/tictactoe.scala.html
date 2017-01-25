@@ -242,8 +242,9 @@
                  msgType: 'gamePlayers',
                  value: {}
               }));
+              var that = this;
               setTimeout(function () {
-                 this.ticSocket.send(JSON.stringify({msgType:'keepAlive', value: {}}));
+                 that.ticSocket.send(JSON.stringify({msgType:'keepAlive', value: {}}));
               }, 2000)
 
            },
@@ -259,7 +260,7 @@
            },
            onMessage: function (event) {
               var msg = JSON.parse(event.data);
-              if(msg.msgType !== 'keepAliveAck') {
+              if(msg.msgType !== "keepAliveAck") {
                  console.log(msg)
               }
               switch (msg.msgType) {
@@ -270,7 +271,7 @@
                     this.handleGamePlayersRet(msg.value);
                     break;
                  case "returnToIndex":
-                    handleReturn(msg.value)
+                    this.handleReturn(msg.value)
                     break;
                  case 'keepAliveAck':
                     this.handleKeepAliveAck(msg.value);
@@ -280,8 +281,9 @@
               }
            },
            handleKeepAliveAck: function (data) {
+               var that = this;
               setTimeout(function () {
-                 this.ticSocket.send(JSON.stringify({msgType:'keepAlive', value: {}}));
+                 that.ticSocket.send(JSON.stringify({msgType:'keepAlive', value: {}}));
               }, 2000)
            },
            handleAcceptMessage: function (message) {
@@ -293,7 +295,7 @@
               this.set('otherUser', data.other)
            },
            handleReturn: function(data){
-
+              this.$.paperDialogAnimated.open()
            }
         });
     </script>

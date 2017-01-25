@@ -159,7 +159,7 @@
            },
            onMessage: function (event) {
               var msg = JSON.parse(event.data);
-              if(msg.msgType !== 'keepAliveAck') {
+              if(msg.msgType !== "keepAliveAck") {
                  console.log(msg)
               }
               switch (msg.msgType) {
@@ -189,8 +189,9 @@
               }
            },
            handleKeepAliveAck: function (data) {
+              var that = this;
               setTimeout(function () {
-                 this.socket.send(JSON.stringify({msgType:'keepAlive', value: {}}));
+                 that.socket.send(JSON.stringify({msgType:'keepAlive', value: {}}));
               }, 2000)
            },
            userHandleStatusRet: function (data) {
@@ -232,8 +233,9 @@
            onOpen: function (event) {
               console.log('Socket opened');;
               this.socket.send(JSON.stringify({msgType: 'userStatus', value: {}}));
+              var that = this;
               setTimeout(function () {
-                 this.socket.send(JSON.stringify({msgType:'keepAlive', value: {}}));
+                 that.socket.send(JSON.stringify({msgType:'keepAlive', value: {}}));
               }, 2000)
            },
 

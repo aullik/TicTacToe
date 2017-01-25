@@ -429,7 +429,7 @@ var socket = new WebSocket("wss://" + window.location.host + "/socket/");
     // ---- click sphere ----
     socket.onmessage = function (event) {
         var msg = JSON.parse(event.data);
-        if(msg.msgType !== 'keepAliveAck') {
+        if(msg.msgType !== "keepAliveAck") {
             console.log(msg)
         }
         switch (msg.msgType) {
@@ -457,7 +457,6 @@ var socket = new WebSocket("wss://" + window.location.host + "/socket/");
         }, 2000)
     }
     function handlePlayerMoved(data) {
-        console.log(data)
         if (data.pMove.split('-')[0] == "O") {
             var sphere = fSphere(data.pMove.slice(2))
             sphere.s = machine
@@ -467,7 +466,6 @@ var socket = new WebSocket("wss://" + window.location.host + "/socket/");
     }
 
     function handleGameStatusRet(data) {
-        console.log(data)
         if (data) {
             for (var i = 0; i < data.moves.length; i++) {
                 var who = data.moves[i].pMove.split('-')[0];
@@ -485,7 +483,6 @@ var socket = new WebSocket("wss://" + window.location.host + "/socket/");
     }
 
     function handleGameFinish(data) {
-        console.log(data)
         if (data) {
             handlePlayerMoved(data);
             end = data.pMove.split('-')[0] == "O" ? machine : human;
@@ -494,18 +491,7 @@ var socket = new WebSocket("wss://" + window.location.host + "/socket/");
         }
     }
 
-    /*
 
-     socket.on('move', function (data) {
-     console.log(JSON.stringify(data))
-     var sphere = fSphere(data.move)
-     sphere.s = machine
-     if (data.status !== "") $('#status').html(data.status)
-     if (data.win == "1") {
-     end = machine
-     manageEnd()
-     }
-     });*/
     function showTempMessage(msg) {
         message = msg;
         writeMessage();
