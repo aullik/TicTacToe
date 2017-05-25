@@ -13,6 +13,7 @@ lazy val commonSettings = Seq(
     // "com.google.guava" % "guava" % "19.0",
     "junit" % "junit" % "4.12",
     "log4j" % "log4j" % "1.2.17",
+
     "org.mongodb" % "mongo-java-driver" % "3.3.0",
     "org.mongodb" % "bson" % "3.3.0",
     "org.json4s" %% "json4s-jackson" % "3.4.2",
@@ -20,6 +21,19 @@ lazy val commonSettings = Seq(
     "com.fasterxml.jackson.core" % "jackson-databind" % "2.6.3",
     "org.clapper" %% "grizzled-slf4j" % "1.0.2",
     "com.typesafe.akka" %% "akka-cluster-tools" % "2.4.6",
+
+    // Testen
+
+    "org.scaldi" %% "scaldi" % "0.5.8",
+    "org.scaldi" %% "scaldi-akka" % "0.5.8",
+    "org.scalactic" %% "scalactic" % "3.0.1",
+    "org.scalatest" %% "scalatest" % "3.0.1" % "test",
+
+    "com.typesafe.slick" %% "slick" % "3.2.0",
+    //"org.slf4j" % "slf4j-nop" % "1.6.4",
+    "com.typesafe.slick" %% "slick-hikaricp" % "3.2.0",
+    "com.h2database" % "h2" % "1.4.194",
+
     //angular2 dependencies
     "org.webjars.npm" % "angular__common" % "2.2.0",
     "org.webjars.npm" % "angular__compiler" % "2.2.0",
@@ -48,9 +62,11 @@ lazy val commonSettings = Seq(
     "com.typesafe.play" %% "play-mailer" % "5.0.0",
     "org.webjars" %% "webjars-play" % "2.5.0-2",
     "com.iheart" %% "ficus" % "1.4.0",
+    "com.typesafe.play" %% "play-ws" % "2.5.4",
+    "com.typesafe.akka" %% "akka-http" % "10.0.2",
 
 
-    //tslint dependency
+//tslint dependency
     "org.webjars.npm" % "tslint-eslint-rules" % "3.1.0",
     "org.webjars.npm" % "tslint-microsoft-contrib" % "2.0.12",
     //   "org.webjars.npm" % "codelyzer" % "2.0.0-beta.1",

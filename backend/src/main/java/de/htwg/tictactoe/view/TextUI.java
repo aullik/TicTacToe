@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 
 import de.htwg.tictactoe.controller.IController;
 import de.htwg.util.observer.IObserver;
-import org.apache.log4j.Logger;
+//import org.apache.log4j.Logger;
 
 import com.google.inject.Inject;
 
@@ -13,7 +13,7 @@ public class TextUI implements IObserver {
 
    private IController controller;
 
-   private static final Logger LOGGER = Logger.getLogger("de.htwg.tictactoe.view.tui");
+   //private static final Logger LOGGER = Logger.getLogger("de.htwg.tictactoe.view.tui");
 
    @Inject
    public TextUI(IController controller) {
@@ -64,8 +64,8 @@ public class TextUI implements IObserver {
    }
 
    public void printTUI() {
-      LOGGER.info(controller.getGameString());
-      LOGGER.info(controller.getStatus());
+      //LOGGER.info(controller.getGameString());
+      //LOGGER.info(controller.getStatus());
    }
 }
 

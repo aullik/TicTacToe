@@ -6,7 +6,7 @@ import com.google.inject.Module;
 import de.htwg.tictactoe.controller.IController;
 import de.htwg.tictactoe.view.TextUI;
 import de.htwg.tictactoe.view.gui.TicTacToeGUI;
-import org.apache.log4j.PropertyConfigurator;
+//import org.apache.log4j.PropertyConfigurator;
 
 import java.util.Scanner;
 
@@ -45,12 +45,12 @@ public class TicTacToe {
    public static void main(String[] args) {
 
       // Set up logging through log4j
-      PropertyConfigurator.configure("log4j.properties");
+      //PropertyConfigurator.configure("log4j.properties");
 
 
       // Set up Google Guice Dependency Injector
-      TicTacToe ttt = new TicTacToe(new TicTacToeModule());
-      ttt.startUI();
+     // TicTacToe ttt = new TicTacToe(new TicTacToeModule());
+      //ttt.startUI();
 
    }
 

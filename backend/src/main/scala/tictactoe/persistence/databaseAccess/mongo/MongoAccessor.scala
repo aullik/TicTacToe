@@ -18,7 +18,7 @@ private[mongo] class MongoAccessor[ID <: EntityId](
 
 
   override def findAllDocuments(): List[Document] = {
-    collection.find().projection(Projections.include(idKey)).asList
+    collection.find().asList//projection(Projections.include(idKey)).
   }
 
 
