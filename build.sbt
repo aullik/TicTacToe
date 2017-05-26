@@ -2,8 +2,6 @@
 resolvers += "scalaz-bintray" at "https://dl.bintray.com/scalaz/releases"
 resolvers += "Typesafe repository" at "http://repo.typesafe.com/typesafe/releases/"
 
-
-
 lazy val commonSettings = Seq(
   version := "0.1",
   scalaVersion := "2.11.7",
@@ -21,7 +19,9 @@ lazy val commonSettings = Seq(
     "com.fasterxml.jackson.core" % "jackson-databind" % "2.6.3",
     "org.clapper" %% "grizzled-slf4j" % "1.0.2",
     "com.typesafe.akka" %% "akka-cluster-tools" % "2.4.6",
-
+    //"com.typesafe.akka" %% "akka-http" % "10.0.6",
+    "com.typesafe.akka" %% "akka-http-experimental" % "2.4.6",
+    //"com.typesafe.akka" % "akka-stream" % "2.5.2",
     // Testen
 
     "org.scaldi" %% "scaldi" % "0.5.8",
@@ -63,7 +63,6 @@ lazy val commonSettings = Seq(
     "org.webjars" %% "webjars-play" % "2.5.0-2",
     "com.iheart" %% "ficus" % "1.4.0",
     "com.typesafe.play" %% "play-ws" % "2.5.4",
-    "com.typesafe.akka" %% "akka-http" % "10.0.2",
 
 
 //tslint dependency

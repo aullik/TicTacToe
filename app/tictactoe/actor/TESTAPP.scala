@@ -33,7 +33,6 @@ object TESTAPP extends App {
   private val userTokenManagerActor: ActorRef = system.actorOf(UserTokenManagerActor.props, UserTokenManagerActor.NAME)
   private val lobbyActor: ActorRef = system.actorOf(LobbyActor.props, LobbyActor.NAME)
 
-
   val websocketAlice = system.actorOf(WebSocketActor(out, alice))
   val websocketBob = system.actorOf(WebSocketActor(out, bob))
 
