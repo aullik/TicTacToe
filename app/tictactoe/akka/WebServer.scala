@@ -79,13 +79,14 @@ object WebServer extends App{
   //private val lobbyCache = mutable.Map.empty[String, UserElement]
 
   //final val persistence: Persistence = environment.persistence
-  val server = new TicTacToeServer
+ //val server = new TicTacToeServer
 
   val route =
     path("users") {
       get {
         println()
-        complete(HttpEntity(ContentTypes.`text/html(UTF-8)`,server.persistence.userConnection.findAllDocuments().toString()))// Json.toJson(lobbyCache.values.toList).toString()
+        complete(HttpEntity(ContentTypes.`text/html(UTF-8)`,"hello"))//server.persistence.userConnection.findAllDocuments().toString()
+        // Json.toJson(lobbyCache.values.toList).toString()
       }
     }
 

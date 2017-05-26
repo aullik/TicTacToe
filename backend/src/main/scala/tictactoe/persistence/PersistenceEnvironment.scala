@@ -4,7 +4,7 @@ import tictactoe.persistence.databaseAccess.cache.CachePersistence
 import tictactoe.persistence.databaseAccess.db4o.DB4OPersistence
 import tictactoe.persistence.databaseAccess.file.FilePersistence
 import tictactoe.persistence.databaseAccess.mongo.MongoPersistence
-import tictactoe.persistence.databaseAccess.rest.RestPersistence
+//import tictactoe.persistence.databaseAccess.rest.RestPersistence
 import tictactoe.persistence.databaseAccess.slick.SlickPersistence
 
 /**
