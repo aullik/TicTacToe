@@ -174,37 +174,6 @@ var socket = new WebSocket("ws://" + window.location.host + "/socket/");
         human = 2,
         nul = 0,
         end = nul
-    // ---- game AI logic ----
-    // adapted from TIC-TAC-TOE 3D Thierry and Eric Levy-Abegnoli
-    // I.A. ON AMSTRAD CPC, PSI editions, 1986
-    /*, nul = 3, cellsPlayed = 0, end = 0, start = 1, dWin = 0;
-     var inv = new Int32Array([0, 2, 1, 6, 8, 7, 3, 5, 4, 18, 20, 19, 24, 26, 25, 21, 23, 22, 9, 11, 10, 15, 17, 16, 12, 14, 13]);
-     var sym = new Int32Array([0, 9, 18, 0, 12, 21, 0, 15, 24, 1, 0, 19, 4, 0, 22, 7, 0, 25, 2, 11, 0, 5, 14, 0, 8, 17, 0]);
-     var pdiag = [], diag = [], diagm = new Int32Array(14), hdiag = new Int32Array(49), coeff = [], ndiag = new Int32Array(27), cell = new Int32Array(27), cij = new Int32Array([0, 0, 0]), memdiag = [new Int32Array(201), new Int32Array(201), new Int32Array(201)], value = new Int32Array(27);
-     var value = new Int32Array([0, 5, -5, 17, 10, 3, -17, -3, -10, 5, 2, 0, 10, 75002, 0, -3, 0, 0, -5, 0, -2, 3, 0, 0, -10, 0, -75002]);
-     var s = [1, 10, 19, 1, 4, 7, 1, 13, 25, 1, 2, 3, 1, 11, 21, 1, 5, 9, 1, 14, 27, 10, 13, 16, 10, 11, 12, 10, 14, 18, 19, 13, 7, 19, 22, 25, 19, 11, 3, 19, 20, 21, 19, 14, 9, 19, 23, 27, 4, 13, 22, 4, 5, 6, 4, 14, 24, 13, 14, 15, 22, 14, 6, 22, 23, 24, 7, 16, 25, 7, 5, 3, 7, 14, 21, 7, 8, 9, 7, 17, 27, 16, 14, 12, 16, 17, 18, 25, 14, 3, 25, 23, 21, 25, 17, 9, 25, 26, 27, 2, 11, 20, 2, 5, 8, 2, 14, 26, 11, 14, 17, 20, 14, 8, 20, 23, 26, 5, 14, 23, 8, 17, 26, 3, 12, 21, 3, 6, 9, 3, 15, 27, 12, 15, 18, 21, 15, 9, 21, 24, 27, 6, 15, 24, 9, 18, 27], k = 0;
-     for (var id = 0; id < 49; id++) {
-     pdiag[id] = new Int32Array(3);
-     for (var oc = 0; oc < 3; oc++) {
-     pdiag[id][oc] = s[k++] - 1;
-     }
-     }
-     for (var p = 0; p < 27; p++) {
-     var i = 0;
-     for (var id = 0; id < 49; id++) {
-     for (var oc = 0; oc < 3; oc++) {
-     if (pdiag[id][oc] !== p) continue;
-     if (!diag[i]) {
-     diag[i] = new Int32Array(27);
-     coeff[i] = new Int32Array(27);
-     }
-     diag[i][p] = id;
-     coeff[i][p] = Math.pow(3, oc);
-     i++;
-     }
-     ndiag[p] = i;
-     }
-     }*/
 
     // ---- save winning values ----
 
@@ -242,106 +211,8 @@ var socket = new WebSocket("ws://" + window.location.host + "/socket/");
                 }
             }
         );
-        setTimedOut(function () {
-            this.showFinishModal(message);
-        }, 5000);
     }
 
-    function showFinishModal(message) {
-        if (framework == 0) {
-            $('.gameFinishedModal').html(message);
-            $('#gameFinishModal').modal({backdrop: 'static', keyboard: false});
-        }
-    }
-
-    // ---- machine IA minimax alpha-beta 2 levels ----
-    /*
-     function machinePlay() {
-     var val0 = -100000, prevDiag, newDiag, bestMove;
-     for (var p0 = 0; p0 < 27; p0++) {
-     if (cell[p0]) continue;
-     var val2 = 0;
-     for (var i = 0; i < ndiag[p0]; i++) {
-     prevDiag = hdiag[diag[i][p0]];
-     newDiag = prevDiag + coeff[i][p0];
-     val2 = val2 - value[prevDiag] + value[newDiag];
-     hdiag[diag[i][p0]] = newDiag;
-     diagm[i] = prevDiag;
-     }
-     cell[p0] = machine;
-     var valm = val2;
-     if (val2 > 50000) {
-     returnToLevelZero(p0);
-     var move = updateGame(p0, machine);
-     return move;
-     }
-     var val1 = 100000, fx = false;
-     for (var p1 = 0; p1 < 27; p1++) {
-     if (cell[p1]) continue;
-     val2 = valm;
-     for (var i = 0; i < ndiag[p1]; i++) {
-     prevDiag = hdiag[diag[i][p1]];
-     newDiag = prevDiag + 2 * coeff[i][p1];
-     val2 = val2 - value[prevDiag] + value[newDiag];
-     }
-     if (val2 <= val0) {
-     fx = true;
-     break;
-     }
-     if (val2 < val1) val1 = val2;
-     }
-     if (!fx && val1 > val0) {
-     val0 = val1;
-     bestMove = p0;
-     }
-     returnToLevelZero(p0);
-     }
-     var move = updateGame(bestMove, machine);
-     return move;
-     }
-     */
-    // ---- return to level zero ----
-    /*
-     function returnToLevelZero(p) {
-     cell[p] = 0;
-     for (var i = 0; i < ndiag[p]; i++) {
-     hdiag[diag[i][p]] = diagm[i];
-     }
-     }
-     */
-    // ---- display win diag ----
-    /*
-     function dispWin(d) {
-
-     fSphere(pdiag[d][0]).s = 3;
-     fSphere(pdiag[d][1]).s = 3;
-     fSphere(pdiag[d][2]).s = 3;
-
-     }*/
-
-    // ---- update game ----
-    /*
-     function updateGame(p, camp) {
-     for (var i = 0; i < ndiag[p]; i++) {
-     var d = diag[i][p];
-     hdiag[d] += coeff[i][p] * camp;
-     memdiag[camp][cij[camp]] = hdiag[d];
-     cij[camp]++;
-     if (hdiag[d] === 13) {
-     end = machine;
-     dWin = d;
-     }
-     if (hdiag[d] === 26) {
-     end = human;
-     dWin = d;
-     }
-     }
-     cell[p] = camp;
-     cellsPlayed++;
-     if (cellsPlayed === 27) end = nul;
-     return p;
-     }
-     */
     // ---- write ----
 
     function writeMessage() {
@@ -357,7 +228,7 @@ var socket = new WebSocket("ws://" + window.location.host + "/socket/");
         over, dx = 0,
         dy = 0,
         message = "";
-    var fillColor = ["", "#0f0", "#f00", "#fff"];
+    var fillColor = ["", "#f00", "#0f0", "#fff"];
 
     function run() {
         requestAnimationFrame(run);
@@ -464,7 +335,11 @@ var socket = new WebSocket("ws://" + window.location.host + "/socket/");
         },
         init: function () {
             var ctx = this.elem.getContext('2d');
-            $('body /deep/ #game').append(this.elem);
+            if(/firefox/.test( navigator.userAgent.toLowerCase() )){
+                $('body #game').html(this.elem);
+            }else{
+                $('body /deep/ #game').html(this.elem);
+            }
             this.resize();
             this.width = this.elem.width = this.offsetWidth;
             this.height = this.elem.height = this.offsetHeight;
@@ -542,41 +417,25 @@ var socket = new WebSocket("ws://" + window.location.host + "/socket/");
         return m;
     }
 
-    /*
-     socket.send(JSON.stringify({
-     msgType:'gameStatus',
-     value: {}
-     }));
-     // ---- click sphere ----
-     socket.onmessage(function(event){
-     var msg = JSON.parse(event.data);
-     switch (msg.msgType) {
-     case "playerMoved":
-     this.handlePlayerMoved(msg.value);
-     break;
-     case 'gameStatusRet':
-     this.handleGameStatusRet(msg.value);
-     break;
-     case 'gameFinish':
-     this.handleGameFinish(msg.value);
-     break;
-     default:
-     console.warn("Could not handle this message: " + msg);
-     }
-
-     });*/
-
     socket.onopen = function () {
         console.log('socket opened');
         socket.send(JSON.stringify({
             msgType: 'gameStatus',
             value: {}
         }));
+        setTimeout(function () {
+            socket.send(JSON.stringify({msgType:'keepAlive', value: {}}));
+        }, 2000)
+    }
+    socket.onclose =function () {
+        socket = new WebSocket("wss://" + window.location.host + "/socket/");
     }
     // ---- click sphere ----
     socket.onmessage = function (event) {
         var msg = JSON.parse(event.data);
-        console.log(msg)
+        if(msg.msgType !== "keepAliveAck") {
+            console.log(msg)
+        }
         switch (msg.msgType) {
             case "playerMoved":
                 handlePlayerMoved(msg.value);
@@ -587,35 +446,35 @@ var socket = new WebSocket("ws://" + window.location.host + "/socket/");
             case 'gameFinish':
                 handleGameFinish(msg.value);
                 break;
+            case 'keepAliveAck':
+                handleKeepAliveAck(msg.value);
+                break;
             default:
                 console.warn("Could not handle this message: " + msg);
         }
 
     };
 
-
+    function handleKeepAliveAck(data) {
+        setTimeout(function () {
+            socket.send(JSON.stringify({msgType:'keepAlive', value: {}}));
+        }, 2000)
+    }
     function handlePlayerMoved(data) {
+        // if (data.pMove.split('-')[0] == "O") {
+        var sphere = fSphere(data.pMove.slice(2))
         if (data.pMove.split('-')[0] == "O") {
-            var sphere = fSphere(data.pMove.slice(2))
-            sphere.s = machine
+            sphere.s = machine;
             played = false;
             showTempMessage("jetzt du bist dran");
+        }else{
+            console.log(sphere)
+            console.log(data.pMove)
+            sphere.s = human;
         }
+        //}
     }
 
-    /*
-     function handleGameStatusRet(data) {
-     if(data){
-     for (var i = 0; i < data.moves; i++){
-     var me = data.moves[i].pMove.split('-')[0] == "M" ? human: machine;
-     console.log(me+" "+data.pMove.moves[i].slice( 2 ));
-     var sphere = fSphere(data.pMove.moves[i].slice( 2 ));
-     sphere.s = me
-
-     }
-     }
-     }
-     */
     function handleGameStatusRet(data) {
         if (data) {
             for (var i = 0; i < data.moves.length; i++) {
@@ -626,35 +485,23 @@ var socket = new WebSocket("ws://" + window.location.host + "/socket/");
                 if (sphere !== undefined) {
                     sphere.s = me
                 }
-                if (i == data.moves.length - 1 && who == "M") {
-                    played = true;
-                }
-
+            }
+            if (data.yourTurn) {
+                played = false;
             }
         }
     }
 
     function handleGameFinish(data) {
         if (data) {
-            handleMoveAck(data.pMove);
+            handlePlayerMoved(data);
             end = data.pMove.split('-')[0] == "O" ? machine : human;
             end = data.tie == false ? end : nul;
             manageEnd()
         }
     }
 
-    /*
 
-     socket.on('move', function (data) {
-     console.log(JSON.stringify(data))
-     var sphere = fSphere(data.move)
-     sphere.s = machine
-     if (data.status !== "") $('#status').html(data.status)
-     if (data.win == "1") {
-     end = machine
-     manageEnd()
-     }
-     });*/
     function showTempMessage(msg) {
         message = msg;
         writeMessage();
@@ -664,7 +511,7 @@ var socket = new WebSocket("ws://" + window.location.host + "/socket/");
         }, 800);
     }
 
-    var played = false;
+    var played = true;
     pointer.click = function () {
         if (played) {
             showTempMessage("Warte bis der andere Player spielt");

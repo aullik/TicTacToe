@@ -17,6 +17,8 @@ class ScalaRoutes @Inject()(val messagesApi: MessagesApi,
                             val webProvider: Provider[WebControllerContainer]
                            ) extends AuthController with WebController {
 
+  TicTacToeApplication.startRestApi()
+
   def index = AuthenticatedGet(TicTacToeApplication.index _)
 
   def game = AuthenticatedGet(GameController.game _)

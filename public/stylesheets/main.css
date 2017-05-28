@@ -7,6 +7,10 @@ body {
     background: url("/assets/images/background.jpg");
     background-size: 100% 100%;
 }
+.tictactoeImage{
+    background: url("/assets/images/tictactoe.jpg");
+    background-size: 100% 100%;
+}
 
 .title {
     height: 10%;
@@ -317,7 +321,7 @@ canvas {
     background: #111;
 }
 .provider {
-    display: inline-block;
+    display: none!important;
     width: 40px;
     height: 40px;
     border-radius: 4px;
@@ -328,8 +332,6 @@ canvas {
     position: absolute;
     bottom: 5px;
     right: 5px;
-    width: 40px;
-    height: 40px;
     border-radius: 4px;
     outline: none;
 }
@@ -339,12 +341,18 @@ canvas {
 }
 .google {
     background: #D14836;
+    background: url("/assets/images/providers/google.png");
+    background-size: 100% 100%;
 }
 
 .facebook {
     background: #3B5998;
+    background: url("https://www.facebook.com/images/fb_icon_325x325.png");
+    background-size: 100% 100%;
 }
 
 .github {
     background: black;
+    background: url("http://image.flaticon.com/icons/png/512/25/25231.png");
+    background-size: 100% 100%;
 }

@@ -8,7 +8,10 @@ import tictactoe.silhouette.TicTacToeEnv
 import javax.inject.Singleton
 
 import akka.actor.ActorSystem
+import com.mohiva.play.silhouette.api.util.PasswordHasherRegistry
 import controllers.routes
+import tictactoe.TicTacToeServer
+import tictactoe.akka.RestServer
 
 import scala.concurrent.{ExecutionContextExecutor, Future}
 
@@ -16,7 +19,9 @@ import scala.concurrent.{ExecutionContextExecutor, Future}
 /**
   */
 @Singleton
-class TicTacToeApplication @Inject()(gameController: GameController, system: ActorSystem) extends Controller {
+class TicTacToeApplication @Inject()(gameController: GameController, system: ActorSystem,
+                                     server: TicTacToeServer,
+                                     passwordHasherRegistry: PasswordHasherRegistry) extends Controller {
   implicit val exc: ExecutionContextExecutor = system.dispatcher
 
 
@@ -27,6 +32,14 @@ class TicTacToeApplication @Inject()(gameController: GameController, system: Act
 
   def signUpPage(request: Request[AnyContent], fws: FrameworkSelector): Result = {
     fws.signUpPage
+  }
+  def startRestApi(): Unit = {/*
+    new Thread(new Runnable {
+      def run() {
+        new RestApi(server).startRestApi
+      }
+    }).start()*/
+    new RestServer(server, passwordHasherRegistry).startServer()
   }
 
 }

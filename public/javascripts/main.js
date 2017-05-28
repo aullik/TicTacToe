@@ -24,41 +24,14 @@ WEB_SOCKET_SWF_LOCATION = "/javascript/WebSocketMain.swf";
 var socket = new WebSocket("ws://" + window.location.host + "/socket/");
 
 var username;
-var users;/*
-$(document).ready(function () {
-    output = {
-        name: "alice",
-        token: "alicetoken",
-        users: [{
-            name: "spieler1",
-            token: "asdf"
-        },{
-            name: "spieler2",
-            token: "fjosid"
-        },
-            {
-                name: "spieler1",
-                token: "asdf"
-            },{
-                name: "spieler2",
-                token: "fjosid"
-            }]
-    }
-    username = output.name;
-    token = output.token;
-    users = output.users;
-    if(output.users){
-        var usersData = [];
-        for (var i = 0; i < output.users.length; i++){
-            usersData.push(userBlock(output.users[i].name, output.users[i].token))
-        }
-        $('.allUsers').append(usersData.join(''));
-    }
-});*/
+var users;
 
 this.socket.onopen = function onOpen(event) {
     console.log('Socket opened');;
     socket.send(JSON.stringify({msgType:'userStatus', value: {}}));
+    setTimeout(function () {
+        socket.send(JSON.stringify({msgType:'keepAlive', value: {}}));
+    }, 2000)
 }
 
 this.socket.onerror = function onError(event) {
@@ -66,11 +39,14 @@ this.socket.onerror = function onError(event) {
 }
 
 this.socket.onclose = function onClose(event) {
-    console.log("Web socket closed");
+    console.log("socket closed")
+    //socket = new WebSocket("wss://" + window.location.host + "/socket/");
 }
 this.socket.onmessage = function socketOnMessage(event){
     var msg = JSON.parse(event.data);
-    console.log(msg)
+    if(msg.msgType !== 'keepAliveAck') {
+        console.log(msg)
+    }
     switch (msg.msgType) {
         case "userStatusRet":
             userHandleStatusRet(msg.value);
@@ -90,11 +66,19 @@ this.socket.onmessage = function socketOnMessage(event){
         case 'startGame':
             handleStartGame(msg.value);
             break;
+        case 'keepAliveAck':
+            handleKeepAliveAck(msg.value);
+            break;
         default:
             console.warn("Could not handle this message: " + msg);
     }
 
 };
+function handleKeepAliveAck(data) {
+    setTimeout(function () {
+        socket.send(JSON.stringify({msgType:'keepAlive', value: {}}));
+    }, 2000)
+}
 function userHandleStatusRet(data) {
     username = data.name;
     token = data.token;
@@ -109,23 +93,25 @@ function userHandleStatusRet(data) {
 }
 function handleUserLoggedIn(data) {
     if(data.name && data.token){
+        users.push(data);
         $('.allUsers').append(userBlock(data.name, data.token));
     }
 }
 function handleUserLoggedOut(data) {
     if(data.name && data.token){
+        var index = this.users.findIndex(x => x.token == data.token);
+        this.users.splice(index, 1);
         $('#'+data.token).remove();
     }
 }
 function handleRequestGame(data) {
     if(data.name && data.token){
         $('.callRequestTitle').html("call to start a game with " + data.name);
-        $('#incomingCallModal').modal({backdrop: 'static', keyboard: false});
         $('#otherUserModal').val(data.token);
+        $('#incomingCallModal').modal({backdrop: 'static', keyboard: false});
     }
 }
 function handleCallAskForGameRet(data) {
-    console.log(data)
     if(data.accept !== undefined && data.accept == false){
         $('#waitingModal').modal('hide');
         toastr.info('Game request denied');
@@ -158,10 +144,11 @@ $(document).on('click','.callAccept', function (){
 function hideRequestGameModalAndSendResp(accept) {
     $('#incomingCallModal').modal('hide');
     var otherUser = $('#otherUserModal').val();
+    console.log("otherUserId "+ otherUser);
     var user = users.find(x => x.token == otherUser);
-    user.accept = accept;
     console.log('gameRequestedRet: ');
     console.log(user);
+    user.accept = accept;
     socket.send(JSON.stringify({
         msgType:'gameRequestedRet',
         value : user

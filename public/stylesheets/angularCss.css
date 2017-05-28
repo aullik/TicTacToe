@@ -20,6 +20,10 @@ body {
     height: 100%;
     padding: 0;
 }
+.tictactoeImage{
+    background: url("/assets/images/tictactoe.jpg");
+    background-size: 100% 100%;
+}
 
 
 /* chat */
@@ -173,7 +177,7 @@ canvas {
 }
 /* aop */
 .provider {
-    display: inline-block;
+    display: none!important;
     width: 40px;
     height: 40px;
     border-radius: 4px;
@@ -183,15 +187,28 @@ canvas {
 .provider img{
     width: 40px;
     height: 40px;
-}
+}/*
 .google {
     background: #D14836;
-}
+    background: url("/assets/images/providers/google.png");
+    background-size: 100% 100%;
+}*/
 
 .facebook {
     background: #3B5998;
+    background: url("https://www.facebook.com/images/fb_icon_325x325.png");
+    background-size: 100% 100%;
 }
 
 .github {
     background: black;
+    background: url("http://image.flaticon.com/icons/png/512/25/25231.png");
+    background-size: 100% 100%;
+}
+.logoutButton{
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    border-radius: 4px;
+    outline: none;
 }

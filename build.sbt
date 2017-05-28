@@ -1,6 +1,7 @@
 
 resolvers += "scalaz-bintray" at "https://dl.bintray.com/scalaz/releases"
 resolvers += "Typesafe repository" at "http://repo.typesafe.com/typesafe/releases/"
+resolvers += "spray repo" at "http://repo.spray.io"
 
 lazy val commonSettings = Seq(
   version := "0.1",
@@ -12,7 +13,7 @@ lazy val commonSettings = Seq(
     "junit" % "junit" % "4.12",
     "log4j" % "log4j" % "1.2.17",
 
-    "org.mongodb" % "mongo-java-driver" % "3.3.0",
+    "org.mongodb" %   "mongo-java-driver" % "3.3.0",
     "org.mongodb" % "bson" % "3.3.0",
     "org.json4s" %% "json4s-jackson" % "3.4.2",
     "net.codingwell" %% "scala-guice" % "4.0.1",
@@ -21,6 +22,11 @@ lazy val commonSettings = Seq(
     "com.typesafe.akka" %% "akka-cluster-tools" % "2.4.6",
     //"com.typesafe.akka" %% "akka-http" % "10.0.6",
     "com.typesafe.akka" %% "akka-http-experimental" % "2.4.6",
+    "com.typesafe.akka" %%"akka-http-testkit-experimental" % "1.0",
+    "io.spray" %%  "spray-json" % "1.3.3",
+    //"com.typesafe.akka" %% "akka-http-spray-json-experimental" % "2.0-SNAPSHOT",
+    //"io.spray" % "spray-json_2.10" % "1.3.3",
+    "com.typesafe.akka" %% "akka-http-spray-json-experimental" % "2.4.6",
     //"com.typesafe.akka" % "akka-stream" % "2.5.2",
     // Testen
 
@@ -79,6 +85,7 @@ lazy val `tictactoe` = (project in file("."))
   .settings(name := "TicTacToe")
   .enablePlugins(PlayScala, SbtWeb)
   .dependsOn(`backend`)
+
 
 lazy val `backend` = (project in file("backend"))
   .settings(commonSettings)

@@ -58,7 +58,11 @@ private[slick] class SlickAccessor[ID <: EntityId](name: String) extends Persist
   override def findFirstDocumentForID(id: ID): Option[Document] = {
     val query = table.filter(tbl => tbl._id === id.asString)
     val data = doDatabaseAction(query.result)
-    Option{toDocument(data.head)}
+    if(data.nonEmpty){
+      Option{toDocument(data.head)}
+    }else {
+      None
+    }
   }
 
   override def findFirstDocumentForEmail(email: String): Option[Document] = {
