@@ -11,7 +11,7 @@ import tictactoe.persistence.databaseAccess.mongo.MongoPersistence
 class TicTacToeServerModule extends AbstractModule with ScalaModule {
 
   def configure(): Unit = {
-    bind[PersistenceEnvironment].toInstance(ProductivePersistenceEnvironmentSlick)
+    bind[PersistenceEnvironment].toInstance(ProductivePersistenceEnvironmentDB4O)
   }
 
 }

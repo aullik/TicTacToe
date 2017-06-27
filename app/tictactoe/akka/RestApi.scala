@@ -71,7 +71,7 @@ class RestServer(serv:TicTacToeServer, passwordHash:PasswordHasherRegistry) exte
   implicit val passwordHasherRegistry = passwordHash
 
   def startServer(): Unit = {
-    var bindingFuture = Http().bindAndHandle(route, "localhost", 55)
+    var bindingFuture = Http().bindAndHandle(route, "localhost", 8080)
     println(s"Server online at http://localhost:55/\nPress RETURN to stop...")
     StdIn.readLine() // let it run until user presses return
     bindingFuture
